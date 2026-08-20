@@ -1582,13 +1582,9 @@ function editJob(id){
 async function saveJob(){
 
   if(currentProfile.role !== "OWNER"){
-
     alert("Hanya OWNER yang dapat membuat jadwal.");
-
     return;
-
   }
-
 
   const id =
     document.getElementById("jobId").value;
@@ -1603,26 +1599,33 @@ async function saveJob(){
     document.getElementById("jobTime").value;
 
   const customerName =
-    document.getElementById("customerName").value.trim();
+    document.getElementById("customerName")
+      .value.trim();
 
   const customerPhone =
-    document.getElementById("customerPhone").value.trim();
+    document.getElementById("customerPhone")
+      .value.trim();
 
   const customerAddress =
-    document.getElementById("customerAddress").value.trim();
+    document.getElementById("customerAddress")
+      .value.trim();
 
   const workDescription =
-    document.getElementById("workDescription").value.trim();
+    document.getElementById("workDescription")
+      .value.trim();
 
   const status =
     document.getElementById("jobStatus").value;
-
 
   const errorBox =
     document.getElementById("formError");
 
   errorBox.textContent = "";
 
+
+  /* =========================
+     VALIDASI
+  ========================= */
 
   if(
     !technicianId ||
@@ -1638,48 +1641,219 @@ async function saveJob(){
       "Mohon lengkapi semua data wajib.";
 
     return;
+  }
+
+
+  /* =========================
+     CARI CUSTOMER
+  ========================= */
+
+  let customer = null;
+
+
+  const {
+    data:existingCustomers,
+    error:customerSearchError
+  } = await supabaseClient
+    .from("customers")
+    .select("*")
+    .or(
+      `whatsapp.eq.${customerPhone},phone.eq.${customerPhone}`
+    )
+    .limit(1);
+
+
+  if(customerSearchError){
+
+    console.error(customerSearchError);
+
+    errorBox.textContent =
+      "Gagal mencari customer: "
+      + customerSearchError.message;
+
+    return;
+  }
+
+
+  if(existingCustomers && existingCustomers.length){
+
+    customer = existingCustomers[0];
 
   }
 
+
+  /* =========================
+     BUAT CUSTOMER BARU
+  ========================= */
+
+  if(!customer){
+
+    const {
+      data:newCustomer,
+      error:createCustomerError
+    } = await supabaseClient
+      .from("customers")
+      .insert({
+
+        customer_code:
+          "CUS-" +
+          Date.now(),
+
+        customer_name:
+          customerName,
+
+        whatsapp:
+          customerPhone,
+
+        phone:
+          customerPhone,
+
+        address:
+          customerAddress,
+
+        city:
+          "",
+
+        customer_type:
+          "INDIVIDUAL",
+
+        status:
+          "ACTIVE",
+
+        created_by:
+          currentUser.id
+
+      })
+      .select()
+      .single();
+
+
+    if(createCustomerError){
+
+      console.error(createCustomerError);
+
+      errorBox.textContent =
+        "Gagal membuat customer: "
+        + createCustomerError.message;
+
+      return;
+    }
+
+
+    customer = newCustomer;
+
+  }
+
+
+  /* =========================
+     UPDATE DATA CUSTOMER
+     ========================= */
+
+  if(customer){
+
+    const {
+      error:updateCustomerError
+    } = await supabaseClient
+      .from("customers")
+      .update({
+
+        customer_name:
+          customerName,
+
+        whatsapp:
+          customerPhone,
+
+        phone:
+          customerPhone,
+
+        address:
+          customerAddress
+
+      })
+      .eq("id",customer.id);
+
+
+    if(updateCustomerError){
+
+      console.error(updateCustomerError);
+
+      errorBox.textContent =
+        "Gagal memperbarui customer: "
+        + updateCustomerError.message;
+
+      return;
+    }
+
+  }
+
+
+  /* =========================
+     WAKTU JOB
+  ========================= */
 
   const scheduledAt =
     localDateTime(date,time);
 
 
+  /* =========================
+     PAYLOAD JOB
+  ========================= */
+
   const payload = {
 
-    assigned_to: technicianId,
+    customer_id:
+      customer.id,
 
-    scheduled_at: scheduledAt,
+    customer_name:
+      customerName,
 
-    customer_name: customerName,
+    customer_phone:
+      customerPhone,
 
-    customer_phone: customerPhone,
+    customer_address:
+      customerAddress,
 
-    customer_address: customerAddress,
+    work_description:
+      workDescription,
 
-    work_description: workDescription,
+    assigned_to:
+      technicianId,
 
-    title: workDescription,
+    scheduled_at:
+      scheduledAt,
 
-    description: workDescription,
+    title:
+      workDescription,
 
-    job_type: "SERVICE",
+    description:
+      workDescription,
 
-    priority: "NORMAL",
+    job_type:
+      "SERVICE",
 
-    status: id
-      ? status
-      : "NEW",
+    priority:
+      "NORMAL",
 
-    estimated_cost: 0,
+    status:
+      id
+        ? status
+        : "NEW",
 
-    service_price: 0,
+    estimated_cost:
+      0,
 
-    actual_cost: 0
+    service_price:
+      0,
+
+    actual_cost:
+      0
 
   };
 
+
+  /* =========================
+     UPDATE JOB
+  ========================= */
 
   let result;
 
@@ -1692,15 +1866,13 @@ async function saveJob(){
         .update(payload)
         .eq("id",id);
 
-  }else{
 
-    /*
-      Job code dibuat otomatis
-    */
+  }else{
 
     payload.job_code =
       "JOB-" +
       Date.now();
+
 
     result =
       await supabaseClient
@@ -1710,25 +1882,37 @@ async function saveJob(){
   }
 
 
+  /* =========================
+     ERROR
+  ========================= */
+
   if(result.error){
 
     console.error(result.error);
 
     errorBox.textContent =
-      "Gagal menyimpan: "
+      "Gagal menyimpan jadwal: "
       + result.error.message;
 
     return;
-
   }
 
+
+  /* =========================
+     SELESAI
+  ========================= */
 
   closeModal();
 
   await loadJobs();
 
-}
+  alert(
+    id
+      ? "Jadwal berhasil diperbarui."
+      : "Jadwal berhasil dibuat."
+  );
 
+}
 
 /* =====================================================
    DELETE
