@@ -23,23 +23,31 @@
 
             <form id="loginForm">
 
-                <label>Email / Username</label>
+                <label for="username">
+                    Email
+                </label>
+
                 <input
-                    type="text"
+                    type="email"
                     id="username"
-                    placeholder="Masukkan username"
+                    placeholder="Masukkan email"
+                    autocomplete="username"
                     required
                 >
 
-                <label>Password</label>
+                <label for="password">
+                    Password
+                </label>
+
                 <input
                     type="password"
                     id="password"
                     placeholder="Masukkan password"
+                    autocomplete="current-password"
                     required
                 >
 
-                <button type="submit">
+                <button type="submit" id="loginButton">
                     LOGIN
                 </button>
 
@@ -51,6 +59,14 @@
 
     </div>
 
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- WAT ERP Configuration -->
+    <script src="assets/js/config.js"></script>
+
+    <!-- WAT ERP Application -->
     <script src="assets/js/app.js"></script>
 
 </body>
