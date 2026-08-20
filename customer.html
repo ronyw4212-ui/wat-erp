@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Customer - WAT ERP</title>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Config WAT ERP -->
+  <script src="assets/js/config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    /* HEADER */
+    .header {
+      height: 72px;
+      background: linear-gradient(135deg, #0866ff, #1976f3);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    }
+
+    .brand h2 {
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .brand span {
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .role {
+      background: rgba(255,255,255,.18);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .logout {
+      border: none;
+      background: white;
+      color: #0866ff;
+      padding: 10px 17px;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* MAIN */
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px 40px;
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .page-title p {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: #0866ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(8,102,255,.2);
+    }
+
+    .btn-primary:hover {
+      background: #0054dc;
+    }
+
+    /* SUMMARY */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+      border-left: 4px solid #0866ff;
+    }
+
+    .summary-card.active {
+      border-left-color: #16a34a;
+    }
+
+    .summary-card.inactive {
+      border-left-color: #ef4444;
+    }
+
+    .summary-card span {
+      color: #718096;
+      font-size: 13px;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 27px;
+      margin-top: 8px;
+    }
+
+    /* TOOLBAR */
+    .toolbar {
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+    }
+
+    .search {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid #d8dee9;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search:focus,
+    select:focus,
+    input:focus,
+    textarea:focus {
+      border-color: #0866ff;
+      box-shadow: 0 0 0 3px rgba(8,102,255,.1);
+    }
+
+    select {
+      padding: 12px 14px;
+      border: 1px solid #d8dee9;
+      border-radius: 8px;
+      background: white;
+      outline: none;
+      min-width: 180px;
+    }
+
+    /* TABLE */
+    .table-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+      text-align: left;
+      padding: 15px;
+      font-size: 12px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 13px;
+    }
+
+    tr:hover td {
+      background: #fafcff;
+    }
+
+    .customer-name {
+      font-weight: bold;
+      color: #172033;
+    }
+
+    .customer-code {
+      color: #64748b;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .badge-active {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .badge-inactive {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .type-badge {
+      background: #e8f1ff;
+      color: #0757c7;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .wa-btn {
+      background: #16a34a;
+      color: white;
+      text-decoration: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .action-btn {
+      border: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+
+    .edit-btn {
+      background: #e8f1ff;
+      color: #0757c7;
+    }
+
+    .disable-btn {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .activate-btn {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px;
+      color: #718096;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #718096;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+
+    .modal-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 19px;
+    }
+
+    .close {
+      border: none;
+      background: transparent;
+      font-size: 25px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .form {
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #334155;
+    }
+
+    input,
+    textarea {
+      padding: 11px 13px;
+      border: 1px solid #d8dee9;
+      border-radius: 7px;
+      outline: none;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      padding: 18px 22px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      border: none;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 11px 17px;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      border: none;
+      background: #0866ff;
+      color: white;
+      padding: 11px 20px;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .error {
+      color: #dc2626;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .header {
+        padding: 0 15px;
+      }
+
+      .container {
+        padding: 0 12px 30px;
+        margin-top: 20px;
+      }
+
+      .page-title {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        flex-direction: column;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <h2>WAT ERP</h2>
+      <span>Technician Control System</span>
+    </div>
+
+    <div class="header-right">
+      <div class="role">OWNER</div>
+      <button class="logout" onclick="logout()">LOGOUT</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <div class="page-title">
+      <div>
+        <h1>Customer</h1>
+        <p>Kelola database customer WAT ERP.</p>
+      </div>
+
+      <button class="btn-primary" onclick="openAddModal()">
+        + Tambah Customer
+      </button>
+    </div>
+
+    <!-- SUMMARY -->
+    <section class="summary">
+
+      <div class="summary-card">
+        <span>Total Customer</span>
+        <strong id="totalCustomer">0</strong>
+      </div>
+
+      <div class="summary-card active">
+        <span>Customer Aktif</span>
+        <strong id="activeCustomer">0</strong>
+      </div>
+
+      <div class="summary-card inactive">
+        <span>Customer Nonaktif</span>
+        <strong id="inactiveCustomer">0</strong>
+      </div>
+
+    </section>
+
+    <!-- TOOLBAR -->
+    <section class="toolbar">
+
+      <input
+        type="text"
+        id="searchInput"
+        class="search"
+        placeholder="Cari nama, kode, WhatsApp, telepon..."
+        oninput="renderCustomers()"
+      >
+
+      <select id="typeFilter" onchange="renderCustomers()">
+        <option value="">Semua Tipe</option>
+        <option value="RESIDENTIAL">Residential</option>
+        <option value="COMMERCIAL">Commercial</option>
+        <option value="CORPORATE">Corporate</option>
+      </select>
+
+      <select id="statusFilter" onchange="renderCustomers()">
+        <option value="">Semua Status</option>
+        <option value="ACTIVE">Aktif</option>
+        <option value="INACTIVE">Nonaktif</option>
+      </select>
+
+    </section>
+
+    <!-- TABLE -->
+    <section class="table-card">
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Kontak</th>
+              <th>Kota</th>
+              <th>Tipe</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="customerTable">
+
+            <tr>
+              <td colspan="6" class="loading">
+                Memuat data customer...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal" id="customerModal">
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <h2 id="modalTitle">
+          Tambah Customer
+        </h2>
+
+        <button class="close" onclick="closeModal()">
+          ×
+        </button>
+
+      </div>
+
+      <form class="form" id="customerForm">
+
+        <input type="hidden" id="customerId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Kode Customer</label>
+            <input
+              type="text"
+              id="customerCode"
+              placeholder="CUS-0001"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Nama Customer *</label>
+            <input
+              type="text"
+              id="customerName"
+              placeholder="Nama customer"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input
+              type="text"
+              id="customerWhatsapp"
+              placeholder="628xxxxxxxxxx"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Telepon</label>
+            <input
+              type="text"
+              id="customerPhone"
+              placeholder="021xxxxxxx"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              id="customerEmail"
+              placeholder="customer@email.com"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Kota</label>
+            <input
+              type="text"
+              id="customerCity"
+              placeholder="Tangerang Selatan"
+            >
+          </div>
+
+          <div class="form-group full">
+            <label>Alamat</label>
+            <textarea
+              id="customerAddress"
+              placeholder="Alamat lengkap customer"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Tipe Customer *</label>
+
+            <select id="customerType" required>
+
+              <option value="RESIDENTIAL">
+                Residential
+              </option>
+
+              <option value="COMMERCIAL">
+                Commercial
+              </option>
+
+              <option value="CORPORATE">
+                Corporate
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+
+            <select id="customerStatus">
+
+              <option value="ACTIVE">
+                Aktif
+              </option>
+
+              <option value="INACTIVE">
+                Nonaktif
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group full">
+            <label>Catatan</label>
+
+            <textarea
+              id="customerNotes"
+              placeholder="Catatan tambahan..."
+            ></textarea>
+
+          </div>
+
+          <div id="formError" class="error full"></div>
+
+        </div>
+
+      </form>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn-secondary"
+          onclick="closeModal()"
+          type="button"
+        >
+          Batal
+        </button>
+
+        <button
+          class="btn-save"
+          onclick="saveCustomer()"
+          type="button"
+        >
+          Simpan Customer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    /* ==========================================
+       SUPABASE
+    ========================================== */
+
+    const { createClient } = window.supabase;
+
+    const supabaseClient = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+    /* ==========================================
+       VARIABLES
+    ========================================== */
+
+    let customers = [];
+
+
+    /* ==========================================
+       AUTH CHECK
+    ========================================== */
+
+    async function checkAuth() {
+
+      const {
+        data: { session }
+      } = await supabaseClient.auth.getSession();
+
+      if (!session) {
+
+        window.location.href = "login.html";
+
+        return null;
+
+      }
+
+      return session;
+
+    }
+
+
+    /* ==========================================
+       LOAD CUSTOMER
+    ========================================== */
+
+    async function loadCustomers() {
+
+      const session = await checkAuth();
+
+      if (!session) return;
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("customers")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+      if (error) {
+
+        console.error(error);
+
+        document.getElementById("customerTable").innerHTML = `
+          <tr>
+            <td colspan="6" class="empty">
+              Gagal mengambil data customer.
+              <br>
+              ${error.message}
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      customers = data || [];
+
+      updateSummary();
+
+      renderCustomers();
+
+    }
+
+
+    /* ==========================================
+       SUMMARY
+    ========================================== */
+
+    function updateSummary() {
+
+      const total = customers.length;
+
+      const active = customers.filter(
+        c => c.status === "ACTIVE"
+      ).length;
+
+      const inactive = customers.filter(
+        c => c.status === "INACTIVE"
+      ).length;
+
+      document.getElementById("totalCustomer")
+        .textContent = total;
+
+      document.getElementById("activeCustomer")
+        .textContent = active;
+
+      document.getElementById("inactiveCustomer")
+        .textContent = inactive;
+
+    }
+
+
+    /* ==========================================
+       RENDER TABLE
+    ========================================== */
+
+    function renderCustomers() {
+
+      const search =
+        document.getElementById("searchInput")
+          .value
+          .toLowerCase()
+          .trim();
+
+      const type =
+        document.getElementById("typeFilter").value;
+
+      const status =
+        document.getElementById("statusFilter").value;
+
+
+      const filtered = customers.filter(customer => {
+
+        const text = [
+
+          customer.customer_code,
+          customer.name,
+          customer.whatsapp,
+          customer.phone,
+          customer.email,
+          customer.city,
+          customer.address
+
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+
+        const matchSearch =
+          !search || text.includes(search);
+
+        const matchType =
+          !type || customer.customer_type === type;
+
+        const matchStatus =
+          !status || customer.status === status;
+
+
+        return (
+          matchSearch &&
+          matchType &&
+          matchStatus
+        );
+
+      });
+
+
+      const table =
+        document.getElementById("customerTable");
+
+
+      if (!filtered.length) {
+
+        table.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty">
+              Belum ada customer.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+
+      table.innerHTML = filtered.map(customer => {
+
+        const whatsapp =
+          normalizeWhatsApp(customer.whatsapp);
+
+
+        const waButton = whatsapp
+          ? `
+            <a
+              class="wa-btn"
+              href="https://wa.me/${whatsapp}"
+              target="_blank"
+            >
+              WhatsApp
+            </a>
+          `
+          : "-";
+
+
+        const statusBadge =
+          customer.status === "ACTIVE"
+          ? `<span class="badge badge-active">AKTIF</span>`
+          : `<span class="badge badge-inactive">NONAKTIF</span>`;
+
+
+        const actionButton =
+          customer.status === "ACTIVE"
+          ? `
+            <button
+              class="action-btn disable-btn"
+              onclick="changeStatus('${customer.id}', 'INACTIVE')"
+            >
+              Nonaktifkan
+            </button>
+          `
+          : `
+            <button
+              class="action-btn activate-btn"
+              onclick="changeStatus('${customer.id}', 'ACTIVE')"
+            >
+              Aktifkan
+            </button>
+          `;
+
+
+        return `
+
+          <tr>
+
+            <td>
+
+              <div class="customer-name">
+                ${escapeHtml(customer.name)}
+              </div>
+
+              <div class="customer-code">
+                ${escapeHtml(customer.customer_code)}
+              </div>
+
+            </td>
+
+
+            <td>
+
+              ${waButton}
+
+              ${
+                customer.phone
+                ? `<div style="margin-top:5px;color:#64748b;">
+                    ${escapeHtml(customer.phone)}
+                  </div>`
+                : ""
+              }
+
+            </td>
+
+
+            <td>
+              ${escapeHtml(customer.city || "-")}
+            </td>
+
+
+            <td>
+
+              <span class="type-badge">
+                ${escapeHtml(customer.customer_type || "-")}
+              </span>
+
+            </td>
+
+
+            <td>
+              ${statusBadge}
+            </td>
+
+
+            <td>
+
+              <button
+                class="action-btn edit-btn"
+                onclick="editCustomer('${customer.id}')"
+              >
+                Edit
+              </button>
+
+              ${actionButton}
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }).join("");
+
+    }
+
+
+    /* ==========================================
+       ADD MODAL
+    ========================================== */
+
+    async function openAddModal() {
+
+      document.getElementById("modalTitle")
+        .textContent = "Tambah Customer";
+
+      document.getElementById("customerForm")
+        .reset();
+
+      document.getElementById("customerId")
+        .value = "";
+
+      document.getElementById("formError")
+        .textContent = "";
+
+      document.getElementById("customerCode")
+        .value = await generateCustomerCode();
+
+      document.getElementById("customerStatus")
+        .value = "ACTIVE";
+
+      document.getElementById("customerType")
+        .value = "RESIDENTIAL";
+
+
+      document.getElementById("customerModal")
+        .classList.add("show");
+
+    }
+
+
+    /* ==========================================
+       EDIT CUSTOMER
+    ========================================== */
+
+    function editCustomer(id) {
+
+      const customer =
+        customers.find(c => c.id === id);
+
+      if (!customer) return;
+
+
+      document.getElementById("modalTitle")
+        .textContent = "Edit Customer";
+
+
+      document.getElementById("customerId")
+        .value = customer.id;
+
+      document.getElementById("customerCode")
+        .value = customer.customer_code || "";
+
+      document.getElementById("customerName")
+        .value = customer.name || "";
+
+      document.getElementById("customerWhatsapp")
+        .value = customer.whatsapp || "";
+
+      document.getElementById("customerPhone")
+        .value = customer.phone || "";
+
+      document.getElementById("customerEmail")
+        .value = customer.email || "";
+
+      document.getElementById("customerAddress")
+        .value = customer.address || "";
+
+      document.getElementById("customerCity")
+        .value = customer.city || "";
+
+      document.getElementById("customerType")
+        .value = customer.customer_type || "RESIDENTIAL";
+
+      document.getElementById("customerStatus")
+        .value = customer.status || "ACTIVE";
+
+      document.getElementById("customerNotes")
+        .value = customer.notes || "";
+
+      document.getElementById("formError")
+        .textContent = "";
+
+
+      document.getElementById("customerModal")
+        .classList.add("show");
+
+    }
+
+
+    /* ==========================================
+       SAVE CUSTOMER
+    ========================================== */
+
+    async function saveCustomer() {
+
+      const errorBox =
+        document.getElementById("formError");
+
+      errorBox.textContent = "";
+
+
+      const session = await checkAuth();
+
+      if (!session) return;
+
+
+      const id =
+        document.getElementById("customerId").value;
+
+
+      const payload = {
+
+        customer_code:
+          document.getElementById("customerCode")
+            .value
+            .trim(),
+
+        name:
+          document.getElementById("customerName")
+            .value
+            .trim(),
+
+        whatsapp:
+          document.getElementById("customerWhatsapp")
+            .value
+            .trim() || null,
+
+        phone:
+          document.getElementById("customerPhone")
+            .value
+            .trim() || null,
+
+        email:
+          document.getElementById("customerEmail")
+            .value
+            .trim() || null,
+
+        address:
+          document.getElementById("customerAddress")
+            .value
+            .trim() || null,
+
+        city:
+          document.getElementById("customerCity")
+            .value
+            .trim() || null,
+
+        customer_type:
+          document.getElementById("customerType")
+            .value,
+
+        status:
+          document.getElementById("customerStatus")
+            .value,
+
+        notes:
+          document.getElementById("customerNotes")
+            .value
+            .trim() || null
+
+      };
+
+
+      if (!payload.customer_code) {
+
+        errorBox.textContent =
+          "Kode customer wajib diisi.";
+
+        return;
+
+      }
+
+
+      if (!payload.name) {
+
+        errorBox.textContent =
+          "Nama customer wajib diisi.";
+
+        return;
+
+      }
+
+
+      let result;
+
+
+      if (id) {
+
+        result = await supabaseClient
+          .from("customers")
+          .update(payload)
+          .eq("id", id);
+
+      } else {
+
+        payload.created_by =
+          session.user.id;
+
+        result = await supabaseClient
+          .from("customers")
+          .insert(payload);
+
+      }
+
+
+      if (result.error) {
+
+        console.error(result.error);
+
+        errorBox.textContent =
+          result.error.message;
+
+        return;
+
+      }
+
+
+      closeModal();
+
+      await loadCustomers();
+
+    }
+
+
+    /* ==========================================
+       CHANGE STATUS
+    ========================================== */
+
+    async function changeStatus(id, newStatus) {
+
+      const customer =
+        customers.find(c => c.id === id);
+
+      if (!customer) return;
+
+
+      const action =
+        newStatus === "ACTIVE"
+        ? "mengaktifkan"
+        : "menonaktifkan";
+
+
+      const confirmed =
+        confirm(
+          `Yakin ingin ${action} customer "${customer.name}"?`
+        );
+
+
+      if (!confirmed) return;
+
+
+      const {
+        error
+      } = await supabaseClient
+        .from("customers")
+        .update({
+          status: newStatus
+        })
+        .eq("id", id);
+
+
+      if (error) {
+
+        alert(
+          "Gagal mengubah status: " +
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      await loadCustomers();
+
+    }
+
+
+    /* ==========================================
+       GENERATE CUSTOMER CODE
+    ========================================== */
+
+    async function generateCustomerCode() {
+
+      const {
+        count,
+        error
+      } = await supabaseClient
+        .from("customers")
+        .select("*", {
+          count: "exact",
+          head: true
+        });
+
+
+      if (error) {
+
+        console.error(error);
+
+        return "CUS-0001";
+
+      }
+
+
+      const number =
+        (count || 0) + 1;
+
+
+      return "CUS-" +
+        String(number).padStart(4, "0");
+
+    }
+
+
+    /* ==========================================
+       NORMALIZE WHATSAPP
+    ========================================== */
+
+    function normalizeWhatsApp(number) {
+
+      if (!number) return "";
+
+      let value =
+        String(number)
+          .replace(/\D/g, "");
+
+
+      if (value.startsWith("0")) {
+
+        value =
+          "62" + value.substring(1);
+
+      }
+
+
+      if (value.startsWith("8")) {
+
+        value = "62" + value;
+
+      }
+
+
+      return value;
+
+    }
+
+
+    /* ==========================================
+       ESCAPE HTML
+    ========================================== */
+
+    function escapeHtml(value) {
+
+      if (value === null ||
+          value === undefined) {
+
+        return "";
+
+      }
+
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* ==========================================
+       CLOSE MODAL
+    ========================================== */
+
+    function closeModal() {
+
+      document.getElementById("customerModal")
+        .classList.remove("show");
+
+    }
+
+
+    /* ==========================================
+       LOGOUT
+    ========================================== */
+
+    async function logout() {
+
+      await supabaseClient.auth.signOut();
+
+      window.location.href = "login.html";
+
+    }
+
+
+    /* ==========================================
+       INIT
+    ========================================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      loadCustomers
+    );
+
+  </script>
+
+</body>
+</html>
