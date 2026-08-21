@@ -7,67 +7,291 @@
     <title>Login - WAT ERP</title>
 
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.10);
+            box-sizing: border-box;
+        }
+
+        .login-box h1 {
+            margin: 0;
+            color: #0866ff;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            margin: 5px 0 30px;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .login-box label {
+            display: block;
+            margin: 15px 0 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .login-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border: 1px solid #d8dee9;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .login-box input:focus {
+            border-color: #0866ff;
+            box-shadow: 0 0 0 3px rgba(8,102,255,.10);
+        }
+
+        .login-box button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            border: 0;
+            border-radius: 8px;
+            background: #0866ff;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-box button:hover {
+            background: #0757d9;
+        }
+
+        .login-box button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        #loginMessage {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            min-height: 18px;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .success {
+            color: #16a34a;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="login-container">
+<div class="login-container">
 
-        <div class="login-box">
+    <div class="login-box">
 
-            <h1>WAT ERP</h1>
+        <h1>WAT ERP</h1>
 
-            <p class="subtitle">
-                Technician Control System
-            </p>
+        <p class="subtitle">
+            Technician Control System
+        </p>
 
-            <form id="loginForm">
+        <form id="loginForm">
 
-                <label for="username">
-                    Email
-                </label>
+            <label for="username">
+                Email
+            </label>
 
-                <input
-                    type="email"
-                    id="username"
-                    placeholder="Masukkan email"
-                    autocomplete="username"
-                    required
-                >
+            <input
+                type="email"
+                id="username"
+                placeholder="Masukkan email"
+                autocomplete="username"
+                required
+            >
 
-                <label for="password">
-                    Password
-                </label>
+            <label for="password">
+                Password
+            </label>
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Masukkan password"
-                    autocomplete="current-password"
-                    required
-                >
+            <input
+                type="password"
+                id="password"
+                placeholder="Masukkan password"
+                autocomplete="current-password"
+                required
+            >
 
-                <button type="submit" id="loginButton">
-                    LOGIN
-                </button>
+            <button type="submit" id="loginButton">
+                LOGIN
+            </button>
 
-            </form>
+        </form>
 
-            <p id="loginMessage"></p>
-
-        </div>
+        <p id="loginMessage"></p>
 
     </div>
 
+</div>
 
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- WAT ERP Configuration -->
-    <script src="assets/js/config.js"></script>
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- WAT ERP Application -->
-    <script src="assets/js/app.js"></script>
+<!-- WAT ERP Configuration -->
+<script src="assets/js/config.js"></script>
+
+<script>
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const loginMessage = document.getElementById("loginMessage");
+
+    function showMessage(message, type = "error") {
+        loginMessage.textContent = message;
+        loginMessage.className = type;
+    }
+
+    loginForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const email = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+            showMessage("Email dan password wajib diisi.");
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "MEMPROSES...";
+        showMessage("");
+
+        try {
+
+            // LOGIN SUPABASE
+            const {
+                data: authData,
+                error: authError
+            } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (authError) {
+                throw new Error(authError.message);
+            }
+
+            if (!authData.user) {
+                throw new Error("User tidak ditemukan.");
+            }
+
+            // AMBIL PROFILE USER
+            const {
+                data: profile,
+                error: profileError
+            } = await supabaseClient
+                .from("profiles")
+                .select("id, full_name, email, role, status")
+                .eq("id", authData.user.id)
+                .single();
+
+            if (profileError) {
+                await supabaseClient.auth.signOut();
+                throw new Error(
+                    "Profile user tidak ditemukan: " +
+                    profileError.message
+                );
+            }
+
+            // CEK STATUS
+            if (profile.status !== "ACTIVE") {
+
+                await supabaseClient.auth.signOut();
+
+                throw new Error(
+                    "Akun belum aktif. Hubungi owner."
+                );
+            }
+
+            // SIMPAN DATA PROFILE
+            localStorage.setItem(
+                "wat_user_profile",
+                JSON.stringify(profile)
+            );
+
+            showMessage(
+                "Login berhasil. Membuka sistem...",
+                "success"
+            );
+
+            // ============================
+            // REDIRECT BERDASARKAN ROLE
+            // ============================
+
+            if (profile.role === "OWNER") {
+
+                window.location.href = "dashboard-owner.html";
+
+            } else if (profile.role === "TEKNISI") {
+
+                window.location.href = "technician.html";
+
+            } else {
+
+                await supabaseClient.auth.signOut();
+
+                throw new Error(
+                    "Role akun tidak dikenali: " + profile.role
+                );
+            }
+
+        } catch (error) {
+
+            console.error("LOGIN ERROR:", error);
+
+            showMessage(
+                "Login gagal: " + error.message,
+                "error"
+            );
+
+            loginButton.disabled = false;
+            loginButton.textContent = "LOGIN";
+        }
+
+    });
+
+</script>
 
 </body>
 </html>
