@@ -9,101 +9,31 @@
     <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-        }
-
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            padding: 35px;
-            border-radius: 16px;
-            box-shadow: 0 10px 35px rgba(0,0,0,.10);
-            box-sizing: border-box;
-        }
-
-        .login-box h1 {
-            margin: 0;
-            color: #0866ff;
-            font-size: 32px;
-            font-weight: 800;
-        }
-
-        .subtitle {
-            margin: 5px 0 30px;
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .login-box label {
+        .forgot-password {
             display: block;
-            margin: 15px 0 7px;
+            text-align: center;
+            margin-top: 14px;
+            color: #0866ff;
+            text-decoration: none;
             font-size: 13px;
-            font-weight: 700;
-            color: #334155;
-        }
-
-        .login-box input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 13px 14px;
-            border: 1px solid #d8dee9;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .login-box input:focus {
-            border-color: #0866ff;
-            box-shadow: 0 0 0 3px rgba(8,102,255,.10);
-        }
-
-        .login-box button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 13px;
-            border: 0;
-            border-radius: 8px;
-            background: #0866ff;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
             cursor: pointer;
         }
 
-        .login-box button:hover {
-            background: #0757d9;
+        .forgot-password:hover {
+            text-decoration: underline;
         }
 
-        .login-box button:disabled {
-            opacity: .6;
-            cursor: not-allowed;
+        .reset-box {
+            display: none;
         }
 
-        #loginMessage {
-            margin-top: 15px;
+        .back-login {
+            display: block;
             text-align: center;
+            margin-top: 14px;
+            color: #0866ff;
             font-size: 13px;
-            min-height: 18px;
-        }
-
-        .error {
-            color: #dc2626;
-        }
-
-        .success {
-            color: #16a34a;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -112,7 +42,8 @@
 
 <div class="login-container">
 
-    <div class="login-box">
+    <!-- LOGIN -->
+    <div class="login-box" id="loginBox">
 
         <h1>WAT ERP</h1>
 
@@ -152,144 +83,272 @@
 
         </form>
 
+        <a class="forgot-password" onclick="showReset()">
+            Lupa Password?
+        </a>
+
         <p id="loginMessage"></p>
+
+    </div>
+
+
+    <!-- RESET REQUEST -->
+    <div class="login-box reset-box" id="resetBox">
+
+        <h1>WAT ERP</h1>
+
+        <p class="subtitle">
+            Reset Password
+        </p>
+
+        <p style="font-size:13px;color:#718096;margin-bottom:20px;">
+            Masukkan email akun Anda. Link reset password akan dikirim ke email tersebut.
+        </p>
+
+        <form id="resetForm">
+
+            <label for="resetEmail">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="resetEmail"
+                placeholder="Masukkan email"
+                required
+            >
+
+            <button type="submit" id="resetButton">
+                KIRIM LINK RESET
+            </button>
+
+        </form>
+
+        <p id="resetMessage"></p>
+
+        <span class="back-login" onclick="showLogin()">
+            ← Kembali ke Login
+        </span>
 
     </div>
 
 </div>
 
 
-<!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- WAT ERP Configuration -->
 <script src="assets/js/config.js"></script>
+
 
 <script>
 
-    const supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
-    const loginForm = document.getElementById("loginForm");
-    const loginButton = document.getElementById("loginButton");
-    const loginMessage = document.getElementById("loginMessage");
 
-    function showMessage(message, type = "error") {
-        loginMessage.textContent = message;
-        loginMessage.className = type;
+/* =========================
+   LOGIN
+========================= */
+
+document.getElementById("loginForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const email =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const button =
+        document.getElementById("loginButton");
+
+    const message =
+        document.getElementById("loginMessage");
+
+    button.disabled = true;
+    button.textContent = "LOGIN...";
+
+    message.textContent = "";
+    message.style.color = "red";
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if(error){
+
+        message.textContent =
+            "Login gagal: " + error.message;
+
+        button.disabled = false;
+        button.textContent = "LOGIN";
+
+        return;
     }
 
-    loginForm.addEventListener("submit", async function(event) {
 
-        event.preventDefault();
+    /*
+       Ambil profile user
+    */
 
-        const email = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
+    const user = data.user;
 
-        if (!email || !password) {
-            showMessage("Email dan password wajib diisi.");
-            return;
-        }
+    const { data: profile, error: profileError } =
+        await supabaseClient
+            .from("profiles")
+            .select("role,status")
+            .eq("id", user.id)
+            .single();
 
-        loginButton.disabled = true;
-        loginButton.textContent = "MEMPROSES...";
-        showMessage("");
 
-        try {
+    if(profileError){
 
-            // LOGIN SUPABASE
-            const {
-                data: authData,
-                error: authError
-            } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+        message.textContent =
+            "Login berhasil, tetapi profile tidak ditemukan.";
 
-            if (authError) {
-                throw new Error(authError.message);
+        button.disabled = false;
+        button.textContent = "LOGIN";
+
+        return;
+    }
+
+
+    if(profile.status !== "ACTIVE"){
+
+        await supabaseClient.auth.signOut();
+
+        message.textContent =
+            "Akun tidak aktif.";
+
+        button.disabled = false;
+        button.textContent = "LOGIN";
+
+        return;
+    }
+
+
+    /*
+       REDIRECT BERDASARKAN ROLE
+    */
+
+    if(profile.role === "OWNER"){
+
+        window.location.href =
+            "dashboard-owner.html";
+
+    }
+    else if(profile.role === "TEKNISI"){
+
+        window.location.href =
+            "technician.html";
+
+    }
+    else{
+
+        message.textContent =
+            "Role akun tidak dikenali.";
+
+        await supabaseClient.auth.signOut();
+
+        button.disabled = false;
+        button.textContent = "LOGIN";
+    }
+
+});
+
+
+/* =========================
+   RESET PASSWORD REQUEST
+========================= */
+
+document.getElementById("resetForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const email =
+        document.getElementById("resetEmail").value.trim();
+
+    const button =
+        document.getElementById("resetButton");
+
+    const message =
+        document.getElementById("resetMessage");
+
+    button.disabled = true;
+    button.textContent = "MENGIRIM...";
+
+    message.textContent = "";
+    message.style.color = "#333";
+
+
+    const redirectUrl =
+        window.location.origin +
+        window.location.pathname.replace(
+            "login.html",
+            "reset-password.html"
+        );
+
+
+    const { error } =
+        await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+                redirectTo: redirectUrl
             }
+        );
 
-            if (!authData.user) {
-                throw new Error("User tidak ditemukan.");
-            }
 
-            // AMBIL PROFILE USER
-            const {
-                data: profile,
-                error: profileError
-            } = await supabaseClient
-                .from("profiles")
-                .select("id, full_name, email, role, status")
-                .eq("id", authData.user.id)
-                .single();
+    if(error){
 
-            if (profileError) {
-                await supabaseClient.auth.signOut();
-                throw new Error(
-                    "Profile user tidak ditemukan: " +
-                    profileError.message
-                );
-            }
+        message.style.color = "red";
 
-            // CEK STATUS
-            if (profile.status !== "ACTIVE") {
+        message.textContent =
+            "Gagal mengirim: " + error.message;
 
-                await supabaseClient.auth.signOut();
+        button.disabled = false;
+        button.textContent = "KIRIM LINK RESET";
 
-                throw new Error(
-                    "Akun belum aktif. Hubungi owner."
-                );
-            }
+        return;
+    }
 
-            // SIMPAN DATA PROFILE
-            localStorage.setItem(
-                "wat_user_profile",
-                JSON.stringify(profile)
-            );
 
-            showMessage(
-                "Login berhasil. Membuka sistem...",
-                "success"
-            );
+    message.style.color = "green";
 
-            // ============================
-            // REDIRECT BERDASARKAN ROLE
-            // ============================
+    message.textContent =
+        "Link reset password sudah dikirim. Silakan cek email Anda.";
 
-            if (profile.role === "OWNER") {
+    button.disabled = false;
+    button.textContent = "KIRIM LINK RESET";
 
-                window.location.href = "dashboard-owner.html";
+});
 
-            } else if (profile.role === "TEKNISI") {
 
-                window.location.href = "technician.html";
+/* =========================
+   UI
+========================= */
 
-            } else {
+function showReset(){
 
-                await supabaseClient.auth.signOut();
+    document.getElementById("loginBox").style.display = "none";
 
-                throw new Error(
-                    "Role akun tidak dikenali: " + profile.role
-                );
-            }
+    document.getElementById("resetBox").style.display = "block";
 
-        } catch (error) {
+    document.getElementById("resetEmail").value =
+        document.getElementById("username").value;
+}
 
-            console.error("LOGIN ERROR:", error);
 
-            showMessage(
-                "Login gagal: " + error.message,
-                "error"
-            );
+function showLogin(){
 
-            loginButton.disabled = false;
-            loginButton.textContent = "LOGIN";
-        }
+    document.getElementById("resetBox").style.display = "none";
 
-    });
+    document.getElementById("loginBox").style.display = "block";
+}
 
 </script>
 
