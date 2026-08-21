@@ -1135,152 +1135,108 @@ async function loadTechnicians(){
 async function findOrCreateCustomer(){
 
   const name =
-    document
-      .getElementById("customerName")
-      .value
-      .trim();
+    document.getElementById("customerName").value.trim();
 
   const whatsapp =
-    document
-      .getElementById("customerWhatsapp")
-      .value
-      .trim();
+    document.getElementById("customerWhatsapp").value.trim();
 
   const address =
-    document
-      .getElementById("customerAddress")
-      .value
-      .trim();
-
+    document.getElementById("customerAddress").value.trim();
 
   if(!name || !whatsapp || !address){
-
     throw new Error(
       "Nama customer, WhatsApp dan alamat wajib diisi."
     );
-
   }
 
+  const normalized = normalizePhone(whatsapp);
 
-  const normalized =
-    normalizePhone(whatsapp);
-
-
-  /*
-    Cari berdasarkan nomor WhatsApp.
-  */
-
+  /* Cari customer berdasarkan WhatsApp */
   const {
-    data:existing,
-    error:findError
+    data: existing,
+    error: findError
   } = await supabaseClient
     .from("customers")
     .select("*")
-    .eq("whatsapp",normalized)
+    .eq("whatsapp", normalized)
     .limit(1);
 
-
   if(findError){
-
     throw findError;
-
   }
 
-
+  /* Jika customer sudah ada */
   if(existing && existing.length){
 
     const customer = existing[0];
 
-    /*
-      Update nama/alamat/nomor jika diperlukan.
-    */
-
-    const {data:updated,error:updateError} =
-      await supabaseClient
-        .from("customers")
-        .update({
-          name:name,
-          whatsapp:normalized,
-          phone:normalized,
-          address:address
-        })
-        .eq("id",customer.id)
-        .select()
-        .single();
-
+    const {
+      data: updated,
+      error: updateError
+    } = await supabaseClient
+      .from("customers")
+      .update({
+        name: name,
+        whatsapp: normalized,
+        phone: normalized,
+        address: address
+      })
+      .eq("id", customer.id)
+      .select()
+      .single();
 
     if(updateError){
-
       throw updateError;
-
     }
 
     return updated;
-
   }
 
-
-  /*
-    Customer baru.
-    Customer code otomatis.
-  */
-
+  /* Customer baru */
   const customerCode =
-    "CUS-" +
-    Date.now().toString().slice(-8);
-
+    "CUS-" + Date.now().toString().slice(-8);
 
   const customerPayload = {
 
-    customer_code:customerCode,
+    customer_code: customerCode,
 
-    name:name,
+    name: name,
 
-    whatsapp:normalized,
+    whatsapp: normalized,
 
-    phone:normalized,
+    phone: normalized,
 
-    email:null,
+    email: null,
 
-    address:address,
+    address: address,
 
-    city:null,
+    city: null,
 
-    customer_type:"RESIDENTIAL",
+    customer_type: "RESIDENTIAL",
 
-    status:"ACTIVE",
+    status: "ACTIVE",
 
-    note:"Dibuat otomatis dari Jadwal Teknisi",
-
-    created_by:
-      currentUser
-        ? currentUser.id
-        : null
+    created_by: currentUser
+      ? currentUser.id
+      : null
 
   };
 
-
   const {
-    data:newCustomer,
-    error:createError
+    data: newCustomer,
+    error: createError
   } = await supabaseClient
     .from("customers")
     .insert(customerPayload)
     .select()
     .single();
 
-
   if(createError){
-
     throw createError;
-
   }
 
-
   return newCustomer;
-
 }
-
 
 /* ================= LOAD JOBS ================= */
 
