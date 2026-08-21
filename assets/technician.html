@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Saya - WAT ERP</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f7fb;
+  color:#172033;
+}
+.header{
+  min-height:72px;
+  background:linear-gradient(135deg,#0866ff,#1976f3);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+.brand h2{font-size:21px}
+.brand span{display:block;font-size:11px;margin-top:3px;opacity:.82}
+.user-box{display:flex;align-items:center;gap:12px}
+.user-name{font-size:13px;font-weight:bold}
+.logout{
+  border:0;background:#fff;color:#0866ff;
+  padding:9px 14px;border-radius:7px;
+  font-weight:bold;cursor:pointer
+}
+.container{max-width:1050px;margin:24px auto;padding:0 16px 40px}
+.page-title{margin-bottom:20px}
+.page-title h1{font-size:27px;margin-bottom:5px}
+.page-title p{font-size:13px;color:#718096}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:18px
+}
+.stat{
+  background:#fff;border-radius:12px;padding:17px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06)
+}
+.stat small{display:block;color:#718096;font-size:12px}
+.stat strong{display:block;font-size:25px;margin-top:7px}
+.toolbar{
+  background:#fff;border-radius:12px;padding:13px;
+  margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,.06);
+  display:flex;gap:10px
+}
+.search{
+  flex:1;border:1px solid #d8dee9;border-radius:8px;
+  padding:11px 13px;outline:none
+}
+select{
+  border:1px solid #d8dee9;border-radius:8px;
+  padding:11px 13px;background:#fff;outline:none
+}
+.search:focus,select:focus{
+  border-color:#0866ff;
+  box-shadow:0 0 0 3px rgba(8,102,255,.1)
+}
+.job-list{display:grid;gap:14px}
+.job-card{
+  background:#fff;border-radius:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.07);
+  overflow:hidden
+}
+.job-top{
+  padding:16px 18px;
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:12px;
+  border-bottom:1px solid #edf0f4
+}
+.job-time{
+  color:#0866ff;font-size:20px;font-weight:bold
+}
+.job-date{font-size:12px;color:#718096;margin-top:4px}
+.badge{
+  display:inline-block;padding:7px 10px;border-radius:20px;
+  font-size:10px;font-weight:bold
+}
+.s-new{background:#e8f0fe;color:#0866ff}
+.s-assigned{background:#fff4d6;color:#9a6700}
+.s-way{background:#e8f8ee;color:#16834b}
+.s-checkin{background:#e8f3ff;color:#1464a5}
+.s-progress{background:#fff0df;color:#c2410c}
+.s-completed{background:#e4f7e9;color:#15803d}
+.s-cancelled{background:#fee2e2;color:#b91c1c}
+.job-body{padding:17px 18px}
+.customer-name{font-size:18px;font-weight:bold;margin-bottom:6px}
+.phone{
+  display:inline-block;color:#0a9f54;
+  text-decoration:none;font-weight:bold;font-size:13px;
+  margin-bottom:10px
+}
+.phone:hover{text-decoration:underline}
+.info{
+  color:#526071;font-size:13px;line-height:1.55;
+  margin-top:7px
+}
+.info strong{color:#344054}
+.work{
+  background:#f8fafc;border-radius:9px;
+  padding:12px;margin-top:12px;font-size:13px;line-height:1.5
+}
+.job-actions{
+  padding:13px 18px;
+  border-top:1px solid #edf0f4;
+  display:flex;gap:8px;flex-wrap:wrap
+}
+.btn{
+  border:0;border-radius:8px;padding:10px 13px;
+  font-size:12px;font-weight:bold;cursor:pointer
+}
+.btn-blue{background:#0866ff;color:#fff}
+.btn-green{background:#e8f8ee;color:#16834b}
+.btn-gray{background:#eef2f7;color:#344054}
+.btn-orange{background:#fff0df;color:#c2410c}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.empty{
+  background:#fff;border-radius:12px;
+  padding:45px 20px;text-align:center;color:#718096;
+  box-shadow:0 3px 12px rgba(0,0,0,.06)
+}
+.loading{text-align:center;color:#718096;padding:40px}
+.modal{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(15,23,42,.6);
+  align-items:center;justify-content:center;padding:16px
+}
+.modal.show{display:flex}
+.modal-box{
+  width:100%;max-width:650px;max-height:92vh;
+  overflow-y:auto;background:#fff;border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.22)
+}
+.modal-header{
+  padding:18px 20px;border-bottom:1px solid #e5e7eb;
+  display:flex;justify-content:space-between;align-items:center
+}
+.modal-header h2{font-size:18px}
+.close{
+  border:0;background:transparent;font-size:25px;
+  color:#64748b;cursor:pointer
+}
+.detail-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;padding:20px
+}
+.detail-item{
+  background:#f8fafc;padding:12px;border-radius:9px
+}
+.detail-item.full{grid-column:1/-1}
+.detail-item small{
+  display:block;color:#718096;font-size:11px;margin-bottom:5px
+}
+.detail-item strong{font-size:13px;line-height:1.45}
+.detail-actions{
+  padding:0 20px 20px;display:flex;gap:8px;flex-wrap:wrap
+}
+.status-buttons{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:9px;padding:0 20px 20px
+}
+.status-btn{
+  border:1px solid #d8dee9;background:#fff;
+  border-radius:8px;padding:11px;cursor:pointer;
+  font-weight:bold;font-size:12px
+}
+.status-btn:hover{border-color:#0866ff;color:#0866ff}
+.error{
+  background:#fee2e2;color:#b91c1c;
+  padding:12px;border-radius:8px;font-size:12px;
+  margin:15px 20px
+}
+@media(max-width:700px){
+  .header{padding:0 14px}
+  .user-name{display:none}
+  .container{margin:18px auto;padding:0 12px 30px}
+  .stats{grid-template-columns:1fr}
+  .toolbar{flex-direction:column}
+  .job-top{align-items:flex-start}
+  .detail-grid{grid-template-columns:1fr}
+  .detail-item.full{grid-column:auto}
+  .status-buttons{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="brand">
+    <h2>WAT ERP</h2>
+    <span>Jadwal & Progres Teknisi</span>
+  </div>
+
+  <div class="user-box">
+    <div class="user-name" id="userName">Teknisi</div>
+    <button class="logout" onclick="logout()">LOGOUT</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="page-title">
+    <h1>Jadwal Saya</h1>
+    <p>Daftar pekerjaan yang ditugaskan kepada Anda.</p>
+  </div>
+
+  <section class="stats">
+    <div class="stat">
+      <small>Total Jadwal</small>
+      <strong id="totalCount">0</strong>
+    </div>
+    <div class="stat">
+      <small>Hari Ini</small>
+      <strong id="todayCount">0</strong>
+    </div>
+    <div class="stat">
+      <small>Belum Selesai</small>
+      <strong id="pendingCount">0</strong>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <input
+      id="searchInput"
+      class="search"
+      placeholder="Cari customer, alamat, pekerjaan..."
+      oninput="renderJobs()"
+    >
+
+    <select id="statusFilter" onchange="renderJobs()">
+      <option value="">Semua Status</option>
+      <option value="NEW">Baru</option>
+      <option value="ASSIGNED">Assigned</option>
+      <option value="ON_THE_WAY">OTW</option>
+      <option value="CHECKED_IN">Check In</option>
+      <option value="IN_PROGRESS">Proses</option>
+      <option value="COMPLETED">Selesai</option>
+      <option value="CANCELLED">Dibatalkan</option>
+    </select>
+  </section>
+
+  <section id="jobList" class="job-list">
+    <div class="loading">Memuat jadwal...</div>
+  </section>
+
+</main>
+
+
+<!-- DETAIL -->
+
+<div class="modal" id="detailModal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>Detail Pekerjaan</h2>
+      <button class="close" onclick="closeDetail()">×</button>
+    </div>
+
+    <div id="detailContent"></div>
+
+    <div class="detail-actions" id="detailActions"></div>
+
+    <div style="padding:0 20px 10px">
+      <strong style="font-size:13px">Update Status</strong>
+    </div>
+
+    <div class="status-buttons">
+
+      <button class="status-btn" onclick="updateStatusFromModal('ON_THE_WAY')">
+        🚗 Menuju Lokasi
+      </button>
+
+      <button class="status-btn" onclick="updateStatusFromModal('CHECKED_IN')">
+        📍 Check In
+      </button>
+
+      <button class="status-btn" onclick="updateStatusFromModal('IN_PROGRESS')">
+        🔧 Mulai Pekerjaan
+      </button>
+
+      <button class="status-btn" onclick="updateStatusFromModal('COMPLETED')">
+        ✅ Selesai
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const { createClient } = window.supabase;
+
+const supabaseClient =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+let currentUser = null;
+let currentProfile = null;
+let jobs = [];
+let customers = [];
+let activeJobId = null;
+
+
+/* ================= UTIL ================= */
+
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function normalizePhone(phone){
+
+  let p = String(phone || "")
+    .replace(/\D/g,"");
+
+  if(p.startsWith("0")){
+    p = "62" + p.substring(1);
+  }
+
+  if(!p.startsWith("62")){
+    p = "62" + p;
+  }
+
+  return p;
+}
+
+
+function waUrl(phone){
+  return "https://wa.me/" + normalizePhone(phone);
+}
+
+
+function statusText(status){
+
+  const map = {
+    NEW:"Baru",
+    ASSIGNED:"Assigned",
+    ON_THE_WAY:"OTW",
+    CHECKED_IN:"Check In",
+    IN_PROGRESS:"Proses",
+    COMPLETED:"Selesai",
+    CANCELLED:"Dibatalkan"
+  };
+
+  return map[status] || status || "-";
+}
+
+
+function statusClass(status){
+
+  const map = {
+    NEW:"s-new",
+    ASSIGNED:"s-assigned",
+    ON_THE_WAY:"s-way",
+    CHECKED_IN:"s-checkin",
+    IN_PROGRESS:"s-progress",
+    COMPLETED:"s-completed",
+    CANCELLED:"s-cancelled"
+  };
+
+  return map[status] || "s-new";
+}
+
+
+function getToday(){
+
+  const d = new Date();
+
+  return new Date(
+    d.getTime() -
+    d.getTimezoneOffset() * 60000
+  ).toISOString().slice(0,10);
+
+}
+
+
+function getJobDate(job){
+
+  if(!job.scheduled_at)
+    return "-";
+
+  return new Date(job.scheduled_at)
+    .toLocaleDateString(
+      "id-ID",
+      {
+        weekday:"long",
+        day:"2-digit",
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+}
+
+
+function getJobTime(job){
+
+  if(!job.scheduled_at)
+    return "-";
+
+  return new Date(job.scheduled_at)
+    .toLocaleTimeString(
+      "id-ID",
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    );
+
+}
+
+
+function customerData(id){
+
+  return customers.find(
+    c => c.id === id
+  ) || null;
+
+}
+
+
+/* ================= AUTH ================= */
+
+async function checkTechnician(){
+
+  const {
+    data:{user},
+    error:authError
+  } =
+  await supabaseClient
+    .auth
+    .getUser();
+
+  if(authError || !user){
+
+    location.href = "login.html";
+
+    return false;
+  }
+
+  currentUser = user;
+
+
+  const {
+    data:profile,
+    error
+  } =
+  await supabaseClient
+    .from("profiles")
+    .select(
+      "id,full_name,email,role,status"
+    )
+    .eq("id",user.id)
+    .single();
+
+
+  if(
+    error ||
+    !profile ||
+    profile.status !== "ACTIVE"
+  ){
+
+    await supabaseClient
+      .auth
+      .signOut();
+
+    location.href = "login.html";
+
+    return false;
+  }
+
+
+  /*
+    Halaman ini khusus akun TEKNISI.
+  */
+
+  if(profile.role !== "TEKNISI"){
+
+    location.href = "index.html";
+
+    return false;
+  }
+
+
+  currentProfile = profile;
+
+
+  document.getElementById("userName")
+    .textContent =
+      profile.full_name ||
+      profile.email ||
+      "Teknisi";
+
+
+  return true;
+
+}
+
+
+async function logout(){
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+  location.href = "login.html";
+
+}
+
+
+/* ================= DATA ================= */
+
+async function loadCustomers(){
+
+  /*
+    Kita ambil hanya customer yang dibutuhkan
+    dari job setelah jobs berhasil dimuat.
+  */
+
+  customers = [];
+
+}
+
+
+async function loadJobs(){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("jobs")
+    .select("*")
+    .eq("assigned_to",currentUser.id)
+    .order(
+      "scheduled_at",
+      {ascending:true}
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    document.getElementById("jobList")
+      .innerHTML =
+        `<div class="error">
+          Gagal memuat jadwal:<br>
+          ${esc(error.message)}
+        </div>`;
+
+    return;
+  }
+
+
+  jobs = data || [];
+
+
+  await loadJobCustomers();
+
+  renderSummary();
+
+  renderJobs();
+
+}
+
+
+async function loadJobCustomers(){
+
+  const ids =
+    [...new Set(
+      jobs
+        .map(j => j.customer_id)
+        .filter(Boolean)
+    )];
+
+
+  if(!ids.length){
+
+    customers = [];
+
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("customers")
+    .select(
+      "id,customer_code,name,whatsapp,phone,address,city"
+    )
+    .in("id",ids);
+
+
+  if(error){
+
+    console.error(error);
+
+    customers = [];
+
+    return;
+  }
+
+
+  customers = data || [];
+
+}
+
+
+/* ================= SUMMARY ================= */
+
+function renderSummary(){
+
+  const today =
+    getToday();
+
+
+  document.getElementById("totalCount")
+    .textContent =
+      jobs.length;
+
+
+  document.getElementById("todayCount")
+    .textContent =
+      jobs.filter(j =>
+        String(
+          j.scheduled_at || ""
+        ).slice(0,10) === today
+      ).length;
+
+
+  document.getElementById("pendingCount")
+    .textContent =
+      jobs.filter(j =>
+        ![
+          "COMPLETED",
+          "CANCELLED"
+        ].includes(j.status)
+      ).length;
+
+}
+
+
+/* ================= RENDER ================= */
+
+function renderJobs(){
+
+  const query =
+    document.getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filter =
+    document.getElementById("statusFilter")
+      .value;
+
+
+  const rows =
+    jobs.filter(job => {
+
+      const c =
+        customerData(
+          job.customer_id
+        );
+
+
+      const text = [
+
+        c?.name || "",
+        c?.whatsapp || "",
+        c?.phone || "",
+        c?.address || "",
+        job.description || "",
+        job.title || "",
+        job.job_code || ""
+
+      ]
+      .join(" ")
+      .toLowerCase();
+
+
+      return (
+        (!query || text.includes(query)) &&
+        (!filter || job.status === filter)
+      );
+
+    });
+
+
+  const list =
+    document.getElementById("jobList");
+
+
+  if(!rows.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        <strong>Tidak ada jadwal.</strong>
+        <p style="margin-top:7px">
+          Belum ada pekerjaan yang sesuai.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  list.innerHTML =
+    rows.map(job => {
+
+      const c =
+        customerData(
+          job.customer_id
+        );
+
+
+      const name =
+        c?.name ||
+        "Customer";
+
+
+      const phone =
+        c?.whatsapp ||
+        c?.phone ||
+        "";
+
+
+      const address =
+        c?.address ||
+        "-";
+
+
+      const wa =
+        phone
+          ? `
+            <a
+              class="phone"
+              href="${waUrl(phone)}"
+              target="_blank"
+              rel="noopener"
+              onclick="event.stopPropagation()"
+            >
+              💬 ${esc(phone)}
+            </a>
+          `
+          : "";
+
+
+      return `
+
+        <article class="job-card">
+
+          <div class="job-top">
+
+            <div>
+
+              <div class="job-time">
+                ${esc(getJobTime(job))}
+              </div>
+
+              <div class="job-date">
+                ${esc(getJobDate(job))}
+              </div>
+
+            </div>
+
+
+            <span
+              class="badge ${statusClass(job.status)}"
+            >
+              ${esc(statusText(job.status))}
+            </span>
+
+          </div>
+
+
+          <div class="job-body">
+
+            <div class="customer-name">
+              ${esc(name)}
+            </div>
+
+            ${wa}
+
+
+            <div class="info">
+              <strong>📍 Alamat:</strong><br>
+              ${esc(address)}
+            </div>
+
+
+            <div class="work">
+
+              <strong>🔧 Pekerjaan</strong>
+
+              <div style="margin-top:5px">
+                ${esc(
+                  job.description ||
+                  job.title ||
+                  "-"
+                )}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="job-actions">
+
+            <button
+              class="btn btn-blue"
+              onclick="showDetail('${job.id}')"
+            >
+              Detail
+            </button>
+
+
+            ${
+              phone
+              ?
+              `
+              <a
+                class="btn btn-green"
+                href="${waUrl(phone)}"
+                target="_blank"
+                rel="noopener"
+                style="text-decoration:none"
+              >
+                💬 WhatsApp
+              </a>
+              `
+              :
+              ""
+            }
+
+
+            ${
+              job.status !== "COMPLETED" &&
+              job.status !== "CANCELLED"
+              ?
+              `
+              <button
+                class="btn btn-orange"
+                onclick="quickNextStatus('${job.id}')"
+              >
+                Update Progres
+              </button>
+              `
+              :
+              ""
+            }
+
+          </div>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* ================= DETAIL ================= */
+
+function showDetail(id){
+
+  const job =
+    jobs.find(
+      j => j.id === id
+    );
+
+
+  if(!job) return;
+
+
+  activeJobId = id;
+
+
+  const c =
+    customerData(
+      job.customer_id
+    );
+
+
+  const phone =
+    c?.whatsapp ||
+    c?.phone ||
+    "";
+
+
+  const wa =
+    phone
+      ?
+      `
+      <a
+        href="${waUrl(phone)}"
+        target="_blank"
+        rel="noopener"
+        class="btn btn-green"
+        style="text-decoration:none"
+      >
+        💬 Chat WhatsApp
+      </a>
+      `
+      :
+      "";
+
+
+  document.getElementById("detailContent")
+    .innerHTML = `
+
+      <div class="detail-grid">
+
+        <div class="detail-item">
+
+          <small>Tanggal</small>
+
+          <strong>
+            ${esc(getJobDate(job))}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Jam</small>
+
+          <strong>
+            ${esc(getJobTime(job))}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Customer</small>
+
+          <strong>
+            ${esc(c?.name || "-")}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Status</small>
+
+          <span class="badge ${statusClass(job.status)}">
+            ${esc(statusText(job.status))}
+          </span>
+
+        </div>
+
+
+        <div class="detail-item full">
+
+          <small>No. WhatsApp</small>
+
+          <strong>
+            ${esc(phone || "-")}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item full">
+
+          <small>Alamat Customer</small>
+
+          <strong>
+            ${esc(c?.address || "-")}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item full">
+
+          <small>Keterangan Pekerjaan</small>
+
+          <strong>
+            ${esc(
+              job.description ||
+              job.title ||
+              "-"
+            )}
+          </strong>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+  document.getElementById("detailActions")
+    .innerHTML = wa;
+
+
+  document.getElementById("detailModal")
+    .classList.add("show");
+
+}
+
+
+function closeDetail(){
+
+  document.getElementById("detailModal")
+    .classList.remove("show");
+
+  activeJobId = null;
+
+}
+
+
+/* ================= STATUS ================= */
+
+function nextStatus(status){
+
+  const flow = {
+
+    NEW:"ON_THE_WAY",
+
+    ASSIGNED:"ON_THE_WAY",
+
+    ON_THE_WAY:"CHECKED_IN",
+
+    CHECKED_IN:"IN_PROGRESS",
+
+    IN_PROGRESS:"COMPLETED"
+
+  };
+
+
+  return flow[status] || null;
+
+}
+
+
+async function quickNextStatus(id){
+
+  const job =
+    jobs.find(
+      j => j.id === id
+    );
+
+
+  if(!job) return;
+
+
+  const next =
+    nextStatus(job.status);
+
+
+  if(!next){
+
+    alert(
+      "Status pekerjaan ini tidak dapat dilanjutkan."
+    );
+
+    return;
+  }
+
+
+  const confirmText = {
+
+    ON_THE_WAY:
+      "Tandai pekerjaan sebagai MENUJU LOKASI?",
+
+    CHECKED_IN:
+      "Tandai sudah CHECK IN di lokasi?",
+
+    IN_PROGRESS:
+      "Mulai pekerjaan sekarang?",
+
+    COMPLETED:
+      "Tandai pekerjaan sebagai SELESAI?"
+
+  };
+
+
+  if(
+    !confirm(
+      confirmText[next] ||
+      "Update status pekerjaan?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  await updateJobStatus(
+    id,
+    next
+  );
+
+}
+
+
+async function updateStatusFromModal(status){
+
+  if(!activeJobId)
+    return;
+
+
+  const job =
+    jobs.find(
+      j => j.id === activeJobId
+    );
+
+
+  if(!job)
+    return;
+
+
+  /*
+    Jangan mengubah status mundur.
+  */
+
+  const order = {
+
+    NEW:0,
+    ASSIGNED:1,
+    ON_THE_WAY:2,
+    CHECKED_IN:3,
+    IN_PROGRESS:4,
+    COMPLETED:5,
+    CANCELLED:99
+
+  };
+
+
+  if(
+    status !== "CANCELLED" &&
+    order[status] < order[job.status]
+  ){
+
+    alert(
+      "Status tidak dapat dimundurkan."
+    );
+
+    return;
+  }
+
+
+  if(status === job.status){
+
+    alert(
+      "Status pekerjaan sudah " +
+      statusText(status) + "."
+    );
+
+    return;
+  }
+
+
+  await updateJobStatus(
+    activeJobId,
+    status
+  );
+
+}
+
+
+async function updateJobStatus(
+  id,
+  status
+){
+
+  try{
+
+    /*
+      Teknisi hanya bisa update job
+      miliknya sendiri.
+    */
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("jobs")
+      .update({
+        status:status,
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq("id",id)
+      .eq(
+        "assigned_to",
+        currentUser.id
+      )
+      .select()
+      .single();
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    /*
+      Update lokal supaya UI langsung berubah.
+    */
+
+    const index =
+      jobs.findIndex(
+        j => j.id === id
+      );
+
+
+    if(index >= 0){
+
+      jobs[index] = {
+        ...jobs[index],
+        ...data
+      };
+
+    }
+
+
+    renderSummary();
+
+    renderJobs();
+
+
+    if(activeJobId === id){
+
+      showDetail(id);
+
+    }
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Gagal update status:\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* ================= START ================= */
+
+async function init(){
+
+  const ok =
+    await checkTechnician();
+
+
+  if(!ok) return;
+
+
+  await loadJobs();
+
+}
+
+
+init();
+
+
+/* ================= MODAL OUTSIDE ================= */
+
+document
+  .getElementById("detailModal")
+  .addEventListener(
+    "click",
+    function(e){
+
+      if(e.target === this){
+
+        closeDetail();
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
