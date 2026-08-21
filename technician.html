@@ -858,41 +858,61 @@ async function init(){
 
 async function loadProfile(){
 
-    const {
-        data,
-        error
-    } = await supabaseClient
+    let data = null;
+    let error = null;
+
+    /*
+     * Normal case: profiles.id = auth.uid()
+     */
+    const byId = await supabaseClient
         .from("profiles")
         .select("id,full_name,email,role,status")
         .eq("id", currentUser.id)
-        .single();
+        .maybeSingle();
 
+    data = byId.data;
+    error = byId.error;
+
+    /*
+     * Fallback: if the profile was created with a different UUID,
+     * resolve it by the authenticated email.
+     */
+    if (!data && currentUser.email) {
+
+        const byEmail = await supabaseClient
+            .from("profiles")
+            .select("id,full_name,email,role,status")
+            .eq("email", currentUser.email)
+            .maybeSingle();
+
+        if (!byEmail.error && byEmail.data) {
+            data = byEmail.data;
+            error = null;
+        }
+    }
 
     if(error){
-
-        console.error(error);
+        console.error("PROFILE ERROR:", error);
 
         document.getElementById("userName").textContent =
             currentUser.email || "Teknisi";
 
         return;
-
     }
 
+    if(!data){
+        console.error("PROFILE TIDAK DITEMUKAN:", currentUser.id, currentUser.email);
+
+        document.getElementById("userName").textContent =
+            currentUser.email || "Teknisi";
+
+        return;
+    }
 
     currentProfile = data;
 
-
     document.getElementById("userName").textContent =
         data.full_name || data.email || "Teknisi";
-
-
-    /*
-       Pastikan akun yang login memang teknisi.
-       OWNER tetap bisa masuk untuk testing,
-       tapi halaman ini mengambil job berdasarkan ID user.
-    */
-
 }
 
 
@@ -902,178 +922,82 @@ async function loadProfile(){
 
 async function loadJobs(){
 
-    document.getElementById("jobsContainer").innerHTML =
+    const container =
+        document.getElementById("jobsContainer");
+
+    container.innerHTML =
         '<div class="loading">Memuat jadwal...</div>';
 
-
-    /*
-       Kita pakai assigned_to sebagai ID teknisi.
-       technician_id juga dicek sebagai fallback.
-    */
-
-    const [
-        assignedResult,
-        technicianResult
-    ] = await Promise.all([
-
-        supabaseClient
-            .from("jobs")
-            .select(`
-                id,
-                job_code,
-                customer_id,
-                technician_id,
-                created_by,
-                title,
-                description,
-                scheduled_at,
-                status,
-                started_at,
-                completed_at,
-                checkin_at,
-                checkout_at,
-                checkin_lat,
-                checkin_lng,
-                checkout_lat,
-                checkout_lng,
-                technician_notes,
-                created_at,
-                updated_at,
-                assigned_to,
-                job_type,
-                priority,
-                estimated_cost,
-                actual_cost,
-                service_price,
-                customer_name,
-                customer_phone,
-                customer_address,
-                work_description,
-                billing_detail,
-                billing_total,
-                billing_sent_at
-            `)
-            .eq("assigned_to", currentUser.id)
-            .order("scheduled_at", {
-                ascending:true,
-                nullsFirst:false
-            }),
-
-        supabaseClient
-            .from("jobs")
-            .select(`
-                id,
-                job_code,
-                customer_id,
-                technician_id,
-                created_by,
-                title,
-                description,
-                scheduled_at,
-                status,
-                started_at,
-                completed_at,
-                checkin_at,
-                checkout_at,
-                checkin_lat,
-                checkin_lng,
-                checkout_lat,
-                checkout_lng,
-                technician_notes,
-                created_at,
-                updated_at,
-                assigned_to,
-                job_type,
-                priority,
-                estimated_cost,
-                actual_cost,
-                service_price,
-                customer_name,
-                customer_phone,
-                customer_address,
-                work_description,
-                billing_detail,
-                billing_total,
-                billing_sent_at
-            `)
-            .eq("technician_id", currentUser.id)
-            .order("scheduled_at", {
-                ascending:true,
-                nullsFirst:false
-            })
-
-    ]);
-
-
-    if(assignedResult.error){
-
-        console.error(
-            "assigned_to error:",
-            assignedResult.error
-        );
-
+    if(!currentUser){
+        container.innerHTML =
+            '<div class="empty">Session teknisi tidak ditemukan.</div>';
+        return;
     }
 
+    /*
+     * Gunakan ID profile jika tersedia.
+     * Pada database kita, technician_id dan assigned_to
+     * menunjuk ke profiles.id.
+     */
+    const profileId =
+        currentProfile?.id || currentUser.id;
 
-    if(technicianResult.error){
+    const ids = [...new Set([
+        currentUser.id,
+        profileId
+    ].filter(Boolean))];
 
-        console.error(
-            "technician_id error:",
-            technicianResult.error
-        );
-
-    }
-
-
-    const combined = [
-        ...(assignedResult.data || []),
-        ...(technicianResult.data || [])
-    ];
-
+    let data = null;
+    let error = null;
 
     /*
-       Hilangkan job duplikat.
-    */
+     * Ambil job yang assigned_to ATAU technician_id cocok.
+     * Tidak memakai JOIN/relationship supaya query tidak gagal
+     * karena konfigurasi foreign key.
+     */
+    const result = await supabaseClient
+        .from("jobs")
+        .select("*")
+        .or(
+            ids.map(id =>
+                `assigned_to.eq.${id},technician_id.eq.${id}`
+            ).join(",")
+        )
+        .order("scheduled_at", {
+            ascending: true,
+            nullsFirst: false
+        });
 
-    const unique = [];
+    data = result.data;
+    error = result.error;
 
-    const seen = new Set();
+    if(error){
+        console.error("LOAD JOB ERROR:", error);
 
+        container.innerHTML = `
+            <div class="empty">
+                Gagal memuat jadwal.<br>
+                <small>${escapeHtml(error.message)}</small>
+            </div>
+        `;
 
-    combined.forEach(job => {
+        return;
+    }
 
-        if(!seen.has(job.id)){
+    jobs = data || [];
 
-            seen.add(job.id);
-            unique.push(job);
-
-        }
-
+    console.log("WAT ERP TECHNICIAN DEBUG", {
+        authUserId: currentUser.id,
+        authEmail: currentUser.email,
+        profileId: currentProfile?.id || null,
+        profileName: currentProfile?.full_name || null,
+        profileRole: currentProfile?.role || null,
+        jobsFound: jobs.length,
+        jobs: jobs
     });
-
-
-    jobs = unique;
-
-
-    jobs.sort((a,b) => {
-
-        const da = a.scheduled_at
-            ? new Date(a.scheduled_at)
-            : new Date(9999,0,1);
-
-        const db = b.scheduled_at
-            ? new Date(b.scheduled_at)
-            : new Date(9999,0,1);
-
-        return da - db;
-
-    });
-
 
     updateSummary();
-
     renderJobs();
-
 }
 
 
@@ -1181,7 +1105,7 @@ function renderJobs(){
 
         container.innerHTML = `
             <div class="empty">
-                Tidak ada jadwal yang sesuai.
+                Belum ada jadwal yang ditugaskan ke akun ini.
             </div>
         `;
 
