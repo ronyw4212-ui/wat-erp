@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Jadwal Teknisi - WAT ERP</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -40,6 +41,7 @@ body{
   display:block;
   font-size:11px;
   margin-top:3px;
+  opacity:.8;
 }
 
 .header-right{
@@ -49,8 +51,8 @@ body{
 }
 
 .role{
-  background:rgba(255,255,255,.16);
-  padding:9px 14px;
+  background:rgba(255,255,255,.18);
+  padding:9px 15px;
   border-radius:20px;
   font-size:12px;
   font-weight:bold;
@@ -60,59 +62,54 @@ body{
   border:0;
   background:white;
   color:#0866ff;
-  padding:10px 16px;
+  padding:9px 15px;
   border-radius:7px;
-  font-weight:bold;
   cursor:pointer;
+  font-weight:bold;
 }
 
 .container{
   max-width:1250px;
   margin:30px auto;
-  padding:0 20px 50px;
+  padding:0 20px 40px;
 }
 
 .page-title{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  margin-bottom:24px;
+  align-items:center;
+  margin-bottom:22px;
 }
 
 .page-title h1{
   font-size:28px;
+  margin-bottom:5px;
 }
 
 .page-title p{
   color:#718096;
   font-size:14px;
-  margin-top:5px;
 }
 
-.btn{
+.btn-primary{
   border:0;
+  background:#0866ff;
+  color:white;
+  padding:12px 18px;
   border-radius:8px;
-  padding:11px 17px;
   font-weight:bold;
   cursor:pointer;
 }
 
-.btn-primary{
-  background:#0866ff;
-  color:white;
-  box-shadow:0 4px 10px rgba(8,102,255,.2);
-}
-
-.btn-secondary{
-  background:#eef2f7;
-  color:#344054;
+.btn-primary:hover{
+  background:#0757d6;
 }
 
 .summary{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:16px;
-  margin-bottom:18px;
+  margin-bottom:20px;
 }
 
 .summary-card{
@@ -121,14 +118,6 @@ body{
   border-radius:12px;
   box-shadow:0 3px 12px rgba(0,0,0,.06);
   border-left:4px solid #0866ff;
-}
-
-.summary-card.today{
-  border-left-color:#16a34a;
-}
-
-.summary-card.done{
-  border-left-color:#f59e0b;
 }
 
 .summary-card span{
@@ -144,7 +133,7 @@ body{
 
 .toolbar{
   background:white;
-  padding:16px;
+  padding:15px;
   border-radius:12px;
   display:flex;
   gap:12px;
@@ -152,48 +141,53 @@ body{
   box-shadow:0 3px 12px rgba(0,0,0,.06);
 }
 
-.search,
-.toolbar select{
-  padding:12px 14px;
-  border:1px solid #d8e0eb;
-  border-radius:8px;
-  outline:none;
-  font-size:13px;
-  background:white;
-}
-
 .search{
   flex:1;
+  padding:12px 14px;
+  border:1px solid #d8dee9;
+  border-radius:8px;
+  outline:none;
 }
 
 .search:focus,
-.toolbar select:focus{
+select:focus,
+input:focus,
+textarea:focus{
   border-color:#0866ff;
+  box-shadow:0 0 0 3px rgba(8,102,255,.1);
 }
 
-.card{
+select{
+  padding:12px 14px;
+  border:1px solid #d8dee9;
+  border-radius:8px;
+  background:white;
+  min-width:180px;
+}
+
+.table-card{
   background:white;
   border-radius:12px;
   box-shadow:0 3px 12px rgba(0,0,0,.06);
   overflow:hidden;
 }
 
-.table-wrap{
+.table-wrapper{
   overflow-x:auto;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:950px;
+  min-width:1050px;
 }
 
 th{
   background:#f8fafc;
-  text-align:left;
-  padding:14px;
-  font-size:12px;
   color:#475569;
+  font-size:12px;
+  padding:14px;
+  text-align:left;
   text-transform:uppercase;
   border-bottom:1px solid #e5e7eb;
 }
@@ -205,130 +199,146 @@ td{
   vertical-align:top;
 }
 
-.date{
-  font-weight:bold;
+tr:hover td{
+  background:#fafcff;
 }
 
-.time{
+.job-title{
+  font-weight:bold;
+  color:#334155;
+}
+
+.job-date{
+  font-weight:bold;
+  color:#334155;
+}
+
+.job-time{
   color:#0866ff;
+  font-weight:bold;
+  margin-top:3px;
+}
+
+.customer-name{
+  font-weight:bold;
+  margin-bottom:4px;
+}
+
+.customer-address{
+  color:#64748b;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.wa-link{
+  display:inline-block;
+  color:#0a9f54;
+  text-decoration:none;
   font-weight:bold;
   margin-top:4px;
 }
 
-.customer{
-  font-weight:bold;
-}
-
-.phone{
-  display:inline-block;
-  margin-top:5px;
-  color:#16a34a;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-.phone:hover{
+.wa-link:hover{
   text-decoration:underline;
 }
 
-.address{
-  color:#667085;
-  line-height:1.4;
-  max-width:280px;
-}
-
-.work{
-  line-height:1.45;
+.tech{
+  font-weight:bold;
+  color:#334155;
 }
 
 .badge{
   display:inline-block;
-  padding:6px 9px;
-  border-radius:14px;
-  font-size:10px;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
   font-weight:bold;
 }
 
-.badge-new{
-  background:#eaf2ff;
+.s-new{
+  background:#e8f0fe;
   color:#0866ff;
 }
 
-.badge-done{
-  background:#eaf8ef;
+.s-assigned{
+  background:#fff4d6;
+  color:#9a6700;
+}
+
+.s-way{
+  background:#e8f8ee;
+  color:#16834b;
+}
+
+.s-checkin{
+  background:#e8f3ff;
+  color:#1464a5;
+}
+
+.s-progress{
+  background:#fff0df;
+  color:#c2410c;
+}
+
+.s-completed{
+  background:#e4f7e9;
   color:#15803d;
 }
 
-.badge-cancel{
+.s-cancelled{
   background:#fee2e2;
   color:#b91c1c;
 }
 
-.actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-.action{
+.action-btn{
   border:0;
-  border-radius:6px;
   padding:7px 10px;
+  border-radius:6px;
+  cursor:pointer;
   font-size:11px;
   font-weight:bold;
-  cursor:pointer;
+  margin-right:4px;
+  margin-bottom:4px;
 }
 
-.view{
-  background:#eef2ff;
-  color:#4757a8;
+.view-btn{
+  background:#eef4ff;
+  color:#0757d6;
 }
 
-.edit{
-  background:#fff7e6;
+.edit-btn{
+  background:#fff5df;
   color:#9a6700;
 }
 
-.delete{
+.delete-btn{
   background:#feecec;
-  color:#b42318;
-}
-
-.empty{
-  text-align:center;
-  color:#98a2b3;
-  padding:45px;
-}
-
-.loading{
-  text-align:center;
-  padding:35px;
-  color:#667085;
+  color:#b91c1c;
 }
 
 .modal{
   display:none;
   position:fixed;
+  z-index:1000;
   inset:0;
-  background:rgba(15,23,42,.58);
-  z-index:20;
+  background:rgba(15,23,42,.6);
+  align-items:center;
+  justify-content:center;
   padding:20px;
-  overflow:auto;
 }
 
 .modal.show{
   display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .modal-box{
-  background:white;
   width:100%;
-  max-width:650px;
+  max-width:720px;
+  max-height:92vh;
+  overflow-y:auto;
+  background:white;
   border-radius:14px;
   box-shadow:0 20px 50px rgba(0,0,0,.2);
-  overflow:hidden;
 }
 
 .modal-header{
@@ -346,59 +356,83 @@ td{
 .close{
   border:0;
   background:transparent;
-  font-size:24px;
-  color:#667085;
+  font-size:25px;
   cursor:pointer;
+  color:#64748b;
 }
 
 .form{
-  padding:20px;
+  padding:22px;
 }
 
-.grid{
+.form-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:15px;
 }
 
-.group{
+.form-group{
   display:flex;
   flex-direction:column;
-  gap:7px;
 }
 
-.group.full{
+.form-group.full{
   grid-column:1/-1;
 }
 
-.group label{
+label{
   font-size:12px;
   font-weight:bold;
-  color:#344054;
+  margin-bottom:7px;
+  color:#334155;
 }
 
-.group input,
-.group textarea,
-.group select{
+input,
+textarea{
   width:100%;
-  padding:12px;
-  border:1px solid #d8e0eb;
+  padding:12px 13px;
+  border:1px solid #d8dee9;
   border-radius:8px;
-  font-size:13px;
   outline:none;
-  background:white;
+  font-family:inherit;
+  font-size:13px;
 }
 
-.group textarea{
+textarea{
   min-height:90px;
   resize:vertical;
 }
 
-.group input:focus,
-.group textarea:focus,
-.group select:focus{
-  border-color:#0866ff;
-  box-shadow:0 0 0 3px rgba(8,102,255,.08);
+input[readonly]{
+  background:#f1f5f9;
+}
+
+.modal-footer{
+  padding:18px 22px;
+  border-top:1px solid #e5e7eb;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.btn-secondary{
+  border:0;
+  background:#eef2f7;
+  color:#334155;
+  padding:11px 17px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-save{
+  border:0;
+  background:#0866ff;
+  color:white;
+  padding:11px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
 .error{
@@ -407,49 +441,71 @@ td{
   margin-top:10px;
 }
 
-.modal-footer{
-  padding:16px 20px;
-  border-top:1px solid #e5e7eb;
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
+.success{
+  color:#15803d;
+  font-size:12px;
+  margin-top:10px;
 }
 
 .detail-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:14px;
+  padding:22px;
 }
 
 .detail-item{
   background:#f8fafc;
-  padding:12px;
+  padding:13px;
   border-radius:8px;
-}
-
-.detail-item small{
-  display:block;
-  color:#667085;
-  font-size:11px;
-  margin-bottom:5px;
-}
-
-.detail-item strong{
-  font-size:13px;
-  line-height:1.4;
 }
 
 .detail-item.full{
   grid-column:1/-1;
 }
 
-@media(max-width:850px){
+.detail-item small{
+  display:block;
+  color:#64748b;
+  font-size:11px;
+  margin-bottom:5px;
+}
 
-  .summary{
-    grid-template-columns:1fr;
+.detail-item strong{
+  font-size:13px;
+  color:#334155;
+}
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#64748b;
+}
+
+.empty{
+  text-align:center;
+  padding:35px;
+  color:#64748b;
+}
+
+@media(max-width:800px){
+
+  .header{
+    padding:0 15px;
   }
 
-  .grid{
+  .container{
+    padding:0 12px 30px;
+    margin-top:20px;
+  }
+
+  .page-title{
+    align-items:flex-start;
+    gap:15px;
+    flex-direction:column;
+  }
+
+  .summary{
     grid-template-columns:1fr;
   }
 
@@ -457,37 +513,20 @@ td{
     flex-direction:column;
   }
 
-  .page-title{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:12px;
-  }
-}
-
-@media(max-width:600px){
-
-  .header{
-    padding:0 15px;
+  .form-grid{
+    grid-template-columns:1fr;
   }
 
-  .container{
-    padding:0 12px 40px;
+  .form-group.full{
+    grid-column:auto;
   }
 
-  .role{
-    display:none;
+  .detail-grid{
+    grid-template-columns:1fr;
   }
 
-  .brand h2{
-    font-size:18px;
-  }
-
-  .page-title h1{
-    font-size:23px;
-  }
-
-  .modal{
-    padding:10px;
+  .detail-item.full{
+    grid-column:auto;
   }
 }
 </style>
@@ -503,11 +542,12 @@ td{
   </div>
 
   <div class="header-right">
-    <span class="role">OWNER</span>
+    <div class="role">OWNER</div>
     <button class="logout" onclick="logout()">LOGOUT</button>
   </div>
 
 </header>
+
 
 <main class="container">
 
@@ -515,86 +555,98 @@ td{
 
     <div>
       <h1>Jadwal Teknisi</h1>
-      <p>Kelola jadwal pekerjaan teknisi dan customer.</p>
+      <p>Kelola jadwal pekerjaan teknisi dan customer</p>
     </div>
 
-    <button class="btn btn-primary" onclick="openAdd()">
+    <button class="btn-primary" onclick="openAddModal()">
       + Tambah Jadwal
     </button>
 
   </div>
 
+
   <section class="summary">
 
     <div class="summary-card">
       <span>Total Jadwal</span>
-      <strong id="totalCount">0</strong>
+      <strong id="totalJob">0</strong>
     </div>
 
-    <div class="summary-card today">
+    <div class="summary-card">
       <span>Jadwal Hari Ini</span>
-      <strong id="todayCount">0</strong>
+      <strong id="todayJob">0</strong>
     </div>
 
-    <div class="summary-card done">
-      <span>Selesai</span>
-      <strong id="doneCount">0</strong>
+    <div class="summary-card">
+      <span>Belum Selesai</span>
+      <strong id="pendingJob">0</strong>
     </div>
 
   </section>
 
+
   <section class="toolbar">
 
     <input
-      id="searchInput"
       class="search"
+      id="searchInput"
       placeholder="Cari customer, teknisi, alamat, pekerjaan..."
-      oninput="render()"
+      oninput="renderJobs()"
     >
 
-    <select id="statusFilter" onchange="render()">
+    <select id="statusFilter" onchange="renderJobs()">
       <option value="">Semua Status</option>
       <option value="NEW">Baru</option>
-      <option value="ON_THE_WAY">Menuju Lokasi</option>
-      <option value="IN_PROGRESS">Dikerjakan</option>
+      <option value="ASSIGNED">Assigned</option>
+      <option value="ON_THE_WAY">OTW</option>
+      <option value="CHECKED_IN">Check In</option>
+      <option value="IN_PROGRESS">Proses</option>
       <option value="COMPLETED">Selesai</option>
       <option value="CANCELLED">Dibatalkan</option>
     </select>
 
   </section>
 
-  <section class="card table-wrap">
 
-    <table>
+  <section class="table-card">
 
-      <thead>
-        <tr>
-          <th>Jadwal</th>
-          <th>Teknisi</th>
-          <th>Customer</th>
-          <th>Alamat</th>
-          <th>Pekerjaan</th>
-          <th>Status</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
+    <div class="table-wrapper">
 
-      <tbody id="jobTable">
-        <tr>
-          <td colspan="7" class="loading">
-            Memuat jadwal...
-          </td>
-        </tr>
-      </tbody>
+      <table>
 
-    </table>
+        <thead>
+
+          <tr>
+            <th>Jadwal</th>
+            <th>Customer</th>
+            <th>Teknisi</th>
+            <th>Pekerjaan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="jobTable">
+
+          <tr>
+            <td colspan="6" class="loading">
+              Memuat data...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
 
   </section>
 
 </main>
 
 
-<!-- MODAL TAMBAH / EDIT -->
+<!-- ================= MODAL TAMBAH / EDIT ================= -->
 
 <div class="modal" id="jobModal">
 
@@ -612,165 +664,206 @@ td{
 
     </div>
 
-    <form class="form" id="jobForm">
+
+    <form id="jobForm" onsubmit="return false">
 
       <input type="hidden" id="jobId">
 
-      <div class="grid">
 
-        <div class="group">
+      <div class="form">
 
-          <label>Teknisi *</label>
-
-          <select id="technicianId" required>
-            <option value="">
-              Memuat teknisi...
-            </option>
-          </select>
-
-        </div>
+        <div class="form-grid">
 
 
-        <div class="group">
+          <!-- TEKNISI -->
 
-          <label>Tanggal *</label>
+          <div class="form-group">
 
-          <input
-            type="date"
-            id="scheduledDate"
-            required
-          >
+            <label>Teknisi *</label>
 
-        </div>
+            <select id="technicianId" required>
 
+              <option value="">
+                Memuat teknisi...
+              </option>
 
-        <div class="group">
+            </select>
 
-          <label>Jam *</label>
-
-          <input
-            type="time"
-            id="scheduledTime"
-            required
-          >
-
-        </div>
+          </div>
 
 
-        <div class="group">
+          <!-- TANGGAL -->
 
-          <label>Nama Customer *</label>
+          <div class="form-group">
 
-          <input
-            type="text"
-            id="customerName"
-            placeholder="Contoh: Dokter Dini Medical Center"
-            required
-          >
+            <label>Tanggal *</label>
 
-        </div>
+            <input
+              type="date"
+              id="scheduledDate"
+              required
+            >
 
-
-        <div class="group full">
-
-          <label>No. WhatsApp Customer *</label>
-
-          <input
-            type="tel"
-            id="customerPhone"
-            placeholder="081234567890"
-            required
-          >
-
-        </div>
+          </div>
 
 
-        <div class="group full">
+          <!-- JAM -->
 
-          <label>Alamat Customer *</label>
+          <div class="form-group">
 
-          <textarea
-            id="customerAddress"
-            placeholder="Alamat lengkap customer"
-            required
-          ></textarea>
+            <label>Jam *</label>
 
-        </div>
+            <input
+              type="time"
+              id="scheduledTime"
+              required
+            >
 
-
-        <div class="group full">
-
-          <label>Keterangan / Pekerjaan *</label>
-
-          <textarea
-            id="jobDescription"
-            placeholder="Contoh: Service AC 2 unit"
-            required
-          ></textarea>
-
-        </div>
+          </div>
 
 
-        <div class="group">
+          <!-- CUSTOMER -->
 
-          <label>Status</label>
+          <div class="form-group">
 
-          <select id="jobStatus">
+            <label>Nama Customer *</label>
 
-            <option value="NEW">
-              Baru
-            </option>
+            <input
+              type="text"
+              id="customerName"
+              placeholder="Contoh: Bpk Roni"
+              required
+            >
 
-            <option value="ON_THE_WAY">
-              Menuju Lokasi
-            </option>
+          </div>
 
-            <option value="IN_PROGRESS">
-              Dikerjakan
-            </option>
 
-            <option value="COMPLETED">
-              Selesai
-            </option>
+          <!-- WHATSAPP -->
 
-            <option value="CANCELLED">
-              Dibatalkan
-            </option>
+          <div class="form-group full">
 
-          </select>
+            <label>No. WhatsApp Customer *</label>
+
+            <input
+              type="tel"
+              id="customerWhatsapp"
+              placeholder="08123456789"
+              required
+            >
+
+          </div>
+
+
+          <!-- ALAMAT -->
+
+          <div class="form-group full">
+
+            <label>Alamat Customer *</label>
+
+            <textarea
+              id="customerAddress"
+              placeholder="Alamat lengkap customer"
+              required
+            ></textarea>
+
+          </div>
+
+
+          <!-- PEKERJAAN -->
+
+          <div class="form-group full">
+
+            <label>Keterangan / Pekerjaan *</label>
+
+            <textarea
+              id="description"
+              placeholder="Contoh: Service AC 1 PK, AC tidak dingin"
+              required
+            ></textarea>
+
+          </div>
+
+
+          <!-- STATUS -->
+
+          <div class="form-group">
+
+            <label>Status</label>
+
+            <select id="status">
+
+              <option value="NEW">
+                Baru
+              </option>
+
+              <option value="ASSIGNED">
+                Assigned
+              </option>
+
+              <option value="ON_THE_WAY">
+                OTW
+              </option>
+
+              <option value="CHECKED_IN">
+                Check In
+              </option>
+
+              <option value="IN_PROGRESS">
+                Proses
+              </option>
+
+              <option value="COMPLETED">
+                Selesai
+              </option>
+
+              <option value="CANCELLED">
+                Dibatalkan
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div
+            id="formMessage"
+            class="error form-group full"
+          ></div>
+
 
         </div>
 
       </div>
 
-      <div id="formMessage"></div>
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="closeModal()"
+        >
+          Batal
+        </button>
+
+        <button
+          type="button"
+          class="btn-save"
+          onclick="saveJob()"
+        >
+          Simpan Jadwal
+        </button>
+
+      </div>
 
     </form>
-
-    <div class="modal-footer">
-
-      <button
-        class="btn btn-secondary"
-        onclick="closeModal()"
-      >
-        Batal
-      </button>
-
-      <button
-        class="btn btn-primary"
-        onclick="saveJob()"
-      >
-        Simpan Jadwal
-      </button>
-
-    </div>
 
   </div>
 
 </div>
 
 
-<!-- MODAL DETAIL -->
+<!-- ================= MODAL DETAIL ================= -->
 
 <div class="modal" id="detailModal">
 
@@ -786,19 +879,12 @@ td{
 
     </div>
 
-    <div class="form">
-
-      <div
-        id="detailContent"
-        class="detail-grid"
-      ></div>
-
-    </div>
+    <div id="detailContent"></div>
 
     <div class="modal-footer">
 
       <button
-        class="btn btn-secondary"
+        class="btn-secondary"
         onclick="closeDetail()"
       >
         Tutup
@@ -813,9 +899,7 @@ td{
 
 <script>
 
-const {
-  createClient
-} = window.supabase;
+const { createClient } = window.supabase;
 
 const supabaseClient =
   createClient(
@@ -826,74 +910,35 @@ const supabaseClient =
 
 let jobs = [];
 let technicians = [];
+let customers = [];
 let currentUser = null;
 
 
-const statusText = {
-
-  NEW:"BARU",
-
-  ON_THE_WAY:"MENUJU LOKASI",
-
-  IN_PROGRESS:"DIKERJAKAN",
-
-  COMPLETED:"SELESAI",
-
-  CANCELLED:"DIBATALKAN"
-
-};
-
-
-const statusClass = {
-
-  NEW:"badge-new",
-
-  ON_THE_WAY:"badge-new",
-
-  IN_PROGRESS:"badge-new",
-
-  COMPLETED:"badge-done",
-
-  CANCELLED:"badge-cancel"
-
-};
-
+/* ================= UTIL ================= */
 
 function esc(value){
 
   return String(value ?? "")
-    .replace(/[&<>"']/g, function(m){
-
-      return {
-
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-
-      }[m];
-
-    });
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
 function normalizePhone(phone){
 
-  let p =
-    String(phone || "")
+  let p = String(phone || "")
     .replace(/\D/g,"");
 
   if(p.startsWith("0")){
-
     p = "62" + p.substring(1);
-
   }
-  else if(p.startsWith("8")){
 
+  if(!p.startsWith("62")){
     p = "62" + p;
-
   }
 
   return p;
@@ -901,31 +946,9 @@ function normalizePhone(phone){
 }
 
 
-function whatsappLink(phone){
+function waUrl(phone){
 
-  const p =
-    normalizePhone(phone);
-
-  if(!p) return "";
-
-  return "https://wa.me/" + p;
-
-}
-
-
-function today(){
-
-  const d = new Date();
-
-  const local =
-    new Date(
-      d.getTime()
-      - d.getTimezoneOffset()*60000
-    );
-
-  return local
-    .toISOString()
-    .substring(0,10);
+  return "https://wa.me/" + normalizePhone(phone);
 
 }
 
@@ -934,9 +957,9 @@ function formatDate(date){
 
   if(!date) return "-";
 
-  return new Date(
-    date + "T00:00:00"
-  ).toLocaleDateString(
+  const d = new Date(date + "T00:00:00");
+
+  return d.toLocaleDateString(
     "id-ID",
     {
       weekday:"long",
@@ -949,145 +972,354 @@ function formatDate(date){
 }
 
 
+function formatTime(time){
+
+  if(!time) return "-";
+
+  return String(time).substring(0,5);
+
+}
+
+
+function statusText(status){
+
+  const map = {
+
+    NEW:"Baru",
+    ASSIGNED:"Assigned",
+    ON_THE_WAY:"OTW",
+    CHECKED_IN:"Check In",
+    IN_PROGRESS:"Proses",
+    COMPLETED:"Selesai",
+    CANCELLED:"Dibatalkan"
+
+  };
+
+  return map[status] || status || "-";
+
+}
+
+
+function statusClass(status){
+
+  const map = {
+
+    NEW:"s-new",
+    ASSIGNED:"s-assigned",
+    ON_THE_WAY:"s-way",
+    CHECKED_IN:"s-checkin",
+    IN_PROGRESS:"s-progress",
+    COMPLETED:"s-completed",
+    CANCELLED:"s-cancelled"
+
+  };
+
+  return map[status] || "s-new";
+
+}
+
+
+/* ================= LOGIN ================= */
+
 async function checkOwner(){
 
   const {
-    data:{
-      user
-    }
-  } =
-  await supabaseClient
-    .auth
-    .getUser();
-
+    data:{user}
+  } = await supabaseClient.auth.getUser();
 
   if(!user){
 
-    location.href =
-      "login.html";
+    location.href = "login.html";
 
     return false;
 
   }
 
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("profiles")
-    .select(
-      "full_name,email,role,status"
-    )
-    .eq("id",user.id)
-    .single();
-
+  const {data,error} =
+    await supabaseClient
+      .from("profiles")
+      .select("id,full_name,email,role,status")
+      .eq("id",user.id)
+      .single();
 
   if(
     error ||
     !data ||
-    data.role !== "OWNER" ||
     data.status !== "ACTIVE"
   ){
 
-    await supabaseClient
-      .auth
-      .signOut();
+    await supabaseClient.auth.signOut();
 
-    location.href =
-      "login.html";
+    location.href = "login.html";
 
     return false;
 
   }
 
-
-  currentUser = user;
+  currentUser = data;
 
   return true;
 
 }
 
 
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  location.href = "login.html";
+
+}
+
+
+/* ================= LOAD MASTER ================= */
+
 async function loadTechnicians(){
 
   const {
     data,
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
     .from("profiles")
-    .select(
-      "id,full_name,email"
-    )
+    .select("id,full_name,email")
     .eq("role","TEKNISI")
     .eq("status","ACTIVE")
     .order("full_name");
 
+  if(error){
 
-  if(error)
-    throw error;
+    console.error(error);
 
+    document.getElementById("technicianId").innerHTML =
+      '<option value="">Gagal memuat teknisi</option>';
 
-  technicians =
-    data || [];
+    return;
 
+  }
+
+  technicians = data || [];
 
   const select =
-    document.getElementById(
-      "technicianId"
-    );
-
+    document.getElementById("technicianId");
 
   select.innerHTML =
-    '<option value="">Pilih teknisi</option>' +
+    '<option value="">Pilih teknisi</option>';
 
-    technicians.map(function(t){
+  technicians.forEach(t=>{
 
-      return `
-        <option value="${t.id}">
-          ${esc(
-            t.full_name ||
-            t.email
-          )}
-        </option>
-      `;
+    const option =
+      document.createElement("option");
 
-    }).join("");
+    option.value = t.id;
+
+    option.textContent =
+      t.full_name || t.email || "Teknisi";
+
+    select.appendChild(option);
+
+  });
 
 }
 
+
+/* ================= CUSTOMER ================= */
+
+/*
+  Customer tidak perlu dibuat manual.
+  Saat jadwal disimpan:
+  1. Cari customer berdasarkan nama + whatsapp.
+  2. Kalau belum ada -> buat customer baru.
+  3. customer_type otomatis RESIDENTIAL.
+*/
+
+async function findOrCreateCustomer(){
+
+  const name =
+    document
+      .getElementById("customerName")
+      .value
+      .trim();
+
+  const whatsapp =
+    document
+      .getElementById("customerWhatsapp")
+      .value
+      .trim();
+
+  const address =
+    document
+      .getElementById("customerAddress")
+      .value
+      .trim();
+
+
+  if(!name || !whatsapp || !address){
+
+    throw new Error(
+      "Nama customer, WhatsApp dan alamat wajib diisi."
+    );
+
+  }
+
+
+  const normalized =
+    normalizePhone(whatsapp);
+
+
+  /*
+    Cari berdasarkan nomor WhatsApp.
+  */
+
+  const {
+    data:existing,
+    error:findError
+  } = await supabaseClient
+    .from("customers")
+    .select("*")
+    .eq("whatsapp",normalized)
+    .limit(1);
+
+
+  if(findError){
+
+    throw findError;
+
+  }
+
+
+  if(existing && existing.length){
+
+    const customer = existing[0];
+
+    /*
+      Update nama/alamat/nomor jika diperlukan.
+    */
+
+    const {data:updated,error:updateError} =
+      await supabaseClient
+        .from("customers")
+        .update({
+          name:name,
+          whatsapp:normalized,
+          phone:normalized,
+          address:address
+        })
+        .eq("id",customer.id)
+        .select()
+        .single();
+
+
+    if(updateError){
+
+      throw updateError;
+
+    }
+
+    return updated;
+
+  }
+
+
+  /*
+    Customer baru.
+    Customer code otomatis.
+  */
+
+  const customerCode =
+    "CUS-" +
+    Date.now().toString().slice(-8);
+
+
+  const customerPayload = {
+
+    customer_code:customerCode,
+
+    name:name,
+
+    whatsapp:normalized,
+
+    phone:normalized,
+
+    email:null,
+
+    address:address,
+
+    city:null,
+
+    customer_type:"RESIDENTIAL",
+
+    status:"ACTIVE",
+
+    note:"Dibuat otomatis dari Jadwal Teknisi",
+
+    created_by:
+      currentUser
+        ? currentUser.id
+        : null
+
+  };
+
+
+  const {
+    data:newCustomer,
+    error:createError
+  } = await supabaseClient
+    .from("customers")
+    .insert(customerPayload)
+    .select()
+    .single();
+
+
+  if(createError){
+
+    throw createError;
+
+  }
+
+
+  return newCustomer;
+
+}
+
+
+/* ================= LOAD JOBS ================= */
 
 async function loadJobs(){
 
   const {
     data,
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
     .from("jobs")
     .select("*")
-    .order(
-      "scheduled_at",
-      {
-        ascending:true
-      }
-    );
+    .order("scheduled_at",{ascending:true});
 
+  if(error){
 
-  if(error)
-    throw error;
+    console.error(error);
 
+    document.getElementById("jobTable").innerHTML =
+      `<tr>
+        <td colspan="6" class="empty">
+          Gagal memuat jadwal.<br>
+          ${esc(error.message)}
+        </td>
+      </tr>`;
 
-  jobs =
-    data || [];
+    return;
 
+  }
 
-  render();
+  jobs = data || [];
+
+  renderSummary();
+
+  renderJobs();
 
 }
 
+
+/* ================= NAMA TEKNISI ================= */
 
 function technicianName(id){
 
@@ -1096,47 +1328,105 @@ function technicianName(id){
       x => x.id === id
     );
 
-
-  if(!t)
-    return "Belum ditugaskan";
-
-
-  return (
-    t.full_name ||
-    t.email
-  );
+  return t
+    ? (t.full_name || t.email)
+    : "Belum ditugaskan";
 
 }
 
 
-function customerInfo(job){
+/* ================= CUSTOMER DATA ================= */
 
-  return {
+function customerData(id){
 
-    name:
-      job.customer_name ||
-      "Customer",
-
-    phone:
-      job.customer_phone ||
-      "",
-
-    address:
-      job.customer_address ||
-      ""
-
-  };
+  return customers.find(
+    x => x.id === id
+  ) || null;
 
 }
 
 
-function render(){
+/* ================= LOAD CUSTOMERS ================= */
 
-  const query =
+async function loadCustomers(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("customers")
+    .select(
+      "id,customer_code,name,whatsapp,phone,address,city"
+    );
+
+  if(error){
+
+    console.error(error);
+
+    customers = [];
+
+    return;
+
+  }
+
+  customers = data || [];
+
+}
+
+
+/* ================= SUMMARY ================= */
+
+function renderSummary(){
+
+  const total =
+    jobs.length;
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0,10);
+
+
+  const todayCount =
+    jobs.filter(j=>{
+
+      if(!j.scheduled_at)
+        return false;
+
+      return String(j.scheduled_at)
+        .slice(0,10) === today;
+
+    }).length;
+
+
+  const pending =
+    jobs.filter(j =>
+      ![
+        "COMPLETED",
+        "CANCELLED"
+      ].includes(j.status)
+    ).length;
+
+
+  document.getElementById("totalJob")
+    .textContent = total;
+
+  document.getElementById("todayJob")
+    .textContent = todayCount;
+
+  document.getElementById("pendingJob")
+    .textContent = pending;
+
+}
+
+
+/* ================= RENDER ================= */
+
+function renderJobs(){
+
+  const search =
     document
-      .getElementById(
-        "searchInput"
-      )
+      .getElementById("searchInput")
       .value
       .toLowerCase()
       .trim();
@@ -1144,102 +1434,75 @@ function render(){
 
   const status =
     document
-      .getElementById(
-        "statusFilter"
-      )
+      .getElementById("statusFilter")
       .value;
 
 
-  const filtered =
-    jobs.filter(function(job){
+  let rows =
+    jobs.filter(j=>{
 
-      const c =
-        customerInfo(job);
+      const customer =
+        customerData(j.customer_id);
+
+      const customerName =
+        customer?.name || "";
+
+      const customerAddress =
+        customer?.address || "";
+
+      const customerPhone =
+        customer?.whatsapp ||
+        customer?.phone ||
+        "";
+
+
+      const technician =
+        technicianName(
+          j.assigned_to ||
+          j.technician_id
+        );
 
 
       const text = [
 
-        c.name,
-        c.phone,
-        c.address,
-        job.description,
-        technicianName(
-          job.assigned_to
-        )
+        customerName,
+        customerAddress,
+        customerPhone,
+        technician,
+        j.description,
+        j.title,
+        j.job_code
 
-      ]
-      .join(" ")
-      .toLowerCase();
+      ].join(" ").toLowerCase();
 
 
-      return (
+      const matchSearch =
+        !search ||
+        text.includes(search);
 
-        (!query ||
-        text.includes(query))
 
-        &&
+      const matchStatus =
+        !status ||
+        j.status === status;
 
-        (!status ||
-        job.status === status)
 
-      );
+      return matchSearch && matchStatus;
 
     });
 
 
-  document
-    .getElementById(
-      "totalCount"
-    )
-    .textContent =
-      jobs.length;
-
-
-  document
-    .getElementById(
-      "todayCount"
-    )
-    .textContent =
-      jobs.filter(function(job){
-
-        return String(
-          job.scheduled_at || ""
-        ).substring(0,10)
-        === today();
-
-      }).length;
-
-
-  document
-    .getElementById(
-      "doneCount"
-    )
-    .textContent =
-      jobs.filter(
-        x =>
-          x.status ===
-          "COMPLETED"
-      ).length;
-
-
   const table =
-    document.getElementById(
-      "jobTable"
-    );
+    document.getElementById("jobTable");
 
 
-  if(!filtered.length){
+  if(!rows.length){
 
-    table.innerHTML = `
-      <tr>
-        <td
-          colspan="7"
-          class="empty"
-        >
+    table.innerHTML =
+      `<tr>
+        <td colspan="6" class="empty">
           Belum ada jadwal.
         </td>
-      </tr>
-    `;
+      </tr>`;
 
     return;
 
@@ -1247,160 +1510,169 @@ function render(){
 
 
   table.innerHTML =
-    filtered.map(function(job){
+    rows.map(j=>{
 
-      const c =
-        customerInfo(job);
+      const customer =
+        customerData(j.customer_id);
 
-      const wa =
-        whatsappLink(
-          c.phone
+
+      const name =
+        customer?.name ||
+        "Customer";
+
+
+      const phone =
+        customer?.whatsapp ||
+        customer?.phone ||
+        "";
+
+
+      const address =
+        customer?.address ||
+        "-";
+
+
+      const technician =
+        technicianName(
+          j.assigned_to ||
+          j.technician_id
         );
 
 
-      return `
-
-      <tr>
-
-        <td>
-
-          <div class="date">
-            ${esc(
-              formatDate(
-                String(
-                  job.scheduled_at || ""
-                ).substring(0,10)
-              )
-            )}
-          </div>
-
-          <div class="time">
-            ${esc(
-              String(
-                job.scheduled_at || ""
-              ).substring(11,16)
-            )}
-          </div>
-
-        </td>
+      const scheduled =
+        j.scheduled_at
+          ? new Date(j.scheduled_at)
+          : null;
 
 
-        <td>
-
-          ${esc(
-            technicianName(
-              job.assigned_to
-            )
-          )}
-
-        </td>
+      let date = "-";
+      let time = "-";
 
 
-        <td>
+      if(scheduled){
 
-          <div class="customer">
-            ${esc(c.name)}
-          </div>
+        date =
+          scheduled.toLocaleDateString(
+            "id-ID",
+            {
+              weekday:"long",
+              day:"2-digit",
+              month:"short",
+              year:"numeric"
+            }
+          );
 
-          ${
-            wa
-            ?
+        time =
+          scheduled.toLocaleTimeString(
+            "id-ID",
+            {
+              hour:"2-digit",
+              minute:"2-digit"
+            }
+          );
 
-            `<a
-              class="phone"
-              href="${wa}"
+      }
+
+
+      const wa =
+        phone
+          ? `<a
+              class="wa-link"
+              href="${waUrl(phone)}"
               target="_blank"
+              rel="noopener"
             >
-              WhatsApp ${esc(
-                c.phone
-              )}
+              WhatsApp
             </a>`
+          : "";
 
-            :
 
-            `<span class="phone">
+      return `
+        <tr>
+
+          <td>
+            <div class="job-date">
+              ${esc(date)}
+            </div>
+
+            <div class="job-time">
+              ${esc(time)}
+            </div>
+          </td>
+
+
+          <td>
+
+            <div class="customer-name">
+              ${esc(name)}
+            </div>
+
+            <div class="customer-address">
+              ${esc(address)}
+            </div>
+
+            ${wa}
+
+          </td>
+
+
+          <td>
+            <div class="tech">
+              ${esc(technician)}
+            </div>
+          </td>
+
+
+          <td>
+
+            <div class="job-title">
               ${esc(
-                c.phone || "-"
+                j.description ||
+                j.title ||
+                "-"
               )}
-            </span>`
-          }
+            </div>
 
-        </td>
-
-
-        <td class="address">
-
-          ${esc(
-            c.address || "-"
-          )}
-
-        </td>
+          </td>
 
 
-        <td class="work">
+          <td>
 
-          ${esc(
-            job.description ||
-            "-"
-          )}
+            <span class="badge ${statusClass(j.status)}">
+              ${esc(statusText(j.status))}
+            </span>
 
-        </td>
-
-
-        <td>
-
-          <span
-            class="badge ${
-              statusClass[
-                job.status
-              ] || "badge-new"
-            }"
-          >
-
-            ${esc(
-              statusText[
-                job.status
-              ] ||
-              job.status ||
-              "BARU"
-            )}
-
-          </span>
-
-        </td>
+          </td>
 
 
-        <td>
-
-          <div class="actions">
+          <td>
 
             <button
-              class="action view"
-              onclick="showDetail('${job.id}')"
+              class="action-btn view-btn"
+              onclick="showDetail('${j.id}')"
             >
               Detail
             </button>
 
+
             <button
-              class="action edit"
-              onclick="openEdit('${job.id}')"
+              class="action-btn edit-btn"
+              onclick="editJob('${j.id}')"
             >
               Edit
             </button>
 
+
             <button
-              class="action delete"
-              onclick="deleteJob('${job.id}')"
+              class="action-btn delete-btn"
+              onclick="deleteJob('${j.id}')"
             >
               Hapus
             </button>
 
-          </div>
+          </td>
 
-        </td>
-
-      </tr>
-
+        </tr>
       `;
 
     }).join("");
@@ -1408,181 +1680,57 @@ function render(){
 }
 
 
-function openAdd(){
+/* ================= OPEN ADD ================= */
 
-  document.getElementById(
-    "modalTitle"
-  ).textContent =
-    "Tambah Jadwal";
+function openAddModal(){
 
-
-  document.getElementById(
-    "jobId"
-  ).value = "";
+  document.getElementById("modalTitle")
+    .textContent = "Tambah Jadwal";
 
 
-  document.getElementById(
-    "scheduledDate"
-  ).value =
-    today();
+  document.getElementById("jobId")
+    .value = "";
 
 
-  document.getElementById(
-    "scheduledTime"
-  ).value =
-    "08:00";
+  document.getElementById("jobForm")
+    .reset();
 
 
-  document.getElementById(
-    "technicianId"
-  ).value = "";
+  document.getElementById("status")
+    .value = "NEW";
 
 
-  document.getElementById(
-    "customerName"
-  ).value = "";
+  document.getElementById("formMessage")
+    .textContent = "";
 
 
-  document.getElementById(
-    "customerPhone"
-  ).value = "";
+  /*
+    Default tanggal hari ini.
+  */
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0,10);
 
 
-  document.getElementById(
-    "customerAddress"
-  ).value = "";
+  document.getElementById("scheduledDate")
+    .value = today;
 
 
-  document.getElementById(
-    "jobDescription"
-  ).value = "";
-
-
-  document.getElementById(
-    "jobStatus"
-  ).value =
-    "NEW";
-
-
-  document.getElementById(
-    "formMessage"
-  ).innerHTML = "";
-
-
-  document
-    .getElementById(
-      "jobModal"
-    )
-    .classList
-    .add("show");
+  document.getElementById("jobModal")
+    .classList.add("show");
 
 }
 
 
-function openEdit(id){
-
-  const job =
-    jobs.find(
-      x => x.id === id
-    );
-
-
-  if(!job)
-    return;
-
-
-  const c =
-    customerInfo(job);
-
-
-  document.getElementById(
-    "modalTitle"
-  ).textContent =
-    "Edit Jadwal";
-
-
-  document.getElementById(
-    "jobId"
-  ).value =
-    job.id;
-
-
-  document.getElementById(
-    "technicianId"
-  ).value =
-    job.assigned_to || "";
-
-
-  document.getElementById(
-    "scheduledDate"
-  ).value =
-    String(
-      job.scheduled_at || ""
-    ).substring(0,10);
-
-
-  document.getElementById(
-    "scheduledTime"
-  ).value =
-    String(
-      job.scheduled_at || ""
-    ).substring(11,16)
-    || "08:00";
-
-
-  document.getElementById(
-    "customerName"
-  ).value =
-    c.name;
-
-
-  document.getElementById(
-    "customerPhone"
-  ).value =
-    c.phone;
-
-
-  document.getElementById(
-    "customerAddress"
-  ).value =
-    c.address;
-
-
-  document.getElementById(
-    "jobDescription"
-  ).value =
-    job.description || "";
-
-
-  document.getElementById(
-    "jobStatus"
-  ).value =
-    job.status || "NEW";
-
-
-  document.getElementById(
-    "formMessage"
-  ).innerHTML = "";
-
-
-  document
-    .getElementById(
-      "jobModal"
-    )
-    .classList
-    .add("show");
-
-}
-
+/* ================= CLOSE ================= */
 
 function closeModal(){
 
   document
-    .getElementById(
-      "jobModal"
-    )
-    .classList
-    .remove("show");
+    .getElementById("jobModal")
+    .classList.remove("show");
 
 }
 
@@ -1590,370 +1738,585 @@ function closeModal(){
 function closeDetail(){
 
   document
-    .getElementById(
-      "detailModal"
-    )
-    .classList
-    .remove("show");
+    .getElementById("detailModal")
+    .classList.remove("show");
 
 }
 
 
-async function findOrCreateCustomer(
-  name,
-  phone,
-  address
-){
+/* ================= EDIT ================= */
 
-  const cleanPhone =
-    phone.trim();
+function editJob(id){
 
-
-  /*
-    Coba cari customer berdasarkan
-    nomor WhatsApp terlebih dahulu.
-  */
-
-  if(cleanPhone){
-
-    const {
-      data
-    } =
-    await supabaseClient
-      .from("customers")
-      .select(
-        "id,name,whatsapp,phone"
-      )
-      .or(
-        `whatsapp.eq.${cleanPhone},phone.eq.${cleanPhone}`
-      )
-      .limit(1);
-
-
-    if(
-      data &&
-      data.length
-    ){
-
-      return data[0].id;
-
-    }
-
-  }
-
-
-  /*
-    Kalau belum ada,
-    buat customer otomatis.
-  */
-
-  const customerCode =
-    "CUS-" +
-    Date.now()
-      .toString()
-      .slice(-8);
-
-
-  const payload = {
-
-    customer_code:
-      customerCode,
-
-    name:
-      name.trim(),
-
-    whatsapp:
-      cleanPhone,
-
-    phone:
-      cleanPhone,
-
-    address:
-      address.trim(),
-
-    status:
-      "ACTIVE",
-
-    /*
-      INI PENTING:
-      enum database lu menggunakan
-      "resedential"
-    */
-
-    customer_type:
-      "resedential",
-
-    notes:
-      "Dibuat dari Jadwal Teknisi",
-
-    created_by:
-      currentUser
-      ? currentUser.id
-      : null
-
-  };
-
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("customers")
-    .insert(payload)
-    .select("id")
-    .single();
-
-
-  if(error){
-
-    throw new Error(
-      "Gagal membuat customer: "
-      + error.message
+  const job =
+    jobs.find(
+      j => j.id === id
     );
 
+
+  if(!job) return;
+
+
+  const customer =
+    customerData(
+      job.customer_id
+    );
+
+
+  document.getElementById("modalTitle")
+    .textContent = "Edit Jadwal";
+
+
+  document.getElementById("jobId")
+    .value = job.id;
+
+
+  document.getElementById("technicianId")
+    .value =
+      job.assigned_to ||
+      job.technician_id ||
+      "";
+
+
+  if(job.scheduled_at){
+
+    const d =
+      new Date(job.scheduled_at);
+
+
+    document.getElementById("scheduledDate")
+      .value =
+        d.toISOString()
+          .slice(0,10);
+
+
+    document.getElementById("scheduledTime")
+      .value =
+        d.toTimeString()
+          .slice(0,5);
+
   }
 
 
-  return data.id;
+  document.getElementById("customerName")
+    .value =
+      customer?.name || "";
+
+
+  document.getElementById("customerWhatsapp")
+    .value =
+      customer?.whatsapp ||
+      customer?.phone ||
+      "";
+
+
+  document.getElementById("customerAddress")
+    .value =
+      customer?.address || "";
+
+
+  document.getElementById("description")
+    .value =
+      job.description ||
+      job.title ||
+      "";
+
+
+  document.getElementById("status")
+    .value =
+      job.status || "NEW";
+
+
+  document.getElementById("formMessage")
+    .textContent = "";
+
+
+  document.getElementById("jobModal")
+    .classList.add("show");
 
 }
 
+
+/* ================= SAVE ================= */
 
 async function saveJob(){
 
   const message =
-    document.getElementById(
-      "formMessage"
-    );
+    document.getElementById("formMessage");
 
 
-  message.innerHTML = "";
-
-
-  const id =
-    document.getElementById(
-      "jobId"
-    ).value;
-
-
-  const technician =
-    document.getElementById(
-      "technicianId"
-    ).value;
-
-
-  const date =
-    document.getElementById(
-      "scheduledDate"
-    ).value;
-
-
-  const time =
-    document.getElementById(
-      "scheduledTime"
-    ).value;
-
-
-  const customerName =
-    document.getElementById(
-      "customerName"
-    ).value
-    .trim();
-
-
-  const customerPhone =
-    document.getElementById(
-      "customerPhone"
-    ).value
-    .trim();
-
-
-  const customerAddress =
-    document.getElementById(
-      "customerAddress"
-    ).value
-    .trim();
-
-
-  const description =
-    document.getElementById(
-      "jobDescription"
-    ).value
-    .trim();
-
-
-  const status =
-    document.getElementById(
-      "jobStatus"
-    ).value;
-
-
-  if(
-    !technician ||
-    !date ||
-    !time ||
-    !customerName ||
-    !customerPhone ||
-    !customerAddress ||
-    !description
-  ){
-
-    message.innerHTML =
-      '<div class="error">Semua kolom wajib diisi.</div>';
-
-    return;
-
-  }
+  message.className = "error";
+  message.textContent = "";
 
 
   try{
 
-    /*
-      Buat / cari customer
-    */
+    const technicianId =
+      document.getElementById("technicianId")
+        .value;
 
-    const customerId =
-      await findOrCreateCustomer(
-        customerName,
-        customerPhone,
-        customerAddress
+
+    const date =
+      document.getElementById("scheduledDate")
+        .value;
+
+
+    const time =
+      document.getElementById("scheduledTime")
+        .value;
+
+
+    const name =
+      document.getElementById("customerName")
+        .value
+        .trim();
+
+
+    const whatsapp =
+      document.getElementById("customerWhatsapp")
+        .value
+        .trim();
+
+
+    const address =
+      document.getElementById("customerAddress")
+        .value
+        .trim();
+
+
+    const description =
+      document.getElementById("description")
+        .value
+        .trim();
+
+
+    const status =
+      document.getElementById("status")
+        .value;
+
+
+    const jobId =
+      document.getElementById("jobId")
+        .value;
+
+
+    if(
+      !technicianId ||
+      !date ||
+      !time ||
+      !name ||
+      !whatsapp ||
+      !address ||
+      !description
+    ){
+
+      throw new Error(
+        "Semua kolom bertanda * wajib diisi."
       );
 
+    }
+
 
     /*
-      Jadwal
+      Buat / cari customer otomatis.
+      Tidak perlu customer code.
+      Tidak perlu customer type.
     */
+
+    const customer =
+      await findOrCreateCustomer();
+
+
+    if(!customer?.id){
+
+      throw new Error(
+        "Customer gagal dibuat."
+      );
+
+    }
+
 
     const scheduledAt =
       `${date}T${time}:00`;
 
 
-    const payload = {
+    if(jobId){
 
-      customer_id:
-        customerId,
+      /*
+        UPDATE JOB
+      */
 
-      assigned_to:
-        technician,
+      const {
+        error
+      } = await supabaseClient
+        .from("jobs")
+        .update({
 
-      scheduled_at:
-        scheduledAt,
+          customer_id:
+            customer.id,
 
-      status:
-        status,
+          assigned_to:
+            technicianId,
 
-      job_type:
-        "SERVICE",
+          scheduled_at:
+            scheduledAt,
 
-      priority:
-        "NORMAL",
+          title:
+            description,
 
-      title:
-        description,
+          description:
+            description,
 
-      description:
-        description,
+          status:
+            status,
 
-      estimated_cost:
-        0,
+          updated_at:
+            new Date().toISOString()
 
-      service_price:
-        0,
-
-      actual_cost:
-        0,
-
-      updated_at:
-        new Date()
-          .toISOString()
-
-    };
+        })
+        .eq("id",jobId);
 
 
-    let result;
+      if(error){
+
+        throw error;
+
+      }
 
 
-    if(id){
+    }else{
 
-      result =
-        await supabaseClient
-          .from("jobs")
-          .update(payload)
-          .eq("id",id);
+      /*
+        CREATE JOB
+      */
 
-    }
-    else{
-
-      payload.job_code =
+      const jobCode =
         "JOB-" +
         Date.now()
           .toString()
           .slice(-8);
 
 
-      payload.created_by =
-        currentUser
-        ? currentUser.id
-        : null;
+      const {
+        error
+      } = await supabaseClient
+        .from("jobs")
+        .insert({
+
+          job_code:
+            jobCode,
+
+          customer_id:
+            customer.id,
+
+          title:
+            description,
+
+          description:
+            description,
+
+          assigned_to:
+            technicianId,
+
+          scheduled_at:
+            scheduledAt,
+
+          status:
+            status,
+
+          job_type:
+            "SERVICE",
+
+          priority:
+            "NORMAL",
+
+          estimated_cost:
+            0,
+
+          service_price:
+            0,
+
+          actual_cost:
+            0,
+
+          technician_notes:
+            null,
+
+          created_by:
+            currentUser
+              ? currentUser.id
+              : null
+
+        });
 
 
-      result =
-        await supabaseClient
-          .from("jobs")
-          .insert(payload);
+      if(error){
+
+        throw error;
+
+      }
 
     }
 
 
-    if(result.error){
+    message.className = "success";
 
-      throw result.error;
+    message.textContent =
+      "Jadwal berhasil disimpan.";
 
-    }
 
-
-    closeModal();
+    await loadCustomers();
 
     await loadJobs();
 
 
-  }
-  catch(error){
+    setTimeout(()=>{
+
+      closeModal();
+
+    },500);
+
+
+  }catch(error){
 
     console.error(error);
 
+    message.className = "error";
 
-    message.innerHTML =
-      `
-      <div class="error">
-        Gagal menyimpan:
-        ${esc(
-          error.message ||
-          "Terjadi kesalahan"
-        )}
-      </div>
-      `;
+    message.textContent =
+      "Gagal menyimpan: " +
+      (
+        error?.message ||
+        "Terjadi kesalahan."
+      );
 
   }
 
 }
 
 
+/* ================= DETAIL ================= */
+
+function showDetail(id){
+
+  const job =
+    jobs.find(
+      j => j.id === id
+    );
+
+
+  if(!job) return;
+
+
+  const customer =
+    customerData(
+      job.customer_id
+    );
+
+
+  const technician =
+    technicianName(
+      job.assigned_to ||
+      job.technician_id
+    );
+
+
+  const phone =
+    customer?.whatsapp ||
+    customer?.phone ||
+    "";
+
+
+  let waButton = "";
+
+
+  if(phone){
+
+    waButton = `
+      <a
+        href="${waUrl(phone)}"
+        target="_blank"
+        rel="noopener"
+        class="btn-primary"
+        style="display:inline-block;text-decoration:none;margin-top:8px"
+      >
+        Chat WhatsApp Customer
+      </a>
+    `;
+
+  }
+
+
+  const scheduled =
+    job.scheduled_at
+      ? new Date(job.scheduled_at)
+      : null;
+
+
+  let date = "-";
+  let time = "-";
+
+
+  if(scheduled){
+
+    date =
+      scheduled.toLocaleDateString(
+        "id-ID",
+        {
+          weekday:"long",
+          day:"2-digit",
+          month:"long",
+          year:"numeric"
+        }
+      );
+
+
+    time =
+      scheduled.toLocaleTimeString(
+        "id-ID",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
+
+  }
+
+
+  document.getElementById("detailContent")
+    .innerHTML = `
+
+      <div class="detail-grid">
+
+        <div class="detail-item">
+
+          <small>Teknisi</small>
+
+          <strong>
+            ${esc(technician)}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Status</small>
+
+          <span class="badge ${statusClass(job.status)}">
+            ${esc(statusText(job.status))}
+          </span>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Tanggal</small>
+
+          <strong>
+            ${esc(date)}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Jam</small>
+
+          <strong>
+            ${esc(time)}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>Customer</small>
+
+          <strong>
+            ${esc(customer?.name || "-")}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <small>No. WhatsApp</small>
+
+          <strong>
+            ${esc(phone || "-")}
+          </strong>
+
+          ${waButton}
+
+        </div>
+
+
+        <div class="detail-item full">
+
+          <small>Alamat Customer</small>
+
+          <strong>
+            ${esc(customer?.address || "-")}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item full">
+
+          <small>Keterangan / Pekerjaan</small>
+
+          <strong>
+            ${esc(
+              job.description ||
+              job.title ||
+              "-"
+            )}
+          </strong>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+  document.getElementById("detailModal")
+    .classList.add("show");
+
+}
+
+
+/* ================= DELETE ================= */
+
 async function deleteJob(id){
 
-  if(
-    !confirm(
-      "Hapus jadwal ini?"
-    )
-  )
-    return;
+  const job =
+    jobs.find(
+      j => j.id === id
+    );
+
+
+  if(!job) return;
+
+
+  const yes =
+    confirm(
+      "Yakin ingin menghapus jadwal ini?"
+    );
+
+
+  if(!yes) return;
 
 
   const {
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
     .from("jobs")
     .delete()
     .eq("id",id);
@@ -1962,8 +2325,8 @@ async function deleteJob(id){
   if(error){
 
     alert(
-      "Gagal menghapus: "
-      + error.message
+      "Gagal menghapus: " +
+      error.message
     );
 
     return;
@@ -1976,236 +2339,69 @@ async function deleteJob(id){
 }
 
 
-function showDetail(id){
+/* ================= INIT ================= */
 
-  const job =
-    jobs.find(
-      x => x.id === id
-    );
+async function init(){
 
+  const ok =
+    await checkOwner();
 
-  if(!job)
-    return;
 
+  if(!ok) return;
 
-  const c =
-    customerInfo(job);
-
-
-  const wa =
-    whatsappLink(
-      c.phone
-    );
-
-
-  document.getElementById(
-    "detailContent"
-  ).innerHTML = `
-
-    <div class="detail-item">
-
-      <small>Teknisi</small>
-
-      <strong>
-        ${esc(
-          technicianName(
-            job.assigned_to
-          )
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item">
-
-      <small>Jadwal</small>
-
-      <strong>
-        ${esc(
-          formatDate(
-            String(
-              job.scheduled_at || ""
-            ).substring(0,10)
-          )
-        )}
-
-        <br>
-
-        ${esc(
-          String(
-            job.scheduled_at || ""
-          ).substring(11,16)
-        )}
-
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item">
-
-      <small>Customer</small>
-
-      <strong>
-        ${esc(c.name)}
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item">
-
-      <small>WhatsApp</small>
-
-      <strong>
-
-        ${
-          wa
-
-          ?
-
-          `<a
-            href="${wa}"
-            target="_blank"
-          >
-            Chat ${esc(
-              c.phone
-            )}
-          </a>`
-
-          :
-
-          esc(
-            c.phone || "-"
-          )
-        }
-
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item full">
-
-      <small>Alamat</small>
-
-      <strong>
-        ${esc(
-          c.address || "-"
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item full">
-
-      <small>Pekerjaan</small>
-
-      <strong>
-        ${esc(
-          job.description || "-"
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="detail-item">
-
-      <small>Status</small>
-
-      <strong>
-        ${esc(
-          statusText[
-            job.status
-          ] ||
-          job.status ||
-          "-"
-        )}
-      </strong>
-
-    </div>
-
-  `;
-
-
-  document
-    .getElementById(
-      "detailModal"
-    )
-    .classList
-    .add("show");
-
-}
-
-
-async function logout(){
-
-  await supabaseClient
-    .auth
-    .signOut();
-
-  location.href =
-    "login.html";
-
-}
-
-
-/*
-  START
-*/
-
-(async function(){
 
   try{
 
-    const owner =
-      await checkOwner();
-
-
-    if(!owner)
-      return;
-
-
     await loadTechnicians();
+
+    await loadCustomers();
 
     await loadJobs();
 
-
-  }
-  catch(error){
+  }catch(error){
 
     console.error(error);
 
-
-    document.getElementById(
-      "jobTable"
-    ).innerHTML = `
-
-      <tr>
-
-        <td
-          colspan="7"
-          class="empty"
-        >
-
-          Gagal memuat data:
-          ${esc(
-            error.message ||
-            "Error"
-          )}
-
-        </td>
-
-      </tr>
-
-    `;
-
   }
 
-})();
+}
+
+
+init();
+
+
+/* ================= MODAL CLICK OUTSIDE ================= */
+
+document
+  .getElementById("jobModal")
+  .addEventListener(
+    "click",
+    function(e){
+
+      if(e.target === this){
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("detailModal")
+  .addEventListener(
+    "click",
+    function(e){
+
+      if(e.target === this){
+
+        closeDetail();
+
+      }
+
+    }
+  );
 
 </script>
 
