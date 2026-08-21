@@ -1,356 +1,1028 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Login - WAT ERP</title>
 
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css"
+    >
 
     <style>
-        .forgot-password {
-            display: block;
-            text-align: center;
-            margin-top: 14px;
-            color: #0866ff;
-            text-decoration: none;
-            font-size: 13px;
-            cursor: pointer;
+
+        *{
+            box-sizing:border-box;
         }
 
-        .forgot-password:hover {
-            text-decoration: underline;
+        body{
+            margin:0;
+            font-family:Arial,Helvetica,sans-serif;
         }
 
-        .reset-box {
-            display: none;
+        .login-container{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            background:#f4f7fb;
         }
 
-        .back-login {
-            display: block;
-            text-align: center;
-            margin-top: 14px;
-            color: #0866ff;
-            font-size: 13px;
-            cursor: pointer;
+        .login-box{
+            width:100%;
+            max-width:420px;
+            background:#fff;
+            padding:35px;
+            border-radius:16px;
+            box-shadow:0 10px 35px rgba(0,0,0,.10);
         }
+
+        .logo{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        .logo h1{
+            margin:0;
+            color:#0866ff;
+            font-size:32px;
+            letter-spacing:.5px;
+        }
+
+        .logo p{
+            margin:7px 0 0;
+            color:#718096;
+            font-size:13px;
+        }
+
+        .form-group{
+            margin-bottom:16px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:7px;
+            font-size:13px;
+            font-weight:600;
+            color:#334155;
+        }
+
+        input{
+            width:100%;
+            padding:13px 14px;
+            border:1px solid #d7deea;
+            border-radius:8px;
+            font-size:14px;
+            outline:none;
+            transition:.2s;
+        }
+
+        input:focus{
+            border-color:#0866ff;
+            box-shadow:0 0 0 3px rgba(8,102,255,.10);
+        }
+
+        .login-button{
+            width:100%;
+            padding:13px;
+            margin-top:5px;
+            border:0;
+            border-radius:8px;
+            background:#0866ff;
+            color:white;
+            font-size:14px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.2s;
+        }
+
+        .login-button:hover{
+            background:#0055dd;
+        }
+
+        .login-button:disabled{
+            opacity:.65;
+            cursor:not-allowed;
+        }
+
+        .forgot-password{
+            display:block;
+            text-align:center;
+            margin-top:16px;
+            color:#0866ff;
+            font-size:13px;
+            text-decoration:none;
+            cursor:pointer;
+        }
+
+        .forgot-password:hover{
+            text-decoration:underline;
+        }
+
+        .message{
+            margin-top:15px;
+            padding:11px 13px;
+            border-radius:8px;
+            font-size:13px;
+            line-height:1.5;
+            display:none;
+        }
+
+        .message.show{
+            display:block;
+        }
+
+        .message.error{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .message.success{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .reset-box{
+            display:none;
+        }
+
+        .reset-description{
+            color:#718096;
+            font-size:13px;
+            line-height:1.5;
+            margin-bottom:20px;
+            text-align:center;
+        }
+
+        .back-login{
+            display:block;
+            text-align:center;
+            margin-top:16px;
+            color:#0866ff;
+            font-size:13px;
+            cursor:pointer;
+        }
+
+        .footer{
+            text-align:center;
+            margin-top:22px;
+            font-size:11px;
+            color:#94a3b8;
+        }
+
+        @media(max-width:480px){
+
+            .login-box{
+                padding:28px 22px;
+            }
+
+            .logo h1{
+                font-size:28px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="login-container">
 
-    <!-- LOGIN -->
-    <div class="login-box" id="loginBox">
 
-        <h1>WAT ERP</h1>
+    <!-- =================================
+         LOGIN BOX
+    ================================== -->
 
-        <p class="subtitle">
-            Technician Control System
-        </p>
+    <div
+        class="login-box"
+        id="loginBox"
+    >
 
-        <form id="loginForm">
+        <div class="logo">
 
-            <label for="username">
-                Email
-            </label>
+            <h1>
+                WAT ERP
+            </h1>
 
-            <input
-                type="email"
-                id="username"
-                placeholder="Masukkan email"
-                autocomplete="username"
-                required
+            <p>
+                Technician Control System
+            </p>
+
+        </div>
+
+
+        <form
+            id="loginForm"
+        >
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Masukkan email"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+                id="loginButton"
             >
-
-            <label for="password">
-                Password
-            </label>
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Masukkan password"
-                autocomplete="current-password"
-                required
-            >
-
-            <button type="submit" id="loginButton">
                 LOGIN
             </button>
 
+
         </form>
 
-        <a class="forgot-password" onclick="showReset()">
+
+        <a
+            class="forgot-password"
+            onclick="showReset()"
+        >
             Lupa Password?
         </a>
 
-        <p id="loginMessage"></p>
+
+        <div
+            id="loginMessage"
+            class="message"
+        ></div>
+
+
+        <div class="footer">
+            WAT ERP © 2026
+        </div>
+
 
     </div>
 
 
-    <!-- RESET REQUEST -->
-    <div class="login-box reset-box" id="resetBox">
 
-        <h1>WAT ERP</h1>
+    <!-- =================================
+         RESET PASSWORD REQUEST
+    ================================== -->
 
-        <p class="subtitle">
-            Reset Password
-        </p>
+    <div
+        class="login-box reset-box"
+        id="resetBox"
+    >
 
-        <p style="font-size:13px;color:#718096;margin-bottom:20px;">
-            Masukkan email akun Anda. Link reset password akan dikirim ke email tersebut.
-        </p>
+        <div class="logo">
 
-        <form id="resetForm">
+            <h1>
+                WAT ERP
+            </h1>
 
-            <label for="resetEmail">
-                Email
-            </label>
+            <p>
+                Reset Password
+            </p>
 
-            <input
-                type="email"
-                id="resetEmail"
-                placeholder="Masukkan email"
-                required
+        </div>
+
+
+        <div class="reset-description">
+
+            Masukkan email akun Anda.
+            Kami akan mengirimkan link
+            untuk membuat password baru.
+
+        </div>
+
+
+        <form
+            id="resetForm"
+        >
+
+
+            <div class="form-group">
+
+                <label for="resetEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="resetEmail"
+                    placeholder="Masukkan email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+                id="resetButton"
             >
-
-            <button type="submit" id="resetButton">
                 KIRIM LINK RESET
             </button>
 
+
         </form>
 
-        <p id="resetMessage"></p>
 
-        <span class="back-login" onclick="showLogin()">
+        <div
+            id="resetMessage"
+            class="message"
+        ></div>
+
+
+        <span
+            class="back-login"
+            onclick="showLogin()"
+        >
             ← Kembali ke Login
         </span>
 
+
+        <div class="footer">
+            WAT ERP © 2026
+        </div>
+
+
     </div>
+
 
 </div>
 
 
+
+<!-- =================================
+     SUPABASE
+================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- =================================
+     WAT ERP CONFIG
+================================== -->
 
 <script src="assets/js/config.js"></script>
 
 
 <script>
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+
+/* =================================
+   SUPABASE CLIENT
+================================= */
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+
+/* =================================
+   LOGIN
+================================= */
+
+document
+.getElementById("loginForm")
+.addEventListener(
+    "submit",
+    async function(e){
+
+        e.preventDefault();
+
+
+        const email =
+            document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+            document
+            .getElementById("password")
+            .value;
+
+
+        const button =
+            document
+            .getElementById("loginButton");
+
+
+        const message =
+            document
+            .getElementById("loginMessage");
+
+
+        clearMessage(message);
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "LOGIN...";
+
+
+        try{
+
+
+            /* =========================
+               SUPABASE LOGIN
+            ========================= */
+
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email:email,
+
+                    password:password
+
+                });
+
+
+            if(error){
+
+                throw new Error(
+                    translateLoginError(
+                        error
+                    )
+                );
+
+            }
+
+
+            const user =
+                data.user;
+
+
+            if(!user){
+
+                throw new Error(
+                    "User tidak ditemukan."
+                );
+
+            }
+
+
+            /* =========================
+               AMBIL PROFILE
+            ========================= */
+
+            const {
+                data:profile,
+                error:profileError
+            } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "id,full_name,email,role,status"
+                )
+                .eq(
+                    "id",
+                    user.id
+                )
+                .single();
+
+
+            if(profileError){
+
+                console.error(
+                    "PROFILE ERROR:",
+                    profileError
+                );
+
+
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+
+                throw new Error(
+                    "Profile akun tidak ditemukan."
+                );
+
+            }
+
+
+            /* =========================
+               CEK STATUS
+            ========================= */
+
+            if(
+                profile.status &&
+                profile.status !== "ACTIVE"
+            ){
+
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+
+                throw new Error(
+                    "Akun Anda tidak aktif. Hubungi Owner."
+                );
+
+            }
+
+
+            /* =========================
+               ROLE REDIRECT
+            ========================= */
+
+            const role =
+                String(
+                    profile.role || ""
+                )
+                .trim()
+                .toUpperCase();
+
+
+            console.log(
+                "LOGIN BERHASIL",
+                {
+                    email:user.email,
+                    role:role
+                }
+            );
+
+
+            /*
+               OWNER
+            */
+
+            if(role === "OWNER"){
+
+                window.location.href =
+                    "dashboard-owner.html";
+
+                return;
+
+            }
+
+
+            /*
+               CS
+            */
+
+            if(role === "CS"){
+
+                window.location.href =
+                    "jobs.html";
+
+                return;
+
+            }
+
+
+            /*
+               TEKNISI
+            */
+
+            if(
+                role === "TEKNISI" ||
+                role === "TECHNICIAN"
+            ){
+
+                window.location.href =
+                    "technician.html";
+
+                return;
+
+            }
+
+
+            /*
+               ROLE TIDAK DIKENALI
+            */
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            throw new Error(
+                "Role akun tidak dikenali: " +
+                role
+            );
+
+
+        }
+        catch(error){
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+
+            showMessage(
+                message,
+                error.message,
+                "error"
+            );
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "LOGIN";
+
+        }
+
+    }
 );
 
 
-/* =========================
-   LOGIN
-========================= */
 
-document.getElementById("loginForm").addEventListener("submit", async function(e){
+/* =================================
+   RESET PASSWORD
+================================= */
 
-    e.preventDefault();
+document
+.getElementById("resetForm")
+.addEventListener(
+    "submit",
+    async function(e){
 
-    const email =
-        document.getElementById("username").value.trim();
-
-    const password =
-        document.getElementById("password").value;
-
-    const button =
-        document.getElementById("loginButton");
-
-    const message =
-        document.getElementById("loginMessage");
-
-    button.disabled = true;
-    button.textContent = "LOGIN...";
-
-    message.textContent = "";
-    message.style.color = "red";
-
-    const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-    if(error){
-
-        message.textContent =
-            "Login gagal: " + error.message;
-
-        button.disabled = false;
-        button.textContent = "LOGIN";
-
-        return;
-    }
+        e.preventDefault();
 
 
-    /*
-       Ambil profile user
-    */
-
-    const user = data.user;
-
-    const { data: profile, error: profileError } =
-        await supabaseClient
-            .from("profiles")
-            .select("role,status")
-            .eq("id", user.id)
-            .single();
+        const email =
+            document
+            .getElementById("resetEmail")
+            .value
+            .trim();
 
 
-    if(profileError){
-
-        message.textContent =
-            "Login berhasil, tetapi profile tidak ditemukan.";
-
-        button.disabled = false;
-        button.textContent = "LOGIN";
-
-        return;
-    }
+        const button =
+            document
+            .getElementById("resetButton");
 
 
-    if(profile.status !== "ACTIVE"){
-
-        await supabaseClient.auth.signOut();
-
-        message.textContent =
-            "Akun tidak aktif.";
-
-        button.disabled = false;
-        button.textContent = "LOGIN";
-
-        return;
-    }
+        const message =
+            document
+            .getElementById("resetMessage");
 
 
-    /*
-       REDIRECT BERDASARKAN ROLE
-    */
-
-    if(profile.role === "OWNER"){
-
-        window.location.href =
-            "dashboard-owner.html";
-
-    }
-    else if(profile.role === "TEKNISI"){
-
-        window.location.href =
-            "technician.html";
-
-    }
-    else{
-
-        message.textContent =
-            "Role akun tidak dikenali.";
-
-        await supabaseClient.auth.signOut();
-
-        button.disabled = false;
-        button.textContent = "LOGIN";
-    }
-
-});
+        clearMessage(message);
 
 
-/* =========================
-   RESET PASSWORD REQUEST
-========================= */
+        button.disabled = true;
 
-document.getElementById("resetForm").addEventListener("submit", async function(e){
-
-    e.preventDefault();
-
-    const email =
-        document.getElementById("resetEmail").value.trim();
-
-    const button =
-        document.getElementById("resetButton");
-
-    const message =
-        document.getElementById("resetMessage");
-
-    button.disabled = true;
-    button.textContent = "MENGIRIM...";
-
-    message.textContent = "";
-    message.style.color = "#333";
+        button.textContent =
+            "MENGIRIM...";
 
 
-    const redirectUrl =
-        window.location.origin +
-        window.location.pathname.replace(
-            "login.html",
-            "reset-password.html"
-        );
+        try{
 
 
-    const { error } =
-        await supabaseClient.auth.resetPasswordForEmail(
-            email,
-            {
-                redirectTo: redirectUrl
+            /*
+               URL HALAMAN RESET
+            */
+
+            const resetUrl =
+                window.location.origin +
+                window.location.pathname
+                    .replace(
+                        "login.html",
+                        "reset-password.html"
+                    );
+
+
+            console.log(
+                "Reset URL:",
+                resetUrl
+            );
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .auth
+                .resetPasswordForEmail(
+                    email,
+                    {
+
+                        redirectTo:
+                            resetUrl
+
+                    }
+                );
+
+
+            if(error){
+
+                throw new Error(
+                    translateResetError(
+                        error
+                    )
+                );
+
             }
-        );
 
 
-    if(error){
+            showMessage(
+                message,
+                "Link reset password sudah dikirim. Silakan cek email Anda.",
+                "success"
+            );
 
-        message.style.color = "red";
 
-        message.textContent =
-            "Gagal mengirim: " + error.message;
+        }
+        catch(error){
+
+            console.error(
+                "RESET ERROR:",
+                error
+            );
+
+
+            showMessage(
+                message,
+                error.message,
+                "error"
+            );
+
+        }
+
 
         button.disabled = false;
-        button.textContent = "KIRIM LINK RESET";
 
-        return;
+        button.textContent =
+            "KIRIM LINK RESET";
+
     }
+);
 
 
-    message.style.color = "green";
 
-    message.textContent =
-        "Link reset password sudah dikirim. Silakan cek email Anda.";
-
-    button.disabled = false;
-    button.textContent = "KIRIM LINK RESET";
-
-});
-
-
-/* =========================
-   UI
-========================= */
+/* =================================
+   SHOW RESET
+================================= */
 
 function showReset(){
 
-    document.getElementById("loginBox").style.display = "none";
+    document
+        .getElementById("loginBox")
+        .style.display =
+            "none";
 
-    document.getElementById("resetBox").style.display = "block";
 
-    document.getElementById("resetEmail").value =
-        document.getElementById("username").value;
+    document
+        .getElementById("resetBox")
+        .style.display =
+            "block";
+
+
+    /*
+       Kalau email login sudah diisi,
+       otomatis masuk ke form reset.
+    */
+
+    const loginEmail =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    if(loginEmail){
+
+        document
+        .getElementById("resetEmail")
+        .value =
+            loginEmail;
+
+    }
+
+
+    clearMessage(
+        document
+        .getElementById("loginMessage")
+    );
+
 }
 
+
+
+/* =================================
+   SHOW LOGIN
+================================= */
 
 function showLogin(){
 
-    document.getElementById("resetBox").style.display = "none";
+    document
+        .getElementById("resetBox")
+        .style.display =
+            "none";
 
-    document.getElementById("loginBox").style.display = "block";
+
+    document
+        .getElementById("loginBox")
+        .style.display =
+            "block";
+
+
+    clearMessage(
+        document
+        .getElementById("resetMessage")
+    );
+
 }
+
+
+
+/* =================================
+   MESSAGE
+================================= */
+
+function showMessage(
+    element,
+    text,
+    type
+){
+
+    element.textContent =
+        text;
+
+
+    element.className =
+        "message show " +
+        type;
+
+}
+
+
+function clearMessage(element){
+
+    element.textContent =
+        "";
+
+    element.className =
+        "message";
+
+}
+
+
+
+/* =================================
+   TRANSLATE LOGIN ERROR
+================================= */
+
+function translateLoginError(error){
+
+    const text =
+        String(
+            error?.message || ""
+        )
+        .toLowerCase();
+
+
+    if(
+        text.includes(
+            "invalid login credentials"
+        )
+    ){
+
+        return (
+            "Email atau password salah."
+        );
+
+    }
+
+
+    if(
+        text.includes(
+            "email not confirmed"
+        )
+    ){
+
+        return (
+            "Email akun belum dikonfirmasi."
+        );
+
+    }
+
+
+    if(
+        text.includes(
+            "too many requests"
+        )
+    ){
+
+        return (
+            "Terlalu banyak percobaan login. Tunggu beberapa saat lalu coba lagi."
+        );
+
+    }
+
+
+    return (
+        error?.message ||
+        "Login gagal."
+    );
+
+}
+
+
+
+/* =================================
+   TRANSLATE RESET ERROR
+================================= */
+
+function translateResetError(error){
+
+    const text =
+        String(
+            error?.message || ""
+        )
+        .toLowerCase();
+
+
+    if(
+        text.includes(
+            "rate limit"
+        )
+    ){
+
+        return (
+            "Email reset sedang terkena batas pengiriman. Jangan kirim berulang kali. Tunggu sampai batas email kembali normal."
+        );
+
+    }
+
+
+    if(
+        text.includes(
+            "redirect"
+        )
+    ){
+
+        return (
+            "URL reset belum diizinkan di konfigurasi Supabase."
+        );
+
+    }
+
+
+    return (
+        error?.message ||
+        "Gagal mengirim link reset."
+    );
+
+}
+
+
 
 </script>
 
+
 </body>
+
 </html>
