@@ -656,7 +656,7 @@ Tambah Freon - Rp100.000"
             <button class="btn btn-success"
                     id="sendBillingButton"
                     onclick="sendBillingWhatsApp()">
-                💬 KIRIM TAGIHAN
+                💬 KIRIM TAGIHAN VIA WHATSAPP
             </button>
 
             <button class="btn btn-primary"
@@ -664,7 +664,7 @@ Tambah Freon - Rp100.000"
                     onclick="finalCompleteJob()"
                     disabled
                     style="opacity:.5;cursor:not-allowed;">
-                ✅ SELESAIKAN PEKERJAAN
+                ✅ SAYA SUDAH KIRIM — SELESAIKAN
             </button>
         </div>
     </div>
@@ -1805,20 +1805,23 @@ async function sendBillingWhatsApp(){
         const message =
 `Halo Bapak/Ibu ${selectedJob.customer_name || "Customer"},
 
-Pekerjaan ${selectedJob.title || selectedJob.work_description || "AC"} sudah selesai dilakukan.
+Pekerjaan ${selectedJob.title || selectedJob.work_description || "AC"} telah selesai dikerjakan.
 
-Berikut rincian tagihan:
-
+RINCIAN TAGIHAN:
 ${detail}
 
 TOTAL TAGIHAN: ${formatRupiah(total)}
 
-Mohon melakukan pembayaran sesuai total tagihan.
+PEMBAYARAN:
+Bank BCA
+No. Rekening: 2190176561
+a.n. Roni Wijaya
 
-Setelah pembayaran, mohon konfirmasi pembayaran kepada Customer Service WAT.
+Setelah melakukan pembayaran, mohon konfirmasi pembayaran kepada Customer Service WAT.
 
 Terima kasih.
-WAT ERP`;
+WAT ERP
+Wijaya AC`;
 
         const waUrl =
             "https://wa.me/" +
@@ -1839,7 +1842,7 @@ WAT ERP`;
             .style.display = "block";
 
         showBillingAlert(
-            "Tagihan sudah disiapkan dan WhatsApp dibuka. Kirim pesan ke customer, lalu klik Selesaikan Pekerjaan.",
+            "WhatsApp sudah dibuka dengan rincian tagihan. Kirim pesan ke customer, lalu klik "Saya Sudah Kirim — Selesaikan".",
             "success"
         );
 
