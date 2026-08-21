@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,77 +16,62 @@
 
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, sans-serif;
             background: #f4f7fb;
             color: #172033;
         }
 
-        button,
-        input,
-        textarea,
-        select {
-            font-family: inherit;
-        }
-
-        .topbar {
-            height: 62px;
-            background: #075fe8;
+        header {
+            background: #12458f;
             color: white;
+            padding: 16px 28px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 28px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+            align-items: center;
         }
 
-        .brand {
-            font-size: 20px;
-            font-weight: 800;
+        .brand h2 {
+            margin: 0;
+            font-size: 22px;
         }
 
         .brand small {
-            display: block;
-            font-size: 10px;
-            font-weight: 500;
-            opacity: .8;
-            margin-top: 2px;
+            opacity: .75;
         }
 
-        .top-right {
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .role-badge {
+        .role {
             background: rgba(255,255,255,.15);
-            padding: 9px 15px;
+            padding: 8px 14px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 13px;
         }
 
-        .logout-btn {
+        .logout {
             border: 0;
             background: white;
-            color: #075fe8;
+            color: #12458f;
             padding: 9px 16px;
             border-radius: 7px;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: bold;
         }
 
-        .page {
-            max-width: 1080px;
+        .container {
+            max-width: 1150px;
             margin: 28px auto;
-            padding: 0 18px 50px;
+            padding: 0 18px;
         }
 
         .page-head {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            align-items: center;
             margin-bottom: 20px;
         }
 
@@ -95,76 +81,77 @@
         }
 
         .page-head p {
-            margin: 6px 0 0;
+            margin: 5px 0 0;
             color: #718096;
-            font-size: 14px;
         }
 
-        .primary-btn {
-            background: #075fe8;
-            color: white;
+        .btn-primary {
+            background: #1261db;
             border: 0;
-            padding: 11px 18px;
+            color: white;
+            padding: 12px 18px;
             border-radius: 8px;
-            font-weight: 700;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .primary-btn:hover {
-            background: #004dcc;
+        .btn-primary:hover {
+            background: #0d4fb8;
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 16px;
+            gap: 16px;
+            margin-bottom: 18px;
         }
 
-        .stat-card {
+        .stat {
             background: white;
-            border-left: 4px solid #075fe8;
-            border-radius: 10px;
-            padding: 17px 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #1261db;
+            box-shadow: 0 2px 10px rgba(0,0,0,.04);
         }
 
-        .stat-card span {
+        .stat span {
             display: block;
             color: #718096;
-            font-size: 12px;
-            margin-bottom: 7px;
+            font-size: 13px;
         }
 
-        .stat-card strong {
+        .stat strong {
+            display: block;
+            margin-top: 8px;
             font-size: 25px;
         }
 
-        .toolbar {
+        .filter-box {
             background: white;
             padding: 14px;
-            border-radius: 10px;
-            display: grid;
-            grid-template-columns: 1fr 160px;
+            border-radius: 12px;
+            display: flex;
             gap: 10px;
-            margin-bottom: 16px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+            margin-bottom: 18px;
         }
 
-        .toolbar input,
-        .toolbar select {
-            width: 100%;
-            padding: 11px 12px;
-            border: 1px solid #d9e1ec;
+        .filter-box input,
+        .filter-box select {
+            padding: 11px;
+            border: 1px solid #d7deea;
             border-radius: 7px;
             outline: none;
         }
 
-        .table-wrap {
+        .filter-box input {
+            flex: 1;
+        }
+
+        .table-box {
             background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,.04);
         }
 
         table {
@@ -174,158 +161,138 @@
 
         th {
             text-align: left;
-            padding: 14px 13px;
             background: #f8fafc;
-            color: #526174;
-            font-size: 11px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #e8edf3;
+            color: #667085;
+            font-size: 12px;
+            padding: 14px;
+            white-space: nowrap;
         }
 
         td {
-            padding: 14px 13px;
-            border-bottom: 1px solid #edf1f5;
-            font-size: 13px;
+            padding: 14px;
+            border-top: 1px solid #edf0f5;
+            font-size: 14px;
             vertical-align: top;
         }
 
-        tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .job-date {
-            color: #075fe8;
-            font-weight: 700;
-        }
-
         .job-code {
-            color: #8491a5;
-            font-size: 11px;
-            margin-top: 4px;
+            font-weight: bold;
+            color: #1261db;
         }
 
         .customer-name {
-            font-weight: 700;
-            margin-bottom: 4px;
+            font-weight: bold;
         }
 
-        .wa-link {
-            color: #0a9f52;
-            font-weight: 700;
-            text-decoration: none;
+        .muted {
+            color: #718096;
             font-size: 12px;
+            margin-top: 4px;
         }
 
         .status {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 5px 9px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 700;
-            white-space: nowrap;
+            font-weight: bold;
         }
 
-        .status-baru {
-            background: #e8f1ff;
-            color: #1261c9;
+        .status-new {
+            background: #eef2ff;
+            color: #3730a3;
         }
 
-        .status-diterima {
-            background: #fff3d9;
-            color: #a96c00;
+        .status-assigned {
+            background: #e0f2fe;
+            color: #0369a1;
         }
 
-        .status-menuju {
-            background: #eee9ff;
-            color: #6544c7;
+        .status-way {
+            background: #fff7ed;
+            color: #c2410c;
         }
 
-        .status-checkin {
-            background: #e4f8f2;
-            color: #087c5b;
+        .status-check {
+            background: #fef3c7;
+            color: #92400e;
         }
 
-        .status-proses {
-            background: #e2f1ff;
-            color: #0069c9;
+        .status-progress {
+            background: #ede9fe;
+            color: #6d28d9;
         }
 
-        .status-selesai {
-            background: #e2f8e9;
-            color: #14833b;
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
         }
 
-        .status-batal {
-            background: #ffe8e8;
-            color: #c53030;
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .action-btn {
             border: 0;
+            padding: 7px 10px;
             border-radius: 6px;
-            padding: 6px 9px;
-            font-size: 11px;
             cursor: pointer;
-            margin: 2px;
+            margin-right: 4px;
+            font-size: 12px;
         }
 
-        .btn-detail {
-            background: #e8f1ff;
-            color: #075fe8;
+        .detail-btn {
+            background: #e0edff;
+            color: #1254a4;
         }
 
-        .btn-edit {
-            background: #fff4d8;
-            color: #9a6700;
+        .edit-btn {
+            background: #fff3cd;
+            color: #856404;
         }
 
-        .btn-delete {
-            background: #ffe8e8;
-            color: #c53030;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 35px;
-            color: #8a96a8;
+        .delete-btn {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         /* MODAL */
 
-        .modal-overlay {
+        .modal {
+            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, .60);
-            display: none;
+            background: rgba(15, 23, 42, .65);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            z-index: 9999;
+            padding: 15px;
         }
 
-        .modal-overlay.show {
+        .modal.show {
             display: flex;
         }
 
-        .modal {
-            width: min(650px, 100%);
+        .modal-box {
+            width: 100%;
+            max-width: 650px;
             max-height: 92vh;
             overflow-y: auto;
             background: white;
             border-radius: 14px;
-            box-shadow: 0 20px 60px rgba(0,0,0,.25);
         }
 
         .modal-header {
             padding: 18px 20px;
-            border-bottom: 1px solid #e8edf3;
+            border-bottom: 1px solid #edf0f5;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             background: white;
-            z-index: 2;
+            z-index: 5;
         }
 
         .modal-header h2 {
@@ -333,161 +300,137 @@
             font-size: 18px;
         }
 
-        .close-btn {
+        .close {
             border: 0;
             background: transparent;
-            font-size: 24px;
-            color: #64748b;
+            font-size: 25px;
             cursor: pointer;
+            color: #667085;
         }
 
-        .modal-body {
+        .form {
             padding: 20px;
         }
 
-        .form-grid {
+        .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .field {
+            margin-bottom: 14px;
         }
 
-        .form-group.full {
+        .field.full {
             grid-column: 1 / -1;
         }
 
         label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #526174;
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
         }
 
         input,
         select,
         textarea {
-            border: 1px solid #d7e0eb;
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d6dce8;
             border-radius: 7px;
-            padding: 10px 11px;
-            font-size: 13px;
+            font-size: 14px;
             outline: none;
-            background: white;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
         }
 
         input:focus,
         select:focus,
         textarea:focus {
-            border-color: #075fe8;
-            box-shadow: 0 0 0 2px rgba(7,95,232,.08);
-        }
-
-        textarea {
-            min-height: 85px;
-            resize: vertical;
+            border-color: #1261db;
         }
 
         .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid #e8edf3;
+            padding: 16px 20px;
+            border-top: 1px solid #edf0f5;
             display: flex;
             justify-content: flex-end;
-            gap: 8px;
+            gap: 10px;
             position: sticky;
             bottom: 0;
             background: white;
         }
 
-        .secondary-btn {
+        .btn-secondary {
+            background: #edf1f6;
+            color: #344054;
             border: 0;
-            background: #edf2f7;
-            color: #334155;
-            padding: 10px 16px;
+            padding: 11px 18px;
             border-radius: 7px;
             cursor: pointer;
-            font-weight: 700;
         }
 
-        .danger-message {
-            background: #fff0f0;
-            color: #c53030;
-            padding: 10px 12px;
-            border-radius: 7px;
-            font-size: 12px;
+        .message {
             margin-top: 12px;
+            padding: 10px;
+            border-radius: 7px;
+            font-size: 13px;
             display: none;
         }
 
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .detail-box {
-            background: #f7f9fc;
-            border-radius: 8px;
-            padding: 12px;
-        }
-
-        .detail-box.full {
-            grid-column: 1 / -1;
-        }
-
-        .detail-box small {
+        .message.error {
             display: block;
-            color: #7b8797;
-            font-size: 10px;
-            margin-bottom: 5px;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        .detail-box strong {
-            font-size: 13px;
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
         }
 
-        @media(max-width: 800px) {
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #718096;
+        }
+
+        @media(max-width: 700px) {
+
             .stats {
                 grid-template-columns: 1fr;
             }
 
-            .toolbar {
+            .page-head {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .grid {
                 grid-template-columns: 1fr;
             }
 
-            .table-wrap {
-                overflow-x: auto;
+            .field.full {
+                grid-column: auto;
             }
 
-            table {
-                min-width: 850px;
-            }
-        }
-
-        @media(max-width: 600px) {
-            .topbar {
-                padding: 0 14px;
-            }
-
-            .page {
-                margin-top: 20px;
-            }
-
-            .page-head {
-                align-items: flex-start;
+            .filter-box {
                 flex-direction: column;
             }
 
-            .form-grid,
-            .detail-grid {
-                grid-template-columns: 1fr;
+            header {
+                padding: 14px 16px;
             }
 
-            .form-group.full,
-            .detail-box.full {
-                grid-column: auto;
+            .container {
+                margin-top: 18px;
             }
         }
     </style>
@@ -495,54 +438,58 @@
 
 <body>
 
-<header class="topbar">
+<header>
+
     <div class="brand">
-        WAT ERP
+        <h2>WAT ERP</h2>
         <small>Technician Control System</small>
     </div>
 
-    <div class="top-right">
-        <span class="role-badge" id="roleBadge">USER</span>
-        <button class="logout-btn" id="logoutBtn">LOGOUT</button>
+    <div class="header-right">
+        <span class="role" id="userRole">USER</span>
+        <button class="logout" id="logoutBtn">LOGOUT</button>
     </div>
+
 </header>
 
 
-<main class="page">
+<main class="container">
 
     <div class="page-head">
+
         <div>
             <h1>Jadwal Teknisi</h1>
-            <p>Kelola dan pantau pekerjaan teknisi dan customer</p>
+            <p>Kelola jadwal pekerjaan teknisi dan customer</p>
         </div>
 
-        <button class="primary-btn" id="addJobBtn">
+        <button class="btn-primary" id="addJobBtn">
             + Tambah Jadwal
         </button>
+
     </div>
 
 
-    <section class="stats">
+    <div class="stats">
 
-        <div class="stat-card">
+        <div class="stat">
             <span>Total Jadwal</span>
             <strong id="totalJobs">0</strong>
         </div>
 
-        <div class="stat-card">
+        <div class="stat">
             <span>Jadwal Hari Ini</span>
             <strong id="todayJobs">0</strong>
         </div>
 
-        <div class="stat-card">
+        <div class="stat">
             <span>Belum Selesai</span>
-            <strong id="pendingJobs">0</strong>
+            <strong id="unfinishedJobs">0</strong>
         </div>
 
-    </section>
+    </div>
 
 
-    <section class="toolbar">
+    <div class="filter-box">
 
         <input
             type="text"
@@ -551,41 +498,43 @@
         >
 
         <select id="statusFilter">
+
             <option value="">Semua Status</option>
             <option value="NEW">Baru</option>
-            <option value="ACCEPTED">Diterima</option>
-            <option value="EN_ROUTE">Menuju Lokasi</option>
+            <option value="ASSIGNED">Diterima Teknisi</option>
+            <option value="ON_THE_WAY">Menuju Lokasi</option>
             <option value="CHECKED_IN">Check In</option>
-            <option value="IN_PROGRESS">Proses</option>
+            <option value="IN_PROGRESS">Sedang Dikerjakan</option>
             <option value="COMPLETED">Selesai</option>
-            <option value="CANCELLED">Batal</option>
+            <option value="CANCELLED">Dibatalkan</option>
+
         </select>
 
-    </section>
+    </div>
 
 
-    <section class="table-wrap">
+    <div class="table-box">
 
         <table>
 
             <thead>
+
                 <tr>
-                    <th>Jadwal</th>
-                    <th>Customer</th>
-                    <th>Teknisi</th>
-                    <th>Pekerjaan</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th>JADWAL</th>
+                    <th>CUSTOMER</th>
+                    <th>TEKNISI</th>
+                    <th>PEKERJAAN</th>
+                    <th>STATUS</th>
+                    <th>AKSI</th>
                 </tr>
+
             </thead>
 
-            <tbody id="jobsBody">
+            <tbody id="jobsTable">
 
                 <tr>
-                    <td colspan="6">
-                        <div class="empty">
-                            Memuat jadwal...
-                        </div>
+                    <td colspan="6" class="loading">
+                        Memuat jadwal...
                     </td>
                 </tr>
 
@@ -593,334 +542,247 @@
 
         </table>
 
-    </section>
+    </div>
 
 </main>
 
 
-<!-- ================= MODAL TAMBAH / EDIT ================= -->
+<!-- MODAL TAMBAH -->
+<div class="modal" id="jobModal">
 
-<div class="modal-overlay" id="jobModal">
-
-    <div class="modal">
+    <div class="modal-box">
 
         <div class="modal-header">
 
-            <h2 id="modalTitle">
-                Tambah Jadwal
-            </h2>
+            <h2>Tambah Jadwal</h2>
 
-            <button class="close-btn" id="closeModal">
+            <button class="close" id="closeModal">
                 ×
             </button>
 
         </div>
 
 
-        <form id="jobForm">
+        <form class="form" id="jobForm">
 
-            <div class="modal-body">
+            <div class="grid">
 
-                <div class="form-grid">
+                <div class="field">
 
-                    <div class="form-group">
+                    <label>Teknisi *</label>
 
-                        <label>Teknisi *</label>
-
-                        <select id="technicianId" required>
-
-                            <option value="">
-                                Memuat teknisi...
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Tanggal *</label>
-
-                        <input
-                            type="date"
-                            id="jobDate"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Jam *</label>
-
-                        <input
-                            type="time"
-                            id="jobTime"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>No. WhatsApp Customer *</label>
-
-                        <input
-                            type="text"
-                            id="customerPhone"
-                            placeholder="08xxxxxxxxxx"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Nama Customer *</label>
-
-                        <input
-                            type="text"
-                            id="customerName"
-                            placeholder="Nama customer"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group full">
-
-                        <label>Alamat Customer *</label>
-
-                        <textarea
-                            id="customerAddress"
-                            placeholder="Alamat lengkap customer"
-                            required
-                        ></textarea>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Judul Pekerjaan *</label>
-
-                        <input
-                            type="text"
-                            id="jobTitle"
-                            placeholder="Contoh: Cuci AC"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Jenis Pekerjaan</label>
-
-                        <input
-                            type="text"
-                            id="jobType"
-                            placeholder="Contoh: Cuci AC"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group full">
-
-                        <label>Keterangan / Pekerjaan *</label>
-
-                        <textarea
-                            id="jobDescription"
-                            placeholder="Contoh: Cuci AC 2 unit"
-                            required
-                        ></textarea>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Prioritas</label>
-
-                        <select id="priority">
-
-                            <option value="NORMAL">
-                                Normal
-                            </option>
-
-                            <option value="LOW">
-                                Rendah
-                            </option>
-
-                            <option value="HIGH">
-                                Tinggi
-                            </option>
-
-                            <option value="URGENT">
-                                Urgent
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Status</label>
-
-                        <select id="jobStatus">
-
-                            <option value="NEW">
-                                Baru
-                            </option>
-
-                            <option value="ACCEPTED">
-                                Diterima
-                            </option>
-
-                            <option value="EN_ROUTE">
-                                Menuju Lokasi
-                            </option>
-
-                            <option value="CHECKED_IN">
-                                Check In
-                            </option>
-
-                            <option value="IN_PROGRESS">
-                                Proses
-                            </option>
-
-                            <option value="COMPLETED">
-                                Selesai
-                            </option>
-
-                            <option value="CANCELLED">
-                                Batal
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Estimasi Biaya</label>
-
-                        <input
-                            type="number"
-                            id="estimatedCost"
-                            min="0"
-                            value="0"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Actual Cost</label>
-
-                        <input
-                            type="number"
-                            id="actualCost"
-                            min="0"
-                            value="0"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>Harga Service</label>
-
-                        <input
-                            type="number"
-                            id="servicePrice"
-                            min="0"
-                            value="0"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group full">
-
-                        <label>Catatan Teknisi</label>
-
-                        <textarea
-                            id="technicianNotes"
-                            placeholder="Catatan teknisi..."
-                        ></textarea>
-
-                    </div>
+                    <select id="technician_id" required>
+                        <option value="">Memuat teknisi...</option>
+                    </select>
 
                 </div>
 
 
-                <div
-                    class="danger-message"
-                    id="formError"
-                ></div>
+                <div class="field">
+
+                    <label>Tanggal *</label>
+
+                    <input
+                        type="date"
+                        id="job_date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Jam *</label>
+
+                    <input
+                        type="time"
+                        id="job_time"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>No. WhatsApp Customer *</label>
+
+                    <input
+                        type="text"
+                        id="customer_whatsapp"
+                        placeholder="08xxxxxxxxxx"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Nama Customer *</label>
+
+                    <input
+                        type="text"
+                        id="customer_name"
+                        placeholder="Nama customer"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field full">
+
+                    <label>Alamat Customer *</label>
+
+                    <textarea
+                        id="customer_address"
+                        placeholder="Alamat lengkap customer"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Judul Pekerjaan *</label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        placeholder="Contoh: Cuci AC"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Jenis Pekerjaan</label>
+
+                    <input
+                        type="text"
+                        id="job_type"
+                        placeholder="Contoh: Cuci AC"
+                    >
+
+                </div>
+
+
+                <div class="field full">
+
+                    <label>Keterangan / Pekerjaan *</label>
+
+                    <textarea
+                        id="description"
+                        placeholder="Contoh: Cuci AC 2 unit"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Prioritas</label>
+
+                    <select id="priority">
+
+                        <option value="Normal">
+                            Normal
+                        </option>
+
+                        <option value="Urgent">
+                            Urgent
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Estimasi Biaya</label>
+
+                    <input
+                        type="number"
+                        id="estimated_cost"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Actual Cost</label>
+
+                    <input
+                        type="number"
+                        id="actual_cost"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Harga Service</label>
+
+                    <input
+                        type="number"
+                        id="service_price"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <div class="field full">
+
+                    <label>Catatan Teknisi</label>
+
+                    <textarea
+                        id="technician_notes"
+                        placeholder="Catatan teknisi..."
+                    ></textarea>
+
+                </div>
 
             </div>
 
 
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="secondary-btn"
-                    id="cancelModal"
-                >
-                    Batal
-                </button>
-
-                <button
-                    type="submit"
-                    class="primary-btn"
-                    id="saveJobBtn"
-                >
-                    Simpan Jadwal
-                </button>
-
-            </div>
+            <div id="formMessage" class="message"></div>
 
         </form>
 
-    </div>
 
-</div>
+        <div class="modal-footer">
 
-
-<!-- ================= MODAL DETAIL ================= -->
-
-<div class="modal-overlay" id="detailModal">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h2>Detail Pekerjaan</h2>
-
-            <button class="close-btn" id="closeDetail">
-                ×
+            <button
+                type="button"
+                class="btn-secondary"
+                id="cancelBtn"
+            >
+                Batal
             </button>
 
-        </div>
-
-        <div class="modal-body">
-
-            <div class="detail-grid" id="detailContent"></div>
+            <button
+                type="submit"
+                form="jobForm"
+                class="btn-primary"
+                id="saveBtn"
+            >
+                Simpan Jadwal
+            </button>
 
         </div>
 
@@ -930,26 +792,22 @@
 
 
 <!-- SUPABASE -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- CONFIG -->
 <script src="assets/js/config.js"></script>
 
 
 <script>
 
-let db = null;
+let supabaseClient = null;
 let currentUser = null;
 let currentProfile = null;
-let jobs = [];
-let technicians = [];
-let editingJobId = null;
+let allJobs = [];
 
 
-/* ================================
-   INITIALIZE
-================================ */
+/* ==========================================
+   INIT
+========================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -966,95 +824,68 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        db = window.supabase.createClient(
+        supabaseClient = window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_PUBLISHABLE_KEY
         );
 
 
-        await checkSession();
+        const {
+            data: {
+                session
+            }
+        } = await supabaseClient.auth.getSession();
 
-        setupEvents();
+
+        if (!session) {
+
+            window.location.href = "login.html";
+
+            return;
+        }
+
+
+        currentUser = session.user;
+
+
+        await loadProfile();
 
         await loadTechnicians();
 
         await loadJobs();
 
+        setDefaultDateTime();
+
     } catch (error) {
 
         console.error(error);
 
-        alert(
-            "Terjadi kesalahan saat memuat sistem."
-        );
+        alert("Gagal membuka sistem: " + error.message);
 
     }
 
 });
 
 
-/* ================================
-   SESSION
-================================ */
-
-async function checkSession() {
-
-    const {
-        data,
-        error
-    } = await db.auth.getSession();
-
-
-    if (error) {
-
-        console.error(error);
-
-        return;
-    }
-
-
-    if (!data.session) {
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-
-    currentUser = data.session.user;
-
-
-    await loadProfile();
-
-}
-
-
-/* ================================
+/* ==========================================
    PROFILE
-================================ */
+========================================== */
 
 async function loadProfile() {
 
     const {
         data,
         error
-    } = await db
+    } = await supabaseClient
         .from("profiles")
         .select("*")
         .eq("id", currentUser.id)
-        .maybeSingle();
+        .single();
 
 
     if (error) {
 
-        console.error(
-            "Profile error:",
-            error
-        );
-
-        document.getElementById(
-            "roleBadge"
-        ).textContent = "USER";
+        console.error(error);
 
         return;
     }
@@ -1063,42 +894,41 @@ async function loadProfile() {
     currentProfile = data;
 
 
-    if (data) {
-
-        document.getElementById(
-            "roleBadge"
-        ).textContent =
-            String(
-                data.role || "USER"
-            ).toUpperCase();
-
-    }
+    document.getElementById("userRole").textContent =
+        data.role || "USER";
 
 }
 
 
-/* ================================
-   LOAD TECHNICIANS
-================================ */
+/* ==========================================
+   LOGOUT
+========================================== */
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "login.html";
+
+    });
+
+
+/* ==========================================
+   TECHNICIAN
+========================================== */
 
 async function loadTechnicians() {
 
     const select =
-        document.getElementById(
-            "technicianId"
-        );
-
-
-    select.innerHTML =
-        `<option value="">
-            Memuat teknisi...
-        </option>`;
+        document.getElementById("technician_id");
 
 
     const {
         data,
         error
-    } = await db
+    } = await supabaseClient
         .from("profiles")
         .select("id, full_name, email, role, status")
         .eq("role", "TEKNISI")
@@ -1108,166 +938,1167 @@ async function loadTechnicians() {
 
     if (error) {
 
-        console.error(
-            "Technician error:",
-            error
-        );
+        console.error(error);
 
         select.innerHTML =
-            `<option value="">
-                Gagal memuat teknisi
-            </option>`;
+            `<option value="">Gagal memuat teknisi</option>`;
 
         return;
     }
 
 
-    technicians = data || [];
-
-
     select.innerHTML =
-        `<option value="">
-            Pilih teknisi
-        </option>`;
+        `<option value="">Pilih teknisi</option>`;
 
 
-    technicians.forEach(
-        technician => {
+    data.forEach(tech => {
 
-            const option =
-                document.createElement(
-                    "option"
-                );
+        const option =
+            document.createElement("option");
 
-            option.value =
-                technician.id;
+        option.value = tech.id;
 
-            option.textContent =
-                technician.full_name ||
-                technician.email;
+        option.textContent =
+            tech.full_name || tech.email;
 
-            select.appendChild(
-                option
-            );
 
-        }
-    );
+        select.appendChild(option);
+
+    });
 
 }
 
 
-/* ================================
+/* ==========================================
+   DEFAULT DATE
+========================================== */
+
+function setDefaultDateTime() {
+
+    const now = new Date();
+
+
+    const date =
+        now.toISOString().split("T")[0];
+
+
+    const time =
+        now.toTimeString().slice(0,5);
+
+
+    document.getElementById("job_date").value =
+        date;
+
+
+    document.getElementById("job_time").value =
+        time;
+
+}
+
+
+/* ==========================================
    LOAD JOBS
-================================ */
+========================================== */
 
 async function loadJobs() {
 
     const tbody =
-        document.getElementById(
-            "jobsBody"
-        );
+        document.getElementById("jobsTable");
 
 
-    tbody.innerHTML =
-        `<tr>
-            <td colspan="6">
-                <div class="empty">
-                    Memuat jadwal...
-                </div>
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="6" class="loading">
+                Memuat jadwal...
             </td>
-        </tr>`;
+        </tr>
+    `;
 
 
     const {
         data,
         error
-    } = await db
+    } = await supabaseClient
         .from("jobs")
         .select(`
-            *
+            *,
+            technician:profiles!jobs_technician_id_fkey(
+                id,
+                full_name,
+                email
+            )
         `)
-        .order(
-            "scheduled_at",
-            {
-                ascending: false
-            }
-        );
+        .order("scheduled_at", {
+            ascending: false
+        });
 
 
     if (error) {
 
-        console.error(
-            "Jobs error:",
-            error
-        );
+        console.error(error);
 
-        tbody.innerHTML =
-            `<tr>
-                <td colspan="6">
-                    <div class="empty">
-                        Gagal memuat jadwal.
-                    </div>
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="loading">
+                    Gagal memuat jadwal
                 </td>
-            </tr>`;
+            </tr>
+        `;
 
         return;
     }
 
 
-    jobs = data || [];
+    allJobs = data || [];
 
+    renderJobs(allJobs);
 
-    renderJobs();
+    updateStats(allJobs);
 
 }
 
 
-/* ================================
-   RENDER JOBS
-================================ */
+/* ==========================================
+   RENDER
+========================================== */
 
-function renderJobs() {
+function renderJobs(jobs) {
 
     const tbody =
-        document.getElementById(
-            "jobsBody"
+        document.getElementById("jobsTable");
+
+
+    if (!jobs.length) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="loading">
+                    Belum ada jadwal
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    tbody.innerHTML = "";
+
+
+    jobs.forEach(job => {
+
+        const tr =
+            document.createElement("tr");
+
+
+        const date =
+            job.scheduled_at
+                ? new Date(job.scheduled_at)
+                : null;
+
+
+        const technician =
+            job.technician?.full_name ||
+            "Belum ada";
+
+
+        tr.innerHTML = `
+
+            <td>
+
+                <div class="job-code">
+                    ${escapeHtml(job.job_code || "-")}
+                </div>
+
+                <div class="muted">
+                    ${date ? formatDate(date) : "-"}
+                </div>
+
+                <div class="muted">
+                    ${date ? formatTime(date) : "-"}
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="customer-name">
+                    ${escapeHtml(
+                        job.customer_name || "-"
+                    )}
+                </div>
+
+                <div class="muted">
+                    ${escapeHtml(
+                        job.customer_phone || "-"
+                    )}
+                </div>
+
+                <div class="muted">
+                    ${escapeHtml(
+                        job.customer_address || "-"
+                    )}
+                </div>
+
+            </td>
+
+
+            <td>
+                ${escapeHtml(technician)}
+            </td>
+
+
+            <td>
+
+                <strong>
+                    ${escapeHtml(job.title || "-")}
+                </strong>
+
+                <div class="muted">
+                    ${escapeHtml(
+                        job.work_description ||
+                        job.description ||
+                        "-"
+                    )}
+                </div>
+
+            </td>
+
+
+            <td>
+                ${statusBadge(job.status)}
+            </td>
+
+
+            <td>
+
+                <button
+                    class="action-btn detail-btn"
+                    onclick="showDetail('${job.id}')"
+                >
+                    Detail
+                </button>
+
+                ${
+                    canManage()
+                    ?
+                    `
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteJob('${job.id}')"
+                    >
+                        Hapus
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
+            </td>
+
+        `;
+
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+function updateStats(jobs) {
+
+    document.getElementById("totalJobs")
+        .textContent = jobs.length;
+
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+
+    const todayCount =
+        jobs.filter(job => {
+
+            if (!job.scheduled_at)
+                return false;
+
+            return job.scheduled_at
+                .startsWith(today);
+
+        }).length;
+
+
+    document.getElementById("todayJobs")
+        .textContent = todayCount;
+
+
+    const unfinished =
+        jobs.filter(job =>
+            ![
+                "COMPLETED",
+                "CANCELLED"
+            ].includes(job.status)
+        ).length;
+
+
+    document.getElementById("unfinishedJobs")
+        .textContent = unfinished;
+
+}
+
+
+/* ==========================================
+   STATUS BADGE
+========================================== */
+
+function statusBadge(status) {
+
+    const map = {
+
+        NEW: [
+            "Baru",
+            "status-new"
+        ],
+
+        ASSIGNED: [
+            "Diterima Teknisi",
+            "status-assigned"
+        ],
+
+        ON_THE_WAY: [
+            "Menuju Lokasi",
+            "status-way"
+        ],
+
+        CHECKED_IN: [
+            "Check In",
+            "status-check"
+        ],
+
+        IN_PROGRESS: [
+            "Sedang Dikerjakan",
+            "status-progress"
+        ],
+
+        COMPLETED: [
+            "Selesai",
+            "status-completed"
+        ],
+
+        CANCELLED: [
+            "Dibatalkan",
+            "status-cancelled"
+        ]
+
+    };
+
+
+    const item =
+        map[status] ||
+        [status || "-", "status-new"];
+
+
+    return `
+        <span class="status ${item[1]}">
+            ${item[0]}
+        </span>
+    `;
+
+}
+
+
+/* ==========================================
+   OPEN MODAL
+========================================== */
+
+document
+    .getElementById("addJobBtn")
+    .addEventListener("click", () => {
+
+        clearForm();
+
+        document
+            .getElementById("jobModal")
+            .classList.add("show");
+
+    });
+
+
+/* ==========================================
+   CLOSE MODAL
+========================================== */
+
+function closeModal() {
+
+    document
+        .getElementById("jobModal")
+        .classList.remove("show");
+
+}
+
+
+document
+    .getElementById("closeModal")
+    .addEventListener("click", closeModal);
+
+
+document
+    .getElementById("cancelBtn")
+    .addEventListener("click", closeModal);
+
+
+/* ==========================================
+   CLEAR FORM
+========================================== */
+
+function clearForm() {
+
+    document
+        .getElementById("jobForm")
+        .reset();
+
+
+    document.getElementById("priority")
+        .value = "Normal";
+
+
+    document.getElementById("estimated_cost")
+        .value = 0;
+
+
+    document.getElementById("actual_cost")
+        .value = 0;
+
+
+    document.getElementById("service_price")
+        .value = 0;
+
+
+    clearMessage();
+
+    setDefaultDateTime();
+
+}
+
+
+/* ==========================================
+   SAVE JOB
+========================================== */
+
+document
+    .getElementById("jobForm")
+    .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+
+        if (!currentUser) {
+
+            showMessage(
+                "Session login tidak ditemukan.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const saveBtn =
+            document.getElementById("saveBtn");
+
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent =
+            "Menyimpan...";
+
+
+        clearMessage();
+
+
+        try {
+
+            /* -----------------------------
+               AMBIL FORM
+            ----------------------------- */
+
+            const technicianId =
+                document.getElementById(
+                    "technician_id"
+                ).value;
+
+
+            const date =
+                document.getElementById(
+                    "job_date"
+                ).value;
+
+
+            const time =
+                document.getElementById(
+                    "job_time"
+                ).value;
+
+
+            const customerName =
+                document.getElementById(
+                    "customer_name"
+                ).value.trim();
+
+
+            const whatsapp =
+                normalizePhone(
+                    document.getElementById(
+                        "customer_whatsapp"
+                    ).value
+                );
+
+
+            const address =
+                document.getElementById(
+                    "customer_address"
+                ).value.trim();
+
+
+            const title =
+                document.getElementById(
+                    "title"
+                ).value.trim();
+
+
+            const jobType =
+                document.getElementById(
+                    "job_type"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "description"
+                ).value.trim();
+
+
+            const priority =
+                document.getElementById(
+                    "priority"
+                ).value;
+
+
+            const estimatedCost =
+                Number(
+                    document.getElementById(
+                        "estimated_cost"
+                    ).value || 0
+                );
+
+
+            const actualCost =
+                Number(
+                    document.getElementById(
+                        "actual_cost"
+                    ).value || 0
+                );
+
+
+            const servicePrice =
+                Number(
+                    document.getElementById(
+                        "service_price"
+                    ).value || 0
+                );
+
+
+            const technicianNotes =
+                document.getElementById(
+                    "technician_notes"
+                ).value.trim();
+
+
+            if (!technicianId)
+                throw new Error(
+                    "Pilih teknisi terlebih dahulu."
+                );
+
+
+            if (!date || !time)
+                throw new Error(
+                    "Tanggal dan jam wajib diisi."
+                );
+
+
+            /* -----------------------------
+               CARI CUSTOMER LAMA
+            ----------------------------- */
+
+            let customer = null;
+
+
+            const {
+                data: existingCustomers,
+                error: customerSearchError
+            } = await supabaseClient
+                .from("customers")
+                .select("*")
+                .or(
+                    `whatsapp.eq.${whatsapp},phone.eq.${whatsapp}`
+                )
+                .limit(1);
+
+
+            if (customerSearchError)
+                throw customerSearchError;
+
+
+            if (
+                existingCustomers &&
+                existingCustomers.length > 0
+            ) {
+
+                customer =
+                    existingCustomers[0];
+
+            }
+
+
+            /* -----------------------------
+               CUSTOMER BARU
+            ----------------------------- */
+
+            if (!customer) {
+
+                const customerCode =
+                    generateCustomerCode();
+
+
+                const {
+                    data: newCustomer,
+                    error: customerInsertError
+                } = await supabaseClient
+                    .from("customers")
+                    .insert({
+
+                        customer_code:
+                            customerCode,
+
+                        name:
+                            customerName,
+
+                        whatsapp:
+                            whatsapp,
+
+                        phone:
+                            whatsapp,
+
+                        address:
+                            address,
+
+                        customer_type:
+                            "RESIDENTIAL",
+
+                        status:
+                            "ACTIVE",
+
+                        created_by:
+                            currentUser.id,
+
+                        notes:
+                            ""
+
+                    })
+                    .select()
+                    .single();
+
+
+                if (customerInsertError)
+                    throw customerInsertError;
+
+
+                customer =
+                    newCustomer;
+
+            } else {
+
+                /* -----------------------------
+                   UPDATE DATA CUSTOMER
+                   JIKA ADA PERUBAHAN
+                ----------------------------- */
+
+                const {
+                    error: updateCustomerError
+                } = await supabaseClient
+                    .from("customers")
+                    .update({
+
+                        name:
+                            customerName,
+
+                        whatsapp:
+                            whatsapp,
+
+                        phone:
+                            whatsapp,
+
+                        address:
+                            address,
+
+                        updated_at:
+                            new Date().toISOString()
+
+                    })
+                    .eq("id", customer.id);
+
+
+                if (updateCustomerError) {
+
+                    console.warn(
+                        "Customer update gagal:",
+                        updateCustomerError
+                    );
+
+                }
+
+            }
+
+
+            /* -----------------------------
+               CREATE JOB CODE
+            ----------------------------- */
+
+            const jobCode =
+                await generateJobCode();
+
+
+            /* -----------------------------
+               SCHEDULE
+            ----------------------------- */
+
+            const scheduledAt =
+                new Date(
+                    `${date}T${time}:00`
+                ).toISOString();
+
+
+            /* -----------------------------
+               INSERT JOB
+            ----------------------------- */
+
+            const {
+                data: newJob,
+                error: jobError
+            } = await supabaseClient
+                .from("jobs")
+                .insert({
+
+                    job_code:
+                        jobCode,
+
+                    customer_id:
+                        customer.id,
+
+                    technician_id:
+                        technicianId,
+
+                    assigned_to:
+                        technicianId,
+
+                    created_by:
+                        currentUser.id,
+
+                    title:
+                        title,
+
+                    description:
+                        description,
+
+                    scheduled_at:
+                        scheduledAt,
+
+                    status:
+                        "NEW",
+
+                    technician_notes:
+                        technicianNotes,
+
+                    job_type:
+                        jobType || null,
+
+                    priority:
+                        priority,
+
+                    estimated_cost:
+                        estimatedCost,
+
+                    actual_cost:
+                        actualCost,
+
+                    service_price:
+                        servicePrice,
+
+                    customer_name:
+                        customerName,
+
+                    customer_phone:
+                        whatsapp,
+
+                    customer_address:
+                        address,
+
+                    work_description:
+                        description
+
+                })
+                .select()
+                .single();
+
+
+            if (jobError)
+                throw jobError;
+
+
+            showMessage(
+                "Jadwal berhasil dibuat.",
+                "success"
+            );
+
+
+            await loadJobs();
+
+
+            setTimeout(() => {
+
+                closeModal();
+
+            }, 700);
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Gagal menyimpan: " +
+                (error.message || error),
+                "error"
+            );
+
+        } finally {
+
+            saveBtn.disabled = false;
+
+            saveBtn.textContent =
+                "Simpan Jadwal";
+
+        }
+
+    });
+
+
+/* ==========================================
+   CUSTOMER CODE
+========================================== */
+
+function generateCustomerCode() {
+
+    const now = new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const random =
+        Math.floor(
+            1000 +
+            Math.random() * 9000
         );
 
 
-    const search =
-        document
-            .getElementById(
-                "searchInput"
+    return `CUS-${year}${month}-${random}`;
+
+}
+
+
+/* ==========================================
+   JOB CODE
+========================================== */
+
+async function generateJobCode() {
+
+    const now = new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+
+    const prefix =
+        `JOB-${year}${month}${day}`;
+
+
+    const {
+        count
+    } = await supabaseClient
+        .from("jobs")
+        .select(
+            "id",
+            {
+                count: "exact",
+                head: true
+            }
+        )
+        .like(
+            "job_code",
+            `${prefix}-%`
+        );
+
+
+    const number =
+        String(
+            (count || 0) + 1
+        ).padStart(4, "0");
+
+
+    return `${prefix}-${number}`;
+
+}
+
+
+/* ==========================================
+   PHONE
+========================================== */
+
+function normalizePhone(phone) {
+
+    let value =
+        String(phone || "")
+        .replace(/\D/g, "");
+
+
+    if (
+        value.startsWith("0")
+    ) {
+
+        value =
+            "62" +
+            value.substring(1);
+
+    }
+
+
+    if (
+        !value.startsWith("62")
+    ) {
+
+        value =
+            "62" +
+            value;
+
+    }
+
+
+    return value;
+
+}
+
+
+/* ==========================================
+   DETAIL
+========================================== */
+
+window.showDetail = function(id) {
+
+    const job =
+        allJobs.find(
+            item => item.id === id
+        );
+
+
+    if (!job)
+        return;
+
+
+    const technician =
+        job.technician?.full_name ||
+        "-";
+
+
+    alert(
+
+        `DETAIL PEKERJAAN\n\n` +
+
+        `Job: ${job.job_code || "-"}\n` +
+
+        `Customer: ${job.customer_name || "-"}\n` +
+
+        `WhatsApp: ${job.customer_phone || "-"}\n` +
+
+        `Alamat: ${job.customer_address || "-"}\n\n` +
+
+        `Teknisi: ${technician}\n` +
+
+        `Pekerjaan: ${job.title || "-"}\n` +
+
+        `Keterangan: ${
+            job.work_description ||
+            job.description ||
+            "-"
+        }\n\n` +
+
+        `Status: ${job.status || "-"}\n` +
+
+        `Harga Service: Rp ${
+            formatNumber(
+                job.service_price || 0
             )
-            .value
-            .toLowerCase()
-            .trim();
+        }`
+
+    );
+
+};
+
+
+/* ==========================================
+   DELETE
+========================================== */
+
+window.deleteJob = async function(id) {
+
+    if (!canManage())
+        return;
+
+
+    const yes =
+        confirm(
+            "Yakin ingin menghapus jadwal ini?"
+        );
+
+
+    if (!yes)
+        return;
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from("jobs")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) {
+
+        alert(
+            "Gagal menghapus: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    await loadJobs();
+
+};
+
+
+/* ==========================================
+   ROLE
+========================================== */
+
+function canManage() {
+
+    return (
+        currentProfile &&
+        (
+            currentProfile.role === "OWNER" ||
+            currentProfile.role === "CS"
+        )
+    );
+
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+document
+    .getElementById("searchInput")
+    .addEventListener("input", filterJobs);
+
+
+document
+    .getElementById("statusFilter")
+    .addEventListener("change", filterJobs);
+
+
+function filterJobs() {
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        ).value
+        .toLowerCase()
+        .trim();
 
 
     const status =
-        document
-            .getElementById(
-                "statusFilter"
-            )
-            .value;
+        document.getElementById(
+            "statusFilter"
+        ).value;
 
 
     const filtered =
-        jobs.filter(job => {
+        allJobs.filter(job => {
 
-            const text = [
-                job.customer_name,
-                job.customer_phone,
-                job.customer_address,
-                job.title,
-                job.description,
-                job.work_description,
-                getTechnicianName(
-                    job.technician_id
-                )
-            ]
-            .join(" ")
-            .toLowerCase();
+            const technician =
+                job.technician?.full_name ||
+                "";
+
+
+            const text =
+                [
+
+                    job.job_code,
+
+                    job.customer_name,
+
+                    job.customer_phone,
+
+                    job.customer_address,
+
+                    job.title,
+
+                    job.description,
+
+                    technician
+
+                ]
+                .join(" ")
+                .toLowerCase();
 
 
             const matchSearch =
@@ -1288,1504 +2119,108 @@ function renderJobs() {
         });
 
 
-    updateStats();
-
-
-    if (!filtered.length) {
-
-        tbody.innerHTML =
-            `<tr>
-                <td colspan="6">
-                    <div class="empty">
-                        Belum ada jadwal.
-                    </div>
-                </td>
-            </tr>`;
-
-        return;
-    }
-
-
-    tbody.innerHTML = "";
-
-
-    filtered.forEach(job => {
-
-        const tr =
-            document.createElement(
-                "tr"
-            );
-
-
-        const date =
-            formatDateTime(
-                job.scheduled_at
-            );
-
-
-        const technician =
-            getTechnicianName(
-                job.technician_id
-            );
-
-
-        tr.innerHTML = `
-
-            <td>
-
-                <div class="job-date">
-                    ${escapeHtml(date.date)}
-                </div>
-
-                <div>
-                    ${escapeHtml(date.time)}
-                </div>
-
-                <div class="job-code">
-                    ${escapeHtml(job.job_code || "-")}
-                </div>
-
-            </td>
-
-
-            <td>
-
-                <div class="customer-name">
-                    ${escapeHtml(
-                        job.customer_name || "-"
-                    )}
-                </div>
-
-                <div>
-                    ${escapeHtml(
-                        job.customer_address || "-"
-                    )}
-                </div>
-
-                ${
-                    job.customer_phone
-                    ?
-                    `<a
-                        class="wa-link"
-                        href="${getWhatsAppUrl(
-                            job.customer_phone
-                        )}"
-                        target="_blank"
-                    >
-                        WhatsApp
-                    </a>`
-                    :
-                    ""
-                }
-
-            </td>
-
-
-            <td>
-                ${escapeHtml(
-                    technician
-                )}
-            </td>
-
-
-            <td>
-
-                <strong>
-                    ${escapeHtml(
-                        job.title || "-"
-                    )}
-                </strong>
-
-                <div style="
-                    margin-top:4px;
-                    color:#718096;
-                ">
-                    ${escapeHtml(
-                        job.work_description ||
-                        job.description ||
-                        "-"
-                    )}
-                </div>
-
-            </td>
-
-
-            <td>
-                ${statusBadge(
-                    job.status
-                )}
-            </td>
-
-
-            <td>
-
-                <button
-                    class="action-btn btn-detail"
-                    onclick="showDetail('${job.id}')"
-                >
-                    Detail
-                </button>
-
-                <button
-                    class="action-btn btn-edit"
-                    onclick="editJob('${job.id}')"
-                >
-                    Edit
-                </button>
-
-                <button
-                    class="action-btn btn-delete"
-                    onclick="deleteJob('${job.id}')"
-                >
-                    Hapus
-                </button>
-
-            </td>
-
-        `;
-
-
-        tbody.appendChild(tr);
-
-    });
+    renderJobs(filtered);
 
 }
 
 
-/* ================================
-   STATS
-================================ */
-
-function updateStats() {
-
-    document.getElementById(
-        "totalJobs"
-    ).textContent =
-        jobs.length;
-
-
-    const today =
-        new Date();
-
-
-    const todayString =
-        today
-            .toISOString()
-            .slice(0, 10);
-
-
-    const todayCount =
-        jobs.filter(job => {
-
-            if (!job.scheduled_at) {
-                return false;
-            }
-
-            return new Date(
-                job.scheduled_at
-            )
-            .toISOString()
-            .slice(0, 10)
-            === todayString;
-
-        }).length;
-
-
-    const pending =
-        jobs.filter(job =>
-            ![
-                "COMPLETED",
-                "CANCELLED"
-            ].includes(
-                job.status
-            )
-        ).length;
-
-
-    document.getElementById(
-        "todayJobs"
-    ).textContent =
-        todayCount;
-
-
-    document.getElementById(
-        "pendingJobs"
-    ).textContent =
-        pending;
-
-}
-
-
-/* ================================
-   ADD JOB
-================================ */
-
-function openAddModal() {
-
-    editingJobId = null;
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Tambah Jadwal";
-
-
-    document.getElementById(
-        "jobForm"
-    ).reset();
-
-
-    document.getElementById(
-        "jobStatus"
-    ).value = "NEW";
-
-
-    document.getElementById(
-        "priority"
-    ).value = "NORMAL";
-
-
-    document.getElementById(
-        "estimatedCost"
-    ).value = 0;
-
-
-    document.getElementById(
-        "actualCost"
-    ).value = 0;
-
-
-    document.getElementById(
-        "servicePrice"
-    ).value = 0;
-
-
-    setDefaultDateTime();
-
-
-    clearError();
-
-
-    document.getElementById(
-        "jobModal"
-    ).classList.add("show");
-
-}
-
-
-/* ================================
-   EDIT JOB
-================================ */
-
-function editJob(id) {
-
-    const job =
-        jobs.find(
-            item => item.id === id
-        );
-
-
-    if (!job) {
-        return;
-    }
-
-
-    editingJobId = id;
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Edit Jadwal";
-
-
-    const dt =
-        new Date(
-            job.scheduled_at
-        );
-
-
-    document.getElementById(
-        "technicianId"
-    ).value =
-        job.technician_id || "";
-
-
-    document.getElementById(
-        "jobDate"
-    ).value =
-        localDateValue(dt);
-
-
-    document.getElementById(
-        "jobTime"
-    ).value =
-        localTimeValue(dt);
-
-
-    document.getElementById(
-        "customerPhone"
-    ).value =
-        job.customer_phone || "";
-
-
-    document.getElementById(
-        "customerName"
-    ).value =
-        job.customer_name || "";
-
-
-    document.getElementById(
-        "customerAddress"
-    ).value =
-        job.customer_address || "";
-
-
-    document.getElementById(
-        "jobTitle"
-    ).value =
-        job.title || "";
-
-
-    document.getElementById(
-        "jobType"
-    ).value =
-        job.job_type || "";
-
-
-    document.getElementById(
-        "jobDescription"
-    ).value =
-        job.work_description ||
-        job.description ||
-        "";
-
-
-    document.getElementById(
-        "priority"
-    ).value =
-        job.priority || "NORMAL";
-
-
-    document.getElementById(
-        "jobStatus"
-    ).value =
-        job.status || "NEW";
-
-
-    document.getElementById(
-        "estimatedCost"
-    ).value =
-        job.estimated_cost || 0;
-
-
-    document.getElementById(
-        "actualCost"
-    ).value =
-        job.actual_cost || 0;
-
-
-    document.getElementById(
-        "servicePrice"
-    ).value =
-        job.service_price || 0;
-
-
-    document.getElementById(
-        "technicianNotes"
-    ).value =
-        job.technician_notes || "";
-
-
-    clearError();
-
-
-    document.getElementById(
-        "jobModal"
-    ).classList.add("show");
-
-}
-
-
-/* ================================
-   SAVE JOB
-================================ */
-
-async function saveJob(event) {
-
-    event.preventDefault();
-
-
-    clearError();
-
-
-    if (!db || !currentUser) {
-
-        showError(
-            "Session Supabase belum aktif."
-        );
-
-        return;
-    }
-
-
-    const technicianId =
+/* ==========================================
+   MESSAGE
+========================================== */
+
+function showMessage(
+    text,
+    type
+) {
+
+    const box =
         document.getElementById(
-            "technicianId"
-        ).value;
+            "formMessage"
+        );
 
 
-    const date =
+    box.textContent =
+        text;
+
+
+    box.className =
+        "message " +
+        type;
+
+}
+
+
+function clearMessage() {
+
+    const box =
         document.getElementById(
-            "jobDate"
-        ).value;
-
-
-    const time =
-        document.getElementById(
-            "jobTime"
-        ).value;
-
-
-    const customerName =
-        document.getElementById(
-            "customerName"
-        ).value.trim();
-
-
-    const customerPhone =
-        document.getElementById(
-            "customerPhone"
-        ).value.trim();
-
-
-    const customerAddress =
-        document.getElementById(
-            "customerAddress"
-        ).value.trim();
-
-
-    const title =
-        document.getElementById(
-            "jobTitle"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "jobDescription"
-        ).value.trim();
-
-
-    if (
-        !technicianId ||
-        !date ||
-        !time ||
-        !customerName ||
-        !customerPhone ||
-        !customerAddress ||
-        !title ||
-        !description
-    ) {
-
-        showError(
-            "Mohon lengkapi semua kolom wajib."
-        );
-
-        return;
-    }
-
-
-    const saveButton =
-        document.getElementById(
-            "saveJobBtn"
+            "formMessage"
         );
 
 
-    saveButton.disabled = true;
+    box.textContent = "";
 
-    saveButton.textContent =
-        "Menyimpan...";
-
-
-    try {
-
-        /*
-         * 1. Cari customer berdasarkan
-         *    nomor WhatsApp.
-         */
-
-        let customerId = null;
-
-
-        const {
-            data: existingCustomer,
-            error: customerSearchError
-        } = await db
-            .from("customers")
-            .select("id")
-            .eq(
-                "phone",
-                customerPhone
-            )
-            .maybeSingle();
-
-
-        if (
-            customerSearchError &&
-            customerSearchError.code !== "PGRST116"
-        ) {
-
-            throw customerSearchError;
-
-        }
-
-
-        if (existingCustomer) {
-
-            customerId =
-                existingCustomer.id;
-
-        }
-
-
-        /*
-         * 2. Kalau customer belum ada,
-         *    buat customer baru.
-         */
-
-        if (!customerId) {
-
-            const {
-                data: newCustomer,
-                error: customerInsertError
-            } = await db
-                .from("customers")
-                .insert({
-
-                    name:
-                        customerName,
-
-                    phone:
-                        customerPhone,
-
-                    address:
-                        customerAddress
-
-                })
-                .select("id")
-                .single();
-
-
-            if (customerInsertError) {
-
-                throw new Error(
-                    "Gagal membuat customer: " +
-                    customerInsertError.message
-                );
-
-            }
-
-
-            customerId =
-                newCustomer.id;
-
-        }
-
-
-        /*
-         * 3. Waktu pekerjaan.
-         */
-
-        const scheduledAt =
-            new Date(
-                `${date}T${time}:00`
-            ).toISOString();
-
-
-        /*
-         * 4. Data job.
-         */
-
-        const baseData = {
-
-            customer_id:
-                customerId,
-
-            technician_id:
-                technicianId,
-
-            assigned_to:
-                technicianId,
-
-            title:
-                title,
-
-            description:
-                description,
-
-            work_description:
-                description,
-
-            scheduled_at:
-                scheduledAt,
-
-            status:
-                document.getElementById(
-                    "jobStatus"
-                ).value,
-
-            job_type:
-                document.getElementById(
-                    "jobType"
-                ).value.trim() || null,
-
-            priority:
-                document.getElementById(
-                    "priority"
-                ).value,
-
-            estimated_cost:
-                Number(
-                    document.getElementById(
-                        "estimatedCost"
-                    ).value
-                ) || 0,
-
-            actual_cost:
-                Number(
-                    document.getElementById(
-                        "actualCost"
-                    ).value
-                ) || 0,
-
-            service_price:
-                Number(
-                    document.getElementById(
-                        "servicePrice"
-                    ).value
-                ) || 0,
-
-            technician_notes:
-                document.getElementById(
-                    "technicianNotes"
-                ).value.trim() || null,
-
-            customer_name:
-                customerName,
-
-            customer_phone:
-                customerPhone,
-
-            customer_address:
-                customerAddress
-
-        };
-
-
-        /*
-         * 5. UPDATE
-         */
-
-        if (editingJobId) {
-
-            const {
-                error
-            } = await db
-                .from("jobs")
-                .update(
-                    baseData
-                )
-                .eq(
-                    "id",
-                    editingJobId
-                );
-
-
-            if (error) {
-                throw error;
-            }
-
-        }
-
-
-        /*
-         * 6. INSERT
-         */
-
-        else {
-
-            const jobCode =
-                generateJobCode();
-
-
-            const insertData = {
-
-                ...baseData,
-
-                job_code:
-                    jobCode,
-
-                created_by:
-                    currentUser.id
-
-            };
-
-
-            const {
-                error
-            } = await db
-                .from("jobs")
-                .insert(
-                    insertData
-                );
-
-
-            if (error) {
-                throw error;
-            }
-
-        }
-
-
-        closeJobModal();
-
-
-        await loadJobs();
-
-
-        alert(
-            editingJobId
-            ? "Jadwal berhasil diperbarui."
-            : "Jadwal berhasil dibuat."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "SAVE ERROR:",
-            error
-        );
-
-
-        showError(
-            error.message ||
-            "Gagal menyimpan jadwal."
-        );
-
-    } finally {
-
-        saveButton.disabled =
-            false;
-
-        saveButton.textContent =
-            "Simpan Jadwal";
-
-    }
+    box.className =
+        "message";
 
 }
 
 
-/* ================================
-   DELETE
-================================ */
+/* ==========================================
+   FORMAT
+========================================== */
 
-async function deleteJob(id) {
+function formatDate(date) {
 
-    const job =
-        jobs.find(
-            item => item.id === id
-        );
-
-
-    if (!job) {
-        return;
-    }
-
-
-    const yes =
-        confirm(
-            `Hapus jadwal ${job.job_code || ""}?`
-        );
-
-
-    if (!yes) {
-        return;
-    }
-
-
-    const {
-        error
-    } = await db
-        .from("jobs")
-        .delete()
-        .eq(
-            "id",
-            id
-        );
-
-
-    if (error) {
-
-        alert(
-            "Gagal menghapus: " +
-            error.message
-        );
-
-        return;
-    }
-
-
-    await loadJobs();
-
-}
-
-
-/* ================================
-   DETAIL
-================================ */
-
-function showDetail(id) {
-
-    const job =
-        jobs.find(
-            item => item.id === id
-        );
-
-
-    if (!job) {
-        return;
-    }
-
-
-    const date =
-        formatDateTime(
-            job.scheduled_at
-        );
-
-
-    const technician =
-        getTechnicianName(
-            job.technician_id
-        );
-
-
-    document.getElementById(
-        "detailContent"
-    ).innerHTML = `
-
-        <div class="detail-box">
-            <small>Job Code</small>
-            <strong>
-                ${escapeHtml(
-                    job.job_code || "-"
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Status</small>
-            <strong>
-                ${statusBadge(
-                    job.status
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Tanggal</small>
-            <strong>
-                ${escapeHtml(
-                    date.date
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Jam</small>
-            <strong>
-                ${escapeHtml(
-                    date.time
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Teknisi</small>
-            <strong>
-                ${escapeHtml(
-                    technician
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Customer</small>
-            <strong>
-                ${escapeHtml(
-                    job.customer_name || "-"
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box full">
-            <small>No. WhatsApp</small>
-            <strong>
-                ${escapeHtml(
-                    job.customer_phone || "-"
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box full">
-            <small>Alamat Customer</small>
-            <strong>
-                ${escapeHtml(
-                    job.customer_address || "-"
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box full">
-            <small>Pekerjaan</small>
-            <strong>
-                ${escapeHtml(
-                    job.title || "-"
-                )}
-            </strong>
-
-            <div style="
-                margin-top:7px;
-                color:#526174;
-                font-size:13px;
-            ">
-                ${escapeHtml(
-                    job.work_description ||
-                    job.description ||
-                    "-"
-                )}
-            </div>
-        </div>
-
-        <div class="detail-box">
-            <small>Harga Service</small>
-            <strong>
-                ${formatRupiah(
-                    job.service_price
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box">
-            <small>Actual Cost</small>
-            <strong>
-                ${formatRupiah(
-                    job.actual_cost
-                )}
-            </strong>
-        </div>
-
-        <div class="detail-box full">
-            <small>Catatan Teknisi</small>
-            <strong>
-                ${escapeHtml(
-                    job.technician_notes || "-"
-                )}
-            </strong>
-        </div>
-
-    `;
-
-
-    document.getElementById(
-        "detailModal"
-    ).classList.add("show");
-
-}
-
-
-/* ================================
-   HELPERS
-================================ */
-
-function getTechnicianName(id) {
-
-    if (!id) {
-        return "-";
-    }
-
-
-    const technician =
-        technicians.find(
-            item => item.id === id
-        );
-
-
-    if (!technician) {
-        return "-";
-    }
-
-
-    return (
-        technician.full_name ||
-        technician.email ||
-        "-"
-    );
-
-}
-
-
-function generateJobCode() {
-
-    const now =
-        new Date();
-
-
-    const year =
-        now.getFullYear();
-
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const day =
-        String(
-            now.getDate()
-        ).padStart(2, "0");
-
-
-    const random =
-        Math.random()
-            .toString(36)
-            .substring(2, 7)
-            .toUpperCase();
-
-
-    return (
-        `JOB-${year}${month}${day}-${random}`
-    );
-
-}
-
-
-function formatDateTime(value) {
-
-    if (!value) {
-
-        return {
-            date: "-",
-            time: "-"
-        };
-
-    }
-
-
-    const d =
-        new Date(value);
-
-
-    return {
-
-        date:
-            d.toLocaleDateString(
-                "id-ID",
-                {
-                    weekday: "short",
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                }
-            ),
-
-        time:
-            d.toLocaleTimeString(
-                "id-ID",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            )
-
-    };
-
-}
-
-
-function localDateValue(date) {
-
-    const y =
-        date.getFullYear();
-
-
-    const m =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const d =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
-
-
-    return `${y}-${m}-${d}`;
-
-}
-
-
-function localTimeValue(date) {
-
-    const h =
-        String(
-            date.getHours()
-        ).padStart(2, "0");
-
-
-    const m =
-        String(
-            date.getMinutes()
-        ).padStart(2, "0");
-
-
-    return `${h}:${m}`;
-
-}
-
-
-function setDefaultDateTime() {
-
-    const now =
-        new Date();
-
-
-    document.getElementById(
-        "jobDate"
-    ).value =
-        localDateValue(now);
-
-
-    document.getElementById(
-        "jobTime"
-    ).value =
-        localTimeValue(now);
-
-}
-
-
-function statusBadge(status) {
-
-    const map = {
-
-        NEW: [
-            "Baru",
-            "status-baru"
-        ],
-
-        ACCEPTED: [
-            "Diterima",
-            "status-diterima"
-        ],
-
-        EN_ROUTE: [
-            "Menuju Lokasi",
-            "status-menuju"
-        ],
-
-        CHECKED_IN: [
-            "Check In",
-            "status-checkin"
-        ],
-
-        IN_PROGRESS: [
-            "Proses",
-            "status-proses"
-        ],
-
-        COMPLETED: [
-            "Selesai",
-            "status-selesai"
-        ],
-
-        CANCELLED: [
-            "Batal",
-            "status-batal"
-        ]
-
-    };
-
-
-    const item =
-        map[status] ||
-        [
-            status || "-",
-            "status-baru"
-        ];
-
-
-    return `
-        <span class="status ${item[1]}">
-            ${escapeHtml(item[0])}
-        </span>
-    `;
-
-}
-
-
-function formatRupiah(value) {
-
-    return new Intl.NumberFormat(
+    return date.toLocaleDateString(
         "id-ID",
         {
-            style: "currency",
-            currency: "IDR",
-            maximumFractionDigits: 0
+            weekday: "short",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
         }
-    ).format(
-        Number(value) || 0
     );
 
 }
 
 
-function getWhatsAppUrl(phone) {
+function formatTime(date) {
 
-    let number =
-        String(phone)
-            .replace(/\D/g, "");
-
-
-    if (
-        number.startsWith("0")
-    ) {
-
-        number =
-            "62" +
-            number.substring(1);
-
-    }
-
-
-    if (
-        !number.startsWith("62")
-    ) {
-
-        number =
-            "62" +
-            number;
-
-    }
-
-
-    return (
-        "https://wa.me/" +
-        number
+    return date.toLocaleTimeString(
+        "id-ID",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
     );
 
 }
 
+
+function formatNumber(number) {
+
+    return Number(
+        number || 0
+    ).toLocaleString("id-ID");
+
+}
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
 
 function escapeHtml(value) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* ================================
-   MODAL
-================================ */
-
-function closeJobModal() {
-
-    document.getElementById(
-        "jobModal"
-    ).classList.remove("show");
-
-}
-
-
-function clearError() {
-
-    const error =
-        document.getElementById(
-            "formError"
-        );
-
-
-    error.style.display =
-        "none";
-
-
-    error.textContent =
-        "";
-
-}
-
-
-function showError(message) {
-
-    const error =
-        document.getElementById(
-            "formError"
-        );
-
-
-    error.textContent =
-        message;
-
-
-    error.style.display =
-        "block";
-
-}
-
-
-/* ================================
-   EVENTS
-================================ */
-
-function setupEvents() {
-
-    document.getElementById(
-        "addJobBtn"
-    ).addEventListener(
-        "click",
-        openAddModal
-    );
-
-
-    document.getElementById(
-        "closeModal"
-    ).addEventListener(
-        "click",
-        closeJobModal
-    );
-
-
-    document.getElementById(
-        "cancelModal"
-    ).addEventListener(
-        "click",
-        closeJobModal
-    );
-
-
-    document.getElementById(
-        "jobForm"
-    ).addEventListener(
-        "submit",
-        saveJob
-    );
-
-
-    document.getElementById(
-        "searchInput"
-    ).addEventListener(
-        "input",
-        renderJobs
-    );
-
-
-    document.getElementById(
-        "statusFilter"
-    ).addEventListener(
-        "change",
-        renderJobs
-    );
-
-
-    document.getElementById(
-        "closeDetail"
-    ).addEventListener(
-        "click",
-        () => {
-
-            document.getElementById(
-                "detailModal"
-            ).classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-
-    document.getElementById(
-        "logoutBtn"
-    ).addEventListener(
-        "click",
-        async () => {
-
-            await db.auth.signOut();
-
-            window.location.href =
-                "login.html";
-
-        }
-    );
-
-
-    document.getElementById(
-        "jobModal"
-    ).addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target.id ===
-                "jobModal"
-            ) {
-
-                closeJobModal();
-
-            }
-
-        }
-    );
-
-
-    document.getElementById(
-        "detailModal"
-    ).addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target.id ===
-                "detailModal"
-            ) {
-
-                document.getElementById(
-                    "detailModal"
-                ).classList.remove(
-                    "show"
-                );
-
-            }
-
-        }
-    );
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 }
 
