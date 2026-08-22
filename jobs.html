@@ -257,6 +257,11 @@
             color: #991b1b;
         }
 
+        .report-btn {
+            background: #dcfce7;
+            color: #166534;
+        }
+
         /* MODAL */
 
         .modal {
@@ -791,6 +796,104 @@
 </div>
 
 
+
+<!-- MODAL LAPORAN PEKERJAAN -->
+<div class="modal" id="reportModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h2>Laporan Pekerjaan</h2>
+            <button class="close" id="closeReportModal">×</button>
+        </div>
+
+        <form class="form" id="reportForm">
+
+            <div class="field">
+                <label>Job</label>
+                <input type="text" id="reportJobCode" readonly>
+            </div>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>Customer</label>
+                    <input type="text" id="reportCustomer" readonly>
+                </div>
+
+                <div class="field">
+                    <label>Pekerjaan</label>
+                    <input type="text" id="reportTitle" readonly>
+                </div>
+
+                <div class="field full">
+                    <label>Rincian Pekerjaan yang Dikerjakan *</label>
+                    <textarea
+                        id="reportDetails"
+                        placeholder="Contoh: Cuci AC 2 unit, pengecekan tekanan freon, pembersihan evaporator..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Actual Cost</label>
+                    <input
+                        type="number"
+                        id="reportActualCost"
+                        min="0"
+                        value="0"
+                    >
+                </div>
+
+                <div class="field">
+                    <label>Harga Service</label>
+                    <input
+                        type="number"
+                        id="reportServicePrice"
+                        min="0"
+                        value="0"
+                    >
+                </div>
+
+                <div class="field full">
+                    <label>Catatan Tambahan</label>
+                    <textarea
+                        id="reportNotes"
+                        placeholder="Catatan kondisi unit, sparepart, rekomendasi, dll."
+                    ></textarea>
+                </div>
+
+            </div>
+
+            <div id="reportMessage" class="message"></div>
+
+        </form>
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn-secondary"
+                id="cancelReportBtn"
+            >
+                Batal
+            </button>
+
+            <button
+                type="submit"
+                form="reportForm"
+                class="btn-primary"
+                id="completeJobBtn"
+            >
+                Selesaikan Pekerjaan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -803,6 +906,7 @@ let supabaseClient = null;
 let currentUser = null;
 let currentProfile = null;
 let allJobs = [];
+let currentReportJob = null;
 
 
 /* ==========================================
@@ -1179,6 +1283,21 @@ function renderJobs(jobs) {
                 >
                     Detail
                 </button>
+
+                ${
+                    canReportJob(job)
+                    ?
+                    `
+                    <button
+                        class="action-btn report-btn"
+                        onclick="openReportModal('${job.id}')"
+                    >
+                        Laporan
+                    </button>
+                    `
+                    :
+                    ""
+                }
 
                 ${
                     canManage()
@@ -1973,11 +2092,247 @@ window.showDetail = function(id) {
             formatNumber(
                 job.service_price || 0
             )
+        }\n\n` +
+
+        `LAPORAN TEKNISI:\n${
+            job.technician_notes || "Belum ada laporan."
         }`
 
     );
 
 };
+
+
+
+/* ==========================================
+   LAPORAN PEKERJAAN TEKNISI
+   STEP 2A
+   ========================================== */
+
+function canReportJob(job) {
+
+    if (!currentProfile || currentProfile.role !== "TEKNISI")
+        return false;
+
+    if (!job)
+        return false;
+
+    if (job.technician_id !== currentUser?.id)
+        return false;
+
+    return ![
+        "COMPLETED",
+        "CANCELLED"
+    ].includes(job.status);
+}
+
+
+window.openReportModal = function(id) {
+
+    const job = allJobs.find(item => item.id === id);
+
+    if (!job)
+        return;
+
+    if (!canReportJob(job)) {
+        alert("Anda tidak memiliki akses untuk melaporkan pekerjaan ini.");
+        return;
+    }
+
+    currentReportJob = job;
+
+    document.getElementById("reportJobCode").value =
+        job.job_code || "-";
+
+    document.getElementById("reportCustomer").value =
+        job.customer_name || "-";
+
+    document.getElementById("reportTitle").value =
+        job.title || "-";
+
+    document.getElementById("reportDetails").value = "";
+
+    document.getElementById("reportActualCost").value =
+        job.actual_cost || 0;
+
+    document.getElementById("reportServicePrice").value =
+        job.service_price || 0;
+
+    document.getElementById("reportNotes").value = "";
+
+    clearReportMessage();
+
+    document
+        .getElementById("reportModal")
+        .classList.add("show");
+};
+
+
+function closeReportModal() {
+
+    document
+        .getElementById("reportModal")
+        .classList.remove("show");
+
+    currentReportJob = null;
+
+}
+
+
+document
+    .getElementById("closeReportModal")
+    .addEventListener("click", closeReportModal);
+
+
+document
+    .getElementById("cancelReportBtn")
+    .addEventListener("click", closeReportModal);
+
+
+document
+    .getElementById("reportForm")
+    .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        if (!currentReportJob || !currentUser)
+            return;
+
+        const details =
+            document.getElementById("reportDetails")
+                .value
+                .trim();
+
+        const notes =
+            document.getElementById("reportNotes")
+                .value
+                .trim();
+
+        const actualCost =
+            Number(
+                document.getElementById("reportActualCost")
+                    .value || 0
+            );
+
+        const servicePrice =
+            Number(
+                document.getElementById("reportServicePrice")
+                    .value || 0
+            );
+
+        if (!details) {
+
+            showReportMessage(
+                "Rincian pekerjaan wajib diisi.",
+                "error"
+            );
+
+            return;
+        }
+
+        const completeBtn =
+            document.getElementById("completeJobBtn");
+
+        completeBtn.disabled = true;
+        completeBtn.textContent = "Menyimpan...";
+
+        clearReportMessage();
+
+        try {
+
+            /*
+             * Menggunakan kolom jobs yang sudah ada:
+             * technician_notes
+             * actual_cost
+             * service_price
+             * status
+             */
+
+            const reportText =
+                `RINCIAN PEKERJAAN:
+${details}
+
+CATATAN TAMBAHAN:
+${notes || "-"}`;
+
+            const {
+                error
+            } = await supabaseClient
+                .from("jobs")
+                .update({
+
+                    technician_notes: reportText,
+
+                    actual_cost: actualCost,
+
+                    service_price: servicePrice,
+
+                    status: "COMPLETED"
+
+                })
+                .eq("id", currentReportJob.id)
+                .eq("technician_id", currentUser.id);
+
+            if (error)
+                throw error;
+
+            showReportMessage(
+                "Laporan berhasil disimpan. Pekerjaan sekarang COMPLETED.",
+                "success"
+            );
+
+            await loadJobs();
+
+            setTimeout(() => {
+
+                closeReportModal();
+
+            }, 700);
+
+        } catch (error) {
+
+            console.error("Complete Job Error:", error);
+
+            showReportMessage(
+                "Gagal menyelesaikan pekerjaan: " +
+                (error.message || error),
+                "error"
+            );
+
+        } finally {
+
+            completeBtn.disabled = false;
+            completeBtn.textContent =
+                "Selesaikan Pekerjaan";
+
+        }
+
+    });
+
+
+function showReportMessage(text, type) {
+
+    const box =
+        document.getElementById("reportMessage");
+
+    box.textContent = text;
+
+    box.className =
+        "message " + type;
+
+}
+
+
+function clearReportMessage() {
+
+    const box =
+        document.getElementById("reportMessage");
+
+    box.textContent = "";
+
+    box.className = "message";
+
+}
 
 
 /* ==========================================
