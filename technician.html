@@ -1830,7 +1830,21 @@ async function sendBillingWhatsApp(){
 
     const button = document.getElementById("sendBillingButton");
     button.disabled = true;
-    button.textContent = "⏳ MENYIAPKAN...";
+    button.textContent = "⏳ MEMBUKA WHATSAPP...";
+
+    // Buka WhatsApp SEGERA saat klik masih dianggap user gesture.
+    // Ini mencegah popup blocker setelah proses async Supabase.
+    const waWindow = window.open(waUrl, "_blank");
+
+    if(!waWindow){
+        button.disabled = false;
+        button.textContent = "💬 KIRIM TAGIHAN";
+        showBillingAlert(
+            "WhatsApp diblokir browser. Izinkan pop-up untuk situs ini lalu klik KIRIM TAGIHAN lagi.",
+            "error"
+        );
+        return;
+    }
 
     try{
         const now = new Date().toISOString();
@@ -1854,14 +1868,12 @@ async function sendBillingWhatsApp(){
         markButton.style.opacity = "1";
         markButton.style.cursor = "pointer";
 
-        /*
-         * Navigasi SAME TAB sengaja dipakai agar browser tidak menganggap
-         * WhatsApp sebagai popup. Setelah customer mengirim pesan, teknisi
-         * kembali ke halaman ERP.
-         */
-        window.location.assign(waUrl);
+        // WhatsApp sudah dibuka di tab baru.
+        // Teknisi tetap berada di ERP untuk menekan "SAYA SUDAH KIRIM".
 
     }catch(error){
+        // WhatsApp sudah terbuka; tampilkan error penyimpanan tanpa
+        // mengganggu pesan yang sedang disiapkan.
         console.error("BILLING SAVE ERROR:", error);
         button.disabled = false;
         button.textContent = "💬 KIRIM TAGIHAN";
