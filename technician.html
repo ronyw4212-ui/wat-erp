@@ -1750,6 +1750,19 @@ function formatRupiah(value){
     ).format(Number(value || 0));
 }
 
+function getCustomerWhatsApp(job){
+
+    if(!job) return "";
+
+    return (
+        job.customer_phone ||
+        job.customer_whatsapp ||
+        job.whatsapp ||
+        ""
+    );
+}
+
+
 function normalizeWhatsAppNumber(phone){
 
     let number = String(phone || "").replace(/\D/g,"");
@@ -1846,7 +1859,7 @@ async function sendBillingWhatsApp(){
          * WhatsApp sebagai popup. Setelah customer mengirim pesan, teknisi
          * kembali ke halaman ERP.
          */
-        window.location.href = waUrl;
+        window.location.assign(waUrl);
 
     }catch(error){
         console.error("BILLING SAVE ERROR:", error);
