@@ -660,14 +660,12 @@ Tambah Freon - Rp100.000"
                 Batal
             </button>
 
-            <a class="btn btn-success"
-       id="sendBillingButton"
-       href="#"
-       target="_blank"
-       rel="noopener"
-       onclick="return sendBillingWhatsApp(event)">
-        💬 KIRIM TAGIHAN
-    </a>
+            <button class="btn btn-success"
+                    id="sendBillingButton"
+                    type="button"
+                    onclick="sendBillingWhatsApp()">
+                💬 KIRIM TAGIHAN
+            </button>
 
             <button class="btn btn-warning"
                     id="markBillingSentButton"
@@ -1790,114 +1788,72 @@ WAT ERP
 Wijaya AC`;
 }
 
-function sendBillingWhatsApp(event){
+async function sendBillingWhatsApp(){
 
-    if(!selectedJob) return false;
+    if(!selectedJob) return;
 
-    const detail =
-        document.getElementById("billingDetail")
-            .value.trim();
-
-    const total =
-        Number(document.getElementById("billingTotal").value);
-
+    const detail = document.getElementById("billingDetail").value.trim();
+    const total = Number(document.getElementById("billingTotal").value);
     const phone = getCustomerWhatsApp(selectedJob);
     const number = normalizeWhatsAppNumber(phone);
 
     if(!detail){
-        if(event) event.preventDefault();
         showBillingAlert("Isi rincian tagihan terlebih dahulu.","error");
-        return false;
+        return;
     }
 
     if(!Number.isFinite(total) || total <= 0){
-        if(event) event.preventDefault();
         showBillingAlert("Masukkan total tagihan yang valid.","error");
-        return false;
+        return;
     }
 
     if(!number || number.length < 10){
-        if(event) event.preventDefault();
         showBillingAlert("Nomor WhatsApp customer tidak tersedia atau tidak valid.","error");
-        return false;
+        return;
     }
 
-    const message =
-        buildBillingMessage(
-            selectedJob,
-            detail,
-            total
-        );
+    const message = buildBillingMessage(selectedJob, detail, total);
+    const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
 
-    const waUrl =
-        "https://wa.me/" +
-        number +
-        "?text=" +
-        encodeURIComponent(message);
+    const button = document.getElementById("sendBillingButton");
+    button.disabled = true;
+    button.textContent = "⏳ MENYIAPKAN...";
 
-    /*
-     * Ini sengaja dibuat sebagai <a target="_blank">.
-     * Browser melihatnya sebagai navigasi langsung dari klik user,
-     * sehingga tidak terkena popup blocker.
-     */
-    const button =
-        document.getElementById("sendBillingButton");
+    try{
+        const now = new Date().toISOString();
+        const { error } = await supabaseClient
+            .from("jobs")
+            .update({
+                billing_detail: detail,
+                billing_total: total,
+                technician_notes: document.getElementById("technicianNotes").value.trim(),
+                updated_at: now
+            })
+            .eq("id", selectedJob.id);
 
-    button.href = waUrl;
-    button.target = "_blank";
+        if(error) throw error;
 
-    /*
-     * Simpan ke Supabase tanpa menunggu.
-     * Navigasi WhatsApp tetap berjalan dari klik user.
-     */
-    const now = new Date().toISOString();
+        selectedJob.billing_detail = detail;
+        selectedJob.billing_total = total;
 
-    supabaseClient
-        .from("jobs")
-        .update({
-            billing_detail: detail,
-            billing_total: total,
-            technician_notes:
-                document.getElementById("technicianNotes")
-                    .value.trim(),
-            updated_at: now
-        })
-        .eq("id", selectedJob.id)
-        .then(({error}) => {
-            if(error){
-                console.error("BILLING SAVE ERROR:", error);
-                showBillingAlert(
-                    "WhatsApp sudah dibuka, tetapi tagihan gagal disimpan: " +
-                    error.message,
-                    "error"
-                );
-                return;
-            }
+        const markButton = document.getElementById("markBillingSentButton");
+        markButton.disabled = false;
+        markButton.style.opacity = "1";
+        markButton.style.cursor = "pointer";
 
-            selectedJob.billing_detail = detail;
-            selectedJob.billing_total = total;
-        })
-        .catch(error => {
-            console.error("BILLING SAVE ERROR:", error);
-        });
+        /*
+         * Navigasi SAME TAB sengaja dipakai agar browser tidak menganggap
+         * WhatsApp sebagai popup. Setelah customer mengirim pesan, teknisi
+         * kembali ke halaman ERP.
+         */
+        window.location.href = waUrl;
 
-    const markButton =
-        document.getElementById("markBillingSentButton");
-
-    markButton.disabled = false;
-    markButton.style.opacity = "1";
-    markButton.style.cursor = "pointer";
-
-    showBillingAlert(
-        "WhatsApp dibuka dengan pesan tagihan otomatis. Kirim pesan di WhatsApp, lalu kembali dan klik SAYA SUDAH KIRIM.",
-        "success"
-    );
-
-    /*
-     * Jangan preventDefault.
-     * Browser akan mengikuti href secara normal.
-     */
-    return true;
+    }catch(error){
+        console.error("BILLING SAVE ERROR:", error);
+        button.disabled = false;
+        button.textContent = "💬 KIRIM TAGIHAN";
+        showBillingAlert("Gagal menyiapkan tagihan: " + error.message,"error");
+    }
 }
 
 
