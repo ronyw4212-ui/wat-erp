@@ -1946,58 +1946,80 @@ function generateCustomerCode() {
    JOB CODE
 ========================================== */
 
+/* ==========================================
+   JOB CODE - AMAN DARI DUPLICATE
+========================================== */
+
 async function generateJobCode() {
 
     const now = new Date();
 
+    const year = now.getFullYear();
 
-    const year =
-        now.getFullYear();
+    const month = String(
+        now.getMonth() + 1
+    ).padStart(2, "0");
 
+    const day = String(
+        now.getDate()
+    ).padStart(2, "0");
 
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2, "0");
+    const prefix = `JOB-${year}${month}${day}`;
 
-
-    const day =
-        String(
-            now.getDate()
-        ).padStart(2, "0");
-
-
-    const prefix =
-        `JOB-${year}${month}${day}`;
-
+    /*
+     * Ambil semua job_code pada tanggal hari ini.
+     * Jangan menggunakan COUNT karena COUNT bisa
+     * menghasilkan nomor yang salah jika ada gap.
+     */
 
     const {
-        count
+        data,
+        error
     } = await supabaseClient
         .from("jobs")
-        .select(
-            "id",
-            {
-                count: "exact",
-                head: true
-            }
-        )
-        .like(
-            "job_code",
-            `${prefix}-%`
+        .select("job_code")
+        .like("job_code", `${prefix}-%`);
+
+    if (error) {
+        throw new Error(
+            "Gagal membuat nomor Job: " +
+            error.message
         );
+    }
 
+    let maxNumber = 0;
 
-    const number =
-        String(
-            (count || 0) + 1
-        ).padStart(4, "0");
+    (data || []).forEach(job => {
 
+        if (!job.job_code) return;
 
-    return `${prefix}-${number}`;
+        const match =
+            job.job_code.match(
+                new RegExp(
+                    `^${prefix}-(\\d+)$`
+                )
+            );
 
+        if (!match) return;
+
+        const number =
+            parseInt(match[1], 10);
+
+        if (
+            !isNaN(number) &&
+            number > maxNumber
+        ) {
+            maxNumber = number;
+        }
+
+    });
+
+    const nextNumber =
+        String(maxNumber + 1)
+            .padStart(4, "0");
+
+    return `${prefix}-${nextNumber}`;
 }
-
 
 /* ==========================================
    PHONE
