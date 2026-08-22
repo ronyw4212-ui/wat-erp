@@ -1822,25 +1822,10 @@ async function sendBillingWhatsApp(){
     }
 
     /*
-     * PENTING:
-     * Popup WhatsApp HARUS dibuat saat event klik masih berlangsung.
-     * Jangan menunggu await Supabase sebelum window.open(),
-     * karena browser dapat menganggapnya popup otomatis dan memblokirnya.
+     * Kita TIDAK menggunakan window.open() lagi.
+     * Setelah data tersimpan, halaman langsung diarahkan ke wa.me.
+     * Dengan cara ini browser tidak akan memblokir popup.
      */
-    const waWindow = window.open("about:blank", "_blank");
-
-    if(!waWindow){
-        showBillingAlert(
-            "WhatsApp gagal dibuka karena popup diblokir browser. Izinkan popup untuk situs ini lalu klik KIRIM TAGIHAN lagi.",
-            "error"
-        );
-        return;
-    }
-
-    waWindow.document.write(
-        "<title>Membuka WhatsApp...</title><p style='font-family:Arial;padding:30px'>Membuka WhatsApp...</p>"
-    );
-
     const button =
         document.getElementById("sendBillingButton");
 
@@ -1888,10 +1873,10 @@ async function sendBillingWhatsApp(){
             encodeURIComponent(message);
 
         /*
-         * Popup sudah dibuka secara synchronous di atas.
-         * Sekarang kita arahkan popup tersebut ke WhatsApp.
+         * Langsung arahkan browser ke WhatsApp.
+         * Tidak memakai popup sehingga tidak terkena popup blocker.
          */
-        waWindow.location.href = waUrl;
+        window.location.href = waUrl;
 
         const markButton =
             document.getElementById("markBillingSentButton");
