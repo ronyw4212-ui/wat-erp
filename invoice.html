@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoice - WAT ERP</title>
+<style>
+*{box-sizing:border-box}
+:root{--blue:#1257b8;--blue2:#0b3b82;--bg:#f4f7fb;--line:#dce4ef;--text:#172033;--muted:#667085;--green:#159447;--orange:#d97706;--red:#c62828}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:linear-gradient(90deg,var(--blue2),var(--blue));color:#fff;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:22px;font-weight:800}.brand small{display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:3px}
+.header-right{display:flex;gap:8px;align-items:center}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.page-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:20px}
+h1{margin:0;font-size:28px}.muted{color:var(--muted)}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-orange{background:#f59e0b;color:#fff}.btn-light{background:#e8eef7;color:#172033}.btn-red{background:var(--red);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px rgba(15,23,42,.05)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--line);border-left:4px solid #1677ff;border-radius:12px;padding:15px}
+.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:22px;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font:inherit}
+textarea{min-height:85px;resize:vertical}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid var(--line);text-align:left}.table th{background:#f8fafc;color:var(--muted);font-size:12px}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.issued{background:#dbeafe;color:#1d4ed8}.partial{background:#fef3c7;color:#92400e}.paid{background:#dcfce7;color:#166534}.draft{background:#e2e8f0;color:#334155}.cancelled{background:#fee2e2;color:#991b1b}
+.alert{display:none;padding:11px 13px;border-radius:8px;margin:12px 0;font-size:13px}.alert.show{display:block}.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:100;overflow:auto;padding:20px}.modal.show{display:block}
+.modal-box{max-width:900px;margin:20px auto;background:#fff;border-radius:14px;padding:22px}
+.modal-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-title h2{margin:0}
+.close{background:transparent;border:0;font-size:24px;cursor:pointer;color:#667085}
+.invoice-paper{max-width:850px;margin:0 auto;background:#fff;border:1px solid var(--line);padding:34px}
+.inv-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #172033;padding-bottom:18px}
+.company{font-size:23px;font-weight:800}.inv-title{text-align:right}.inv-title strong{font-size:22px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:35px;margin-top:24px}
+.amount{text-align:right;margin-top:20px}.amount div{margin:6px 0}.total{font-size:21px;font-weight:800;border-top:2px solid #172033;padding-top:10px}
+.bank{margin-top:25px;padding:15px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px}
+.bank b{font-size:16px}
+@media(max-width:800px){.stats,.grid,.grid3,.two{grid-template-columns:1fr}.page-head,.header{align-items:flex-start;flex-direction:column}.inv-head{flex-direction:column}.inv-title{text-align:left}.invoice-paper{padding:20px}}
+@media print{body{background:#fff}.no-print{display:none!important}.modal{position:static;background:#fff;padding:0}.modal-box{padding:0;margin:0;max-width:none}.invoice-paper{border:0;max-width:none;padding:0}.payment-history{display:none!important}}
+</style>
+</head>
+<body>
+
+<header class="header no-print">
+  <div class="brand">WAT ERP<small>Invoice & Payment</small></div>
+  <div class="header-right">
+    <span id="userLabel">USER</span>
+    <button class="btn btn-light" onclick="logout()">LOGOUT</button>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-head">
+    <div>
+      <h1>Invoice</h1>
+      <div class="muted">Kelola invoice dan pembayaran customer</div>
+    </div>
+    <div class="actions no-print">
+      <button class="btn btn-primary" onclick="openCreate()">+ Buat Invoice</button>
+      <button class="btn btn-light" onclick="loadAll()">↻ Refresh</button>
+      <a class="btn btn-light" href="dashboard-owner.html">Dashboard</a>
+    </div>
+  </div>
+
+  <div id="pageAlert" class="alert"></div>
+
+  <section class="stats">
+    <div class="stat"><span>Total Invoice</span><strong id="statAll">0</strong></div>
+    <div class="stat"><span>Issued</span><strong id="statIssued">0</strong></div>
+    <div class="stat"><span>Partial</span><strong id="statPartial">0</strong></div>
+    <div class="stat"><span>Paid</span><strong id="statPaid">0</strong></div>
+  </section>
+
+  <section class="card no-print">
+    <div class="grid3">
+      <div><label>Pencarian</label><input id="search" placeholder="No invoice / customer / job" oninput="renderInvoices()"></div>
+      <div><label>Status</label><select id="statusFilter" onchange="renderInvoices()">
+        <option value="">Semua Status</option><option value="ISSUED">ISSUED</option><option value="PARTIAL">PARTIAL</option><option value="PAID">PAID</option><option value="DRAFT">DRAFT</option><option value="CANCELLED">CANCELLED</option>
+      </select></div>
+      <div><label>&nbsp;</label><button class="btn btn-light" onclick="resetFilter()">Reset Filter</button></div>
+    </div>
+  </section>
+
+  <section class="card no-print">
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Job</th><th>Total</th><th>Terbayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody id="invoiceRows"><tr><td colspan="8">Memuat...</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- CREATE -->
+<div id="createModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-title"><h2>Buat Invoice</h2><button class="close" onclick="closeModal('createModal')">×</button></div>
+
+    <div class="grid">
+      <div><label>Job Selesai *</label><select id="jobSelect" onchange="fillJob()"><option value="">Memuat...</option></select></div>
+      <div><label>Jatuh Tempo</label><input id="dueAt" type="date"></div>
+    </div>
+
+    <div class="grid" style="margin-top:14px">
+      <div><label>Customer</label><input id="cName" readonly></div>
+      <div><label>No. WhatsApp</label><input id="cPhone" readonly></div>
+      <div><label>Alamat</label><textarea id="cAddress" readonly></textarea></div>
+      <div><label>Rincian Pekerjaan</label><textarea id="jobDetail" readonly></textarea></div>
+    </div>
+
+    <div class="grid3" style="margin-top:14px">
+      <div><label>Subtotal *</label><input id="subtotal" type="number" min="0" value="0" oninput="calculateCreateTotal()"></div>
+      <div><label>Diskon</label><input id="discount" type="number" min="0" value="0" oninput="calculateCreateTotal()"></div>
+      <div><label>Pajak</label><input id="tax" type="number" min="0" value="0" oninput="calculateCreateTotal()"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px;background:#f8fafc"><strong>TOTAL: <span id="createTotal">Rp0</span></strong></div>
+    <label>Catatan</label><textarea id="invoiceNotes" placeholder="Catatan invoice..."></textarea>
+    <div id="createAlert" class="alert"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="createInvoice()">SIMPAN INVOICE</button>
+      <button class="btn btn-light" onclick="closeModal('createModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div id="detailModal" class="modal">
+  <div class="modal-box">
+    <div class="actions no-print" style="margin-bottom:15px">
+      <button class="btn btn-light" onclick="closeModal('detailModal')">Tutup</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print / PDF</button>
+      <button id="addPaymentBtn" class="btn btn-green" onclick="openPayment()">+ Tambah Pembayaran</button>
+    </div>
+    <div id="invoicePaper" class="invoice-paper"></div>
+    <div id="paymentHistory" class="card payment-history no-print" style="margin-top:18px"></div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div id="paymentModal" class="modal">
+  <div class="modal-box" style="max-width:650px">
+    <div class="modal-title"><h2>Pembayaran Invoice</h2><button class="close" onclick="closeModal('paymentModal')">×</button></div>
+
+    <div class="card" style="background:#eff6ff">
+      <div><b>Metode: Transfer Bank</b></div>
+      <div>Bank BCA</div>
+      <div>No. Rekening: <b>2190176561</b></div>
+      <div>a.n. <b>Roni Wijaya</b></div>
+    </div>
+
+    <div class="grid">
+      <div><label>Tanggal Pembayaran *</label><input id="payDate" type="datetime-local"></div>
+      <div><label>Nominal *</label><input id="payAmount" type="number" min="1" placeholder="Contoh 150000"></div>
+      <div><label>Referensi Transfer</label><input id="payRef" placeholder="Opsional"></div>
+      <div><label>Bank Pengirim / Keterangan</label><input id="payBank" value="BCA"></div>
+    </div>
+
+    <label style="margin-top:14px">Catatan</label>
+    <textarea id="payNotes" placeholder="Catatan pembayaran..."></textarea>
+    <div id="payAlert" class="alert"></div>
+
+    <div class="actions">
+      <button class="btn btn-green" onclick="savePayment()">SIMPAN PEMBAYARAN</button>
+      <button class="btn btn-light" onclick="closeModal('paymentModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script>
+let currentUser=null;
+let profile=null;
+let invoices=[];
+let jobs=[];
+let selectedInvoice=null;
+let selectedJob=null;
+let payments=[];
+
+const PAYMENT_BANK="BCA";
+const PAYMENT_ACCOUNT="2190176561";
+const PAYMENT_ACCOUNT_NAME="Roni Wijaya";
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function rupiah(v){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v||0));}
+function fmtDate(v){if(!v)return "-";return new Date(v).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"});}
+function fmtDateTime(v){if(!v)return "-";return new Date(v).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});}
+function showAlert(id,msg,type="ok"){const e=document.getElementById(id);e.textContent=msg;e.className="alert show "+(type==="err"?"err":"ok");}
+function clearAlert(id){const e=document.getElementById(id);e.textContent="";e.className="alert";}
+function openModal(id){document.getElementById(id).classList.add("show");}
+function closeModal(id){document.getElementById(id).classList.remove("show");}
+
+async function init(){
+  if(typeof supabaseClient==="undefined"){
+    document.body.innerHTML='<div style="padding:40px;font-family:Arial"><h2>Konfigurasi Supabase tidak ditemukan</h2><p>Pastikan assets/js/config.js ada dan membuat variabel <b>supabaseClient</b>.</p></div>';
+    return;
+  }
+
+  const {data:{user},error}=await supabaseClient.auth.getUser();
+  if(error||!user){location.href="index.html";return;}
+  currentUser=user;
+
+  const {data:p,error:pe}=await supabaseClient
+    .from("profiles")
+    .select("id,full_name,email,role,status")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if(pe){showAlert("pageAlert","Gagal membaca profile: "+pe.message,"err");return;}
+  profile=p;
+
+  if(!profile || !["OWNER","CS"].includes(profile.role) || profile.status!=="ACTIVE"){
+    document.body.innerHTML='<div style="padding:40px;font-family:Arial"><h2>Akses ditolak</h2><p>Halaman Invoice hanya untuk OWNER / CS aktif.</p></div>';
+    return;
+  }
+
+  document.getElementById("userLabel").textContent=profile.full_name||profile.email||profile.role;
+  await loadAll();
+}
+
+async function loadAll(){
+  clearAlert("pageAlert");
+  await loadInvoices();
+  await loadCompletedJobs();
+}
+
+async function loadInvoices(){
+  const {data,error}=await supabaseClient
+    .from("invoices")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){showAlert("pageAlert","Gagal memuat invoice: "+error.message,"err");return;}
+  invoices=data||[];
+
+  await loadPaymentTotals();
+  updateStats();
+  renderInvoices();
+}
+
+async function loadPaymentTotals(){
+  if(!invoices.length)return;
+  const ids=invoices.map(x=>x.id);
+  const {data,error}=await supabaseClient
+    .from("invoice_payments")
+    .select("invoice_id,amount")
+    .in("invoice_id",ids);
+
+  if(error){
+    console.warn("Payment totals:",error.message);
+    invoices=invoices.map(i=>({...i,_paid:0}));
+    return;
+  }
+
+  const totals={};
+  (data||[]).forEach(p=>totals[p.invoice_id]=(totals[p.invoice_id]||0)+Number(p.amount||0));
+  invoices=invoices.map(i=>({...i,_paid:totals[i.id]||0}));
+}
+
+async function loadCompletedJobs(){
+  const {data,error}=await supabaseClient
+    .from("jobs")
+    .select("*")
+    .eq("status","COMPLETED")
+    .order("completed_at",{ascending:false});
+
+  if(error){
+    console.warn("Jobs:",error.message);
+    jobs=[];
+    return;
+  }
+
+  jobs=data||[];
+  const used=new Set(invoices.map(i=>i.job_id).filter(Boolean));
+  const available=jobs.filter(j=>!used.has(j.id));
+
+  const sel=document.getElementById("jobSelect");
+  sel.innerHTML='<option value="">Pilih job COMPLETED...</option>'+
+    available.map(j=>{
+      const customer=j.customer_name||"Customer";
+      const total=Number(j.billing_total??j.service_price??0);
+      return `<option value="${esc(j.id)}">${esc(j.job_code||j.id)} — ${esc(customer)} — ${rupiah(total)}</option>`;
+    }).join("");
+}
+
+function updateStats(){
+  document.getElementById("statAll").textContent=invoices.length;
+  document.getElementById("statIssued").textContent=invoices.filter(x=>x.status==="ISSUED").length;
+  document.getElementById("statPartial").textContent=invoices.filter(x=>x.status==="PARTIAL").length;
+  document.getElementById("statPaid").textContent=invoices.filter(x=>x.status==="PAID").length;
+}
+
+function renderInvoices(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  const st=document.getElementById("statusFilter").value;
+  const rows=document.getElementById("invoiceRows");
+
+  const filtered=invoices.filter(i=>{
+    const hay=[i.invoice_number,i.customer_name,i.job_code,i.id].join(" ").toLowerCase();
+    return (!q||hay.includes(q))&&(!st||i.status===st);
+  });
+
+  if(!filtered.length){
+    rows.innerHTML='<tr><td colspan="8">Belum ada invoice.</td></tr>';
+    return;
+  }
+
+  rows.innerHTML=filtered.map(i=>{
+    const total=Number(i.total||0);
+    const paid=Number(i._paid||0);
+    const remain=Math.max(0,total-paid);
+    const cls=String(i.status||"").toLowerCase();
+
+    return `<tr>
+      <td><b>${esc(i.invoice_number)}</b><br><small>${fmtDate(i.issued_at)}</small></td>
+      <td>${esc(i.customer_name||"-")}</td>
+      <td>${esc(i.job_code||"-")}</td>
+      <td>${rupiah(total)}</td>
+      <td>${rupiah(paid)}</td>
+      <td>${rupiah(remain)}</td>
+      <td><span class="badge ${cls}">${esc(i.status)}</span></td>
+      <td><button class="btn btn-primary" onclick="viewInvoice('${i.id}')">Detail</button></td>
+    </tr>`;
+  }).join("");
+}
+
+function resetFilter(){
+  document.getElementById("search").value="";
+  document.getElementById("statusFilter").value="";
+  renderInvoices();
+}
+
+function openCreate(){
+  clearAlert("createAlert");
+  selectedJob=null;
+  document.getElementById("jobSelect").value="";
+  document.getElementById("dueAt").value="";
+  ["cName","cPhone","cAddress","jobDetail","invoiceNotes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("subtotal").value=0;
+  document.getElementById("discount").value=0;
+  document.getElementById("tax").value=0;
+  calculateCreateTotal();
+  openModal("createModal");
+}
+
+async function fillJob(){
+  const id=document.getElementById("jobSelect").value;
+  selectedJob=jobs.find(j=>j.id===id);
+  if(!selectedJob)return;
+
+  document.getElementById("cName").value=selectedJob.customer_name||"";
+  document.getElementById("cPhone").value=selectedJob.customer_phone||selectedJob.whatsapp||"";
+  document.getElementById("cAddress").value=selectedJob.customer_address||selectedJob.address||"";
+  document.getElementById("jobDetail").value=selectedJob.billing_detail||selectedJob.work_description||selectedJob.description||"";
+
+  document.getElementById("subtotal").value=Number(selectedJob.billing_total??selectedJob.service_price??selectedJob.harga_service??0);
+  calculateCreateTotal();
+}
+
+function calculateCreateTotal(){
+  const s=Number(document.getElementById("subtotal").value||0);
+  const d=Number(document.getElementById("discount").value||0);
+  const t=Number(document.getElementById("tax").value||0);
+  document.getElementById("createTotal").textContent=rupiah(Math.max(0,s-d+t));
+}
+
+async function generateInvoiceNumber(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=String(now.getMonth()+1).padStart(2,"0");
+  const prefix=`INV/WAT/${month}/${year}/`;
+
+  const {data,error}=await supabaseClient
+    .from("invoices")
+    .select("invoice_number")
+    .ilike("invoice_number",`${prefix}%`)
+    .order("invoice_number",{ascending:false})
+    .limit(1);
+
+  if(error)throw error;
+
+  let next=1;
+  if(data?.length){
+    const m=String(data[0].invoice_number).match(/(\d+)$/);
+    if(m)next=Number(m[1])+1;
+  }
+  return prefix+String(next).padStart(4,"0");
+}
+
+async function createInvoice(){
+  clearAlert("createAlert");
+
+  if(!selectedJob){
+    showAlert("createAlert","Pilih job COMPLETED terlebih dahulu.","err");
+    return;
+  }
+
+  if(!selectedJob.customer_id){
+    showAlert("createAlert","Job ini belum memiliki customer_id. Perbaiki customer pada jadwal terlebih dahulu.","err");
+    return;
+  }
+
+  const subtotal=Number(document.getElementById("subtotal").value||0);
+  const discount=Number(document.getElementById("discount").value||0);
+  const tax=Number(document.getElementById("tax").value||0);
+  const total=Math.max(0,subtotal-discount+tax);
+
+  if(total<=0){
+    showAlert("createAlert","Total invoice harus lebih dari Rp0.","err");
+    return;
+  }
+
+  try{
+    const invoice_number=await generateInvoiceNumber();
+    const due=document.getElementById("dueAt").value;
+
+    const payload={
+      invoice_number,
+      job_id:selectedJob.id,
+      customer_id:selectedJob.customer_id,
+      subtotal,
+      discount,
+      tax,
+      total,
+      status:"ISSUED",
+      issued_at:new Date().toISOString(),
+      due_at:due?new Date(due+"T23:59:59").toISOString():null,
+      notes:document.getElementById("invoiceNotes").value.trim()||null,
+      created_by:currentUser.id
+    };
+
+    const {data,error}=await supabaseClient
+      .from("invoices")
+      .insert(payload)
+      .select("*")
+      .single();
+
+    if(error)throw error;
+
+    closeModal("createModal");
+    showAlert("pageAlert",`Invoice ${invoice_number} berhasil dibuat.`);
+    await loadAll();
+    await viewInvoice(data.id);
+  }catch(e){
+    console.error(e);
+    showAlert("createAlert","Gagal membuat invoice: "+e.message,"err");
+  }
+}
+
+async function getCustomer(customerId){
+  if(!customerId)return null;
+  const {data}=await supabaseClient
+    .from("customers")
+    .select("id,customer_code,name,customer_name,whatsapp,phone,address,city")
+    .eq("id",customerId)
+    .maybeSingle();
+  return data||null;
+}
+
+async function viewInvoice(id){
+  const found=invoices.find(x=>x.id===id);
+
+  if(found){
+    selectedInvoice=found;
+  }else{
+    const {data,error}=await supabaseClient.from("invoices").select("*").eq("id",id).single();
+    if(error){showAlert("pageAlert","Invoice tidak ditemukan: "+error.message,"err");return;}
+    selectedInvoice=data;
+  }
+
+  const [jobRes,cust,payRes]=await Promise.all([
+    selectedInvoice.job_id
+      ? supabaseClient.from("jobs").select("*").eq("id",selectedInvoice.job_id).maybeSingle()
+      : Promise.resolve({data:null}),
+    getCustomer(selectedInvoice.customer_id),
+    supabaseClient.from("invoice_payments").select("*").eq("invoice_id",id).order("payment_date",{ascending:true})
+  ]);
+
+  const job=jobRes.data||{};
+  payments=payRes.data||[];
+
+  const paid=payments.reduce((sum,p)=>sum+Number(p.amount||0),0);
+  const total=Number(selectedInvoice.total||0);
+  const remain=Math.max(0,total-paid);
+
+  const customerName=cust?.name||cust?.customer_name||job.customer_name||"-";
+  const customerPhone=cust?.whatsapp||cust?.phone||job.customer_phone||job.whatsapp||"-";
+  const address=cust?.address||job.customer_address||job.address||"-";
+  const detail=job.billing_detail||job.work_description||job.description||"Jasa pekerjaan";
+  const jobCode=job.job_code||"-";
+
+  document.getElementById("invoicePaper").innerHTML=`
+    <div class="inv-head">
+      <div>
+        <div class="company">PT Wijaya Anugrah Teknik</div>
+        <div class="muted">WIJAYA AC</div>
+        <div class="muted">Jasa Service & Maintenance AC / HVAC</div>
+      </div>
+      <div class="inv-title">
+        <strong>${esc(selectedInvoice.invoice_number)}</strong><br>
+        <span class="badge ${String(selectedInvoice.status||"").toLowerCase()}">${esc(selectedInvoice.status)}</span>
+        <div class="muted" style="margin-top:7px">Tanggal: ${fmtDate(selectedInvoice.issued_at)}</div>
+        <div class="muted">Jatuh tempo: ${fmtDate(selectedInvoice.due_at)}</div>
+      </div>
+    </div>
+
+    <div class="two">
+      <div>
+        <b>TAGIHAN KEPADA</b><br>
+        ${esc(customerName)}<br>
+        <span class="muted">${esc(customerPhone)}</span><br>
+        <span class="muted">${esc(address)}</span>
+      </div>
+      <div>
+        <b>PEKERJAAN</b><br>
+        ${esc(jobCode)}<br>
+        <span class="muted">${esc(job.title||job.work_type||"Service AC")}</span><br>
+        <span class="muted">Selesai: ${fmtDate(job.completed_at)}</span>
+      </div>
+    </div>
+
+    <div style="margin-top:25px">
+      <table class="table">
+        <thead><tr><th>Rincian Pekerjaan</th><th style="text-align:right">Nilai</th></tr></thead>
+        <tbody><tr><td>${esc(detail).replace(/\n/g,"<br>")}</td><td style="text-align:right">${rupiah(selectedInvoice.subtotal)}</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="amount">
+      <div>Subtotal: ${rupiah(selectedInvoice.subtotal)}</div>
+      <div>Diskon: ${rupiah(selectedInvoice.discount)}</div>
+      <div>Pajak: ${rupiah(selectedInvoice.tax)}</div>
+      <div class="total">TOTAL: ${rupiah(total)}</div>
+      <div>Terbayar: ${rupiah(paid)}</div>
+      <div><b>Sisa: ${rupiah(remain)}</b></div>
+    </div>
+
+    <div class="bank">
+      <b>INFORMASI PEMBAYARAN</b><br>
+      Bank BCA<br>
+      No. Rekening: <b>${PAYMENT_ACCOUNT}</b><br>
+      a.n. <b>${PAYMENT_ACCOUNT_NAME}</b>
+    </div>
+
+    <div style="margin-top:24px">
+      <b>Catatan</b><br>${esc(selectedInvoice.notes||"-").replace(/\n/g,"<br>")}
+    </div>
+  `;
+
+  renderPaymentHistory(paid,remain);
+
+  const btn=document.getElementById("addPaymentBtn");
+  btn.disabled=remain<=0 || selectedInvoice.status==="CANCELLED";
+
+  openModal("detailModal");
+}
+
+function renderPaymentHistory(paid,remain){
+  document.getElementById("paymentHistory").innerHTML=`
+    <h3 style="margin-top:0">Riwayat Pembayaran</h3>
+    ${payments.length?`
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Tanggal</th><th>Nominal</th><th>Metode</th><th>Bank</th><th>Referensi</th><th>Catatan</th></tr></thead>
+          <tbody>
+            ${payments.map(p=>`
+              <tr>
+                <td>${fmtDateTime(p.payment_date)}</td>
+                <td>${rupiah(p.amount)}</td>
+                <td>${esc(p.payment_method)}</td>
+                <td>${esc(p.bank_name||"-")}</td>
+                <td>${esc(p.reference_number||"-")}</td>
+                <td>${esc(p.notes||"-")}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>`:"<div class='muted'>Belum ada pembayaran.</div>"}
+    <div style="margin-top:12px"><b>Total Terbayar: ${rupiah(paid)}</b> &nbsp; | &nbsp; <b>Sisa: ${rupiah(remain)}</b></div>
+  `;
+}
+
+function openPayment(){
+  if(!selectedInvoice)return;
+
+  const paid=payments.reduce((sum,p)=>sum+Number(p.amount||0),0);
+  const remain=Math.max(0,Number(selectedInvoice.total||0)-paid);
+
+  document.getElementById("payDate").value=new Date().toISOString().slice(0,16);
+  document.getElementById("payAmount").value=remain||"";
+  document.getElementById("payRef").value="";
+  document.getElementById("payBank").value=PAYMENT_BANK;
+  document.getElementById("payNotes").value="";
+  clearAlert("payAlert");
+
+  openModal("paymentModal");
+}
+
+async function savePayment(){
+  clearAlert("payAlert");
+
+  if(!selectedInvoice){
+    showAlert("payAlert","Invoice belum dipilih.","err");
+    return;
+  }
+
+  const amount=Number(document.getElementById("payAmount").value||0);
+  const alreadyPaid=payments.reduce((sum,p)=>sum+Number(p.amount||0),0);
+  const total=Number(selectedInvoice.total||0);
+  const remain=Math.max(0,total-alreadyPaid);
+
+  if(amount<=0){
+    showAlert("payAlert","Nominal pembayaran harus lebih dari Rp0.","err");
+    return;
+  }
+
+  if(amount>remain){
+    showAlert("payAlert",`Nominal melebihi sisa tagihan ${rupiah(remain)}.`,"err");
+    return;
+  }
+
+  try{
+    const paymentDate=document.getElementById("payDate").value
+      ? new Date(document.getElementById("payDate").value).toISOString()
+      : new Date().toISOString();
+
+    const payload={
+      invoice_id:selectedInvoice.id,
+      payment_date:paymentDate,
+      amount,
+      payment_method:"TRANSFER_BANK",
+      bank_name:document.getElementById("payBank").value.trim()||PAYMENT_BANK,
+      account_number:PAYMENT_ACCOUNT,
+      account_name:PAYMENT_ACCOUNT_NAME,
+      reference_number:document.getElementById("payRef").value.trim()||null,
+      notes:document.getElementById("payNotes").value.trim()||null,
+      created_by:currentUser.id
+    };
+
+    const {error}=await supabaseClient.from("invoice_payments").insert(payload);
+    if(error)throw error;
+
+    const newPaid=alreadyPaid+amount;
+    const newStatus=newPaid>=total?"PAID":"PARTIAL";
+
+    const updatePayload={
+      status:newStatus,
+      paid_at:newStatus==="PAID"?paymentDate:null,
+      updated_at:new Date().toISOString()
+    };
+
+    const {error:updateError}=await supabaseClient
+      .from("invoices")
+      .update(updatePayload)
+      .eq("id",selectedInvoice.id);
+
+    if(updateError)throw updateError;
+
+    closeModal("paymentModal");
+    showAlert("pageAlert",`Pembayaran ${rupiah(amount)} berhasil disimpan. Status: ${newStatus}.`);
+    await loadAll();
+    await viewInvoice(selectedInvoice.id);
+
+  }catch(e){
+    console.error(e);
+    showAlert("payAlert","Gagal menyimpan pembayaran: "+e.message,"err");
+  }
+}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  location.href="index.html";
+}
+
+window.addEventListener("click",e=>{
+  if(e.target.classList.contains("modal"))e.target.classList.remove("show");
+});
+
+window.addEventListener("load",init);
+</script>
+</body>
+</html>
