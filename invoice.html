@@ -534,8 +534,9 @@ tr:hover{
         <select id="statusFilter" onchange="renderInvoices()">
             <option value="">Semua Status</option>
             <option value="DRAFT">Draft</option>
-            <option value="SENT">Terkirim</option>
+            <option value="ISSUED">Terbit</option>
             <option value="PAID">Lunas</option>
+            <option value="PARTIAL">Sebagian Dibayar</option>
             <option value="CANCELLED">Dibatalkan</option>
         </select>
 
@@ -1463,15 +1464,15 @@ function selectCompletedJob(){
     calculateTotal();
 
     /*
-     * Catatan otomatis berisi referensi Job.
+     * Simpan laporan teknisi ke Catatan Invoice sekaligus
+     * dengan referensi Job, sehingga laporan tidak putus
+     * saat invoice dicetak/diedit.
      */
     document.getElementById("notes")
         .value =
-        `Job ${job.job_code || "-"} selesai pada ${
-            job.completed_at
-            ? formatDate(job.completed_at)
-            : "-"
-        }.`;
+        `${billingDetail || "Jasa service"}\n\n` +
+        `Referensi Job: ${job.job_code || "-"}\n` +
+        `Selesai: ${job.completed_at ? formatDate(job.completed_at) : "-"}`;
 
     /*
      * Generate nomor invoice otomatis.
@@ -2011,6 +2012,10 @@ function editInvoice(id){
         .value =
         invoice.notes || "";
 
+    /*
+     * Laporan teknisi sudah ikut tersimpan di notes saat
+     * invoice dibuat dari Job COMPLETED.
+     */
     document.getElementById("workDescription")
         .value =
         invoice.notes || "";
@@ -2584,6 +2589,11 @@ function printInvoice(id){
                     customer?.address ||
                     "-"
                 )}
+            </p>
+
+            <p>
+                <strong>Job Teknisi:</strong>
+                ${escapeHtml(invoice.job_id || "-")}
             </p>
 
             <table>
