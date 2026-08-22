@@ -2352,26 +2352,72 @@ ${details}
 CATATAN TAMBAHAN:
 ${notes || "-"}`;
 
-            const {
-                error
-            } = await supabaseClient
+            // =====================================
+            // STEP 1 - SIMPAN LAPORAN
+            // =====================================
+
+            const { error: reportError } = await supabaseClient
                 .from("jobs")
                 .update({
-
                     technician_notes: reportText,
-
                     actual_cost: actualCost,
-
                     service_price: servicePrice,
-
-                    status: "COMPLETED"
-
+                    updated_at: new Date().toISOString()
                 })
                 .eq("id", currentReportJob.id)
                 .eq("technician_id", currentUser.id);
 
-            if (error)
-                throw error;
+            if (reportError) {
+                throw new Error(
+                    "Gagal menyimpan laporan: " + reportError.message
+                );
+            }
+
+            // =====================================
+            // STEP 2 - UBAH STATUS MENJADI COMPLETED
+            // =====================================
+
+            const { error: statusError } = await supabaseClient
+                .from("jobs")
+                .update({
+                    status: "COMPLETED",
+                    updated_at: new Date().toISOString()
+                })
+                .eq("id", currentReportJob.id)
+                .eq("technician_id", currentUser.id);
+
+            if (statusError) {
+                throw new Error(
+                    "Laporan berhasil disimpan, tetapi status belum menjadi COMPLETED: " +
+                    statusError.message
+                );
+            }
+
+            // =====================================
+            // STEP 3 - VERIFIKASI DATABASE
+            // =====================================
+
+            const {
+                data: verifiedJob,
+                error: verifyError
+            } = await supabaseClient
+                .from("jobs")
+                .select("id, job_code, status, technician_notes, actual_cost, service_price")
+                .eq("id", currentReportJob.id)
+                .single();
+
+            if (verifyError) {
+                throw new Error(
+                    "Gagal memverifikasi hasil update: " +
+                    verifyError.message
+                );
+            }
+
+            if (!verifiedJob || verifiedJob.status !== "COMPLETED") {
+                throw new Error(
+                    "Update berhasil dijalankan tetapi status Job belum COMPLETED."
+                );
+            }
 
             showReportMessage(
                 "Laporan berhasil disimpan. Pekerjaan sekarang COMPLETED.",
@@ -2381,9 +2427,7 @@ ${notes || "-"}`;
             await loadJobs();
 
             setTimeout(() => {
-
                 closeReportModal();
-
             }, 700);
 
         } catch (error) {
