@@ -677,6 +677,14 @@ body{
 
             <div class="progress-buttons">
 
+                <button
+                    class="btn btn-success"
+                    onclick="sendAttendanceWhatsApp()"
+                    style="color:white;background:#16a34a;"
+                >
+                    💬 Konfirmasi Kehadiran
+                </button>
+
                 <button onclick="updateStatus('ON_THE_WAY')">
                     🚗 Menuju Lokasi
                 </button>
@@ -1100,6 +1108,21 @@ function renderJobCard(job){
                     Detail
                 </button>
 
+                ${
+                    job.customer_phone
+                    ?
+                    `
+                    <button
+                        class="btn btn-success"
+                        onclick="sendAttendanceWhatsApp('${job.id}')"
+                    >
+                        💬 Konfirmasi WhatsApp
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
 
                 ${
                     job.customer_address
@@ -1209,6 +1232,87 @@ function closeModal(){
 
     selectedJob = null;
 
+}
+
+
+/* =========================
+   WHATSAPP KONFIRMASI KEHADIRAN
+========================= */
+
+function normalizeWhatsAppNumber(phone){
+
+    let value = String(phone || "")
+        .replace(/[^0-9+]/g, "")
+        .replace(/^\+/, "");
+
+    // Indonesia: 08xxxx -> 628xxxx
+    if(value.startsWith("0")){
+        value = "62" + value.substring(1);
+    }
+
+    // Jika user memasukkan 8xxxx tanpa 0/62.
+    if(value.startsWith("8")){
+        value = "62" + value;
+    }
+
+    return value;
+}
+
+
+function sendAttendanceWhatsApp(jobId = null){
+
+    const job = jobId
+        ? jobs.find(x => x.id === jobId)
+        : selectedJob;
+
+    if(!job){
+        showAlert("Job belum dipilih.", "error");
+        return;
+    }
+
+    if(!job.customer_phone){
+        showAlert("Nomor WhatsApp customer belum tersedia.", "error");
+        return;
+    }
+
+    const phone = normalizeWhatsAppNumber(job.customer_phone);
+
+    if(!phone || phone.length < 10){
+        showAlert("Nomor WhatsApp customer tidak valid.", "error");
+        return;
+    }
+
+    const customer = job.customer_name || "Bapak/Ibu";
+    const date = formatDate(job.scheduled_at);
+    const time = formatTime(job.scheduled_at);
+    const pekerjaan =
+        job.work_description ||
+        job.description ||
+        job.title ||
+        "pekerjaan teknisi";
+
+    const message =
+`Halo ${customer},
+
+Kami dari WAT / Wijaya AC menginformasikan bahwa teknisi kami akan datang untuk pekerjaan berikut:
+
+📋 Job: ${job.job_code || "-"}
+🔧 Pekerjaan: ${pekerjaan}
+📅 Tanggal: ${date}
+🕐 Jam: ${time}
+
+Mohon konfirmasi apakah Bapak/Ibu dapat menerima kedatangan teknisi pada jadwal tersebut.
+
+Terima kasih.
+WAT / Wijaya AC`;
+
+    const url =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message);
+
+    window.open(url, "_blank");
 }
 
 
