@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Kelola Invoice - WAT ERP</title>
+<title>Invoice - WAT ERP</title>
 
 <style>
 *{
@@ -42,12 +42,12 @@ header{
 .header-right{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:15px;
 }
 
 .user-role{
-    font-size:14px;
     font-weight:bold;
+    font-size:14px;
 }
 
 .logout{
@@ -61,54 +61,37 @@ header{
 }
 
 main{
-    max-width:1250px;
+    max-width:1100px;
     margin:30px auto;
     padding:0 20px;
 }
 
-.page-head{
+.page-title{
     display:flex;
     justify-content:space-between;
-    align-items:center;
-    gap:20px;
+    align-items:flex-start;
     margin-bottom:25px;
 }
 
 h1{
     font-size:30px;
+    margin-bottom:6px;
 }
 
 .desc{
     color:#64748b;
-    margin-top:6px;
 }
 
 .btn{
     border:0;
-    border-radius:8px;
-    padding:11px 17px;
+    border-radius:7px;
+    padding:11px 18px;
     cursor:pointer;
     font-weight:bold;
-    font-size:14px;
 }
 
 .btn-primary{
     background:#0d47a1;
-    color:white;
-}
-
-.btn-success{
-    background:#16a34a;
-    color:white;
-}
-
-.btn-warning{
-    background:#f59e0b;
-    color:white;
-}
-
-.btn-danger{
-    background:#dc2626;
     color:white;
 }
 
@@ -117,21 +100,22 @@ h1{
     color:#172033;
 }
 
-.btn:hover{
-    opacity:.9;
+.btn-danger{
+    background:#fee2e2;
+    color:#b91c1c;
 }
 
 .stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:15px;
+    gap:14px;
     margin-bottom:20px;
 }
 
 .stat{
     background:white;
-    border-radius:12px;
     padding:20px;
+    border-radius:12px;
     box-shadow:0 3px 15px rgba(0,0,0,.06);
     border-left:4px solid #0d47a1;
 }
@@ -139,29 +123,29 @@ h1{
 .stat-label{
     color:#64748b;
     font-size:13px;
+    margin-bottom:7px;
 }
 
 .stat-value{
-    font-size:25px;
+    font-size:24px;
     font-weight:bold;
-    margin-top:8px;
 }
 
 .toolbar{
     background:white;
-    padding:15px;
-    border-radius:12px;
-    box-shadow:0 3px 15px rgba(0,0,0,.05);
+    padding:12px;
+    border-radius:10px;
     display:flex;
     gap:10px;
     margin-bottom:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.04);
 }
 
 .search{
     flex:1;
     padding:11px 13px;
-    border:1px solid #d7dee9;
-    border-radius:8px;
+    border:1px solid #d6deea;
+    border-radius:7px;
     outline:none;
 }
 
@@ -169,28 +153,23 @@ select,
 input,
 textarea{
     width:100%;
-    padding:11px 12px;
-    border:1px solid #d7dee9;
-    border-radius:8px;
+    padding:11px;
+    border:1px solid #ccd6e3;
+    border-radius:7px;
+    font-size:14px;
     outline:none;
-    background:white;
 }
 
-.search:focus,
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:#0d47a1;
+textarea{
+    resize:vertical;
+    min-height:90px;
 }
 
 .table-card{
     background:white;
     border-radius:12px;
+    padding:20px;
     box-shadow:0 3px 15px rgba(0,0,0,.06);
-    overflow:hidden;
-}
-
-.table-wrap{
     overflow-x:auto;
 }
 
@@ -200,258 +179,209 @@ table{
 }
 
 th{
-    background:#f8fafc;
-    color:#475569;
-    font-size:13px;
+    background:#eef3f8;
     text-align:left;
-    padding:15px;
-    border-bottom:1px solid #e2e8f0;
-    white-space:nowrap;
+    padding:13px;
+    font-size:13px;
 }
 
 td{
-    padding:14px 15px;
-    border-bottom:1px solid #edf1f5;
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
     font-size:14px;
-    vertical-align:middle;
 }
 
-tr:hover{
-    background:#fafcff;
+.invoice-number{
+    font-weight:bold;
+    color:#0d47a1;
 }
 
 .status{
     display:inline-block;
-    padding:5px 10px;
+    padding:5px 9px;
     border-radius:20px;
-    font-size:12px;
+    font-size:11px;
     font-weight:bold;
-}
-
-.status-draft{
-    background:#e2e8f0;
-    color:#334155;
-}
-
-.status-sent{
-    background:#dbeafe;
-    color:#1d4ed8;
 }
 
 .status-paid{
     background:#dcfce7;
-    color:#166534;
+    color:#15803d;
 }
 
-.status-cancelled{
-    background:#fee2e2;
-    color:#991b1b;
+.status-issued{
+    background:#dbeafe;
+    color:#1d4ed8;
 }
 
-.actions{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-}
-
-.actions button{
-    padding:7px 10px;
-    font-size:12px;
+.status-draft{
+    background:#fef3c7;
+    color:#92400e;
 }
 
 .empty{
-    padding:50px;
     text-align:center;
+    padding:40px;
     color:#64748b;
 }
 
-.loading{
-    padding:50px;
-    text-align:center;
-    color:#64748b;
+.alert{
+    padding:14px 16px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-weight:bold;
 }
 
-.modal{
-    display:none;
+.alert-error{
+    background:#fee2e2;
+    border:1px solid #fecaca;
+    color:#b91c1c;
+}
+
+.alert-success{
+    background:#dcfce7;
+    border:1px solid #86efac;
+    color:#166534;
+}
+
+/* MODAL */
+
+.modal-overlay{
     position:fixed;
     inset:0;
     background:rgba(15,23,42,.65);
-    z-index:1000;
+    display:none;
     align-items:center;
     justify-content:center;
     padding:20px;
+    z-index:999;
 }
 
-.modal.show{
+.modal-overlay.show{
     display:flex;
 }
 
-.modal-box{
+.modal{
     background:white;
     width:100%;
-    max-width:700px;
-    max-height:90vh;
+    max-width:720px;
+    max-height:92vh;
     overflow-y:auto;
     border-radius:14px;
-    box-shadow:0 20px 50px rgba(0,0,0,.2);
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
 }
 
-.modal-head{
-    padding:20px 24px;
-    border-bottom:1px solid #e2e8f0;
+.modal-header{
+    padding:20px;
+    border-bottom:1px solid #e5e7eb;
     display:flex;
     justify-content:space-between;
     align-items:center;
 }
 
-.modal-head h2{
+.modal-header h2{
     font-size:21px;
 }
 
 .close{
     border:0;
     background:none;
-    font-size:25px;
+    font-size:24px;
     cursor:pointer;
     color:#64748b;
 }
 
 .modal-body{
-    padding:24px;
-}
-
-.modal-footer{
-    padding:18px 24px;
-    border-top:1px solid #e2e8f0;
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+    padding:20px;
 }
 
 .form-group{
     margin-bottom:15px;
 }
 
-.form-group.full{
-    grid-column:1/-1;
-}
-
 .form-group label{
     display:block;
-    margin-bottom:7px;
+    font-weight:bold;
     font-size:13px;
-    font-weight:bold;
-    color:#475569;
+    margin-bottom:6px;
 }
 
-.payment-info{
-    margin-top:15px;
-    padding:15px;
-    background:#eff6ff;
-    border:1px solid #bfdbfe;
-    border-radius:9px;
-}
-
-.payment-info strong{
-    color:#1e40af;
-}
-
-.alert{
-    margin-bottom:20px;
-    padding:13px 15px;
-    border-radius:8px;
-    display:none;
-    font-weight:bold;
-}
-
-.alert.show{
-    display:block;
-}
-
-.alert-success{
-    background:#ecfdf5;
-    color:#166534;
-    border:1px solid #86efac;
-}
-
-.alert-error{
-    background:#fef2f2;
-    color:#991b1b;
-    border:1px solid #fecaca;
-}
-
-.detail-grid{
+.grid-2{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:12px;
+    gap:14px;
 }
 
-.detail-item{
+.info-box{
     background:#f8fafc;
-    border-radius:9px;
-    padding:13px;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+    padding:14px;
+    margin-bottom:15px;
 }
 
-.detail-item.full{
-    grid-column:1/-1;
-}
-
-.detail-label{
+.info-title{
+    font-size:11px;
     color:#64748b;
-    font-size:12px;
     margin-bottom:5px;
 }
 
-.detail-value{
+.info-value{
     font-weight:bold;
 }
 
-@media(max-width:800px){
+.total-box{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    border-radius:9px;
+    padding:16px;
+    margin-top:15px;
+}
+
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+}
+
+.total-final{
+    border-top:1px solid #bfdbfe;
+    margin-top:8px;
+    padding-top:10px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.modal-footer{
+    padding:15px 20px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.loading{
+    text-align:center;
+    padding:35px;
+    color:#64748b;
+}
+
+@media(max-width:700px){
     .stats{
         grid-template-columns:1fr 1fr;
     }
 
-    .page-head{
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .page-title{
         flex-direction:column;
-        align-items:flex-start;
+        gap:15px;
     }
 
     .toolbar{
         flex-direction:column;
-    }
-
-    .form-grid,
-    .detail-grid{
-        grid-template-columns:1fr;
-    }
-
-    .form-group.full,
-    .detail-item.full{
-        grid-column:auto;
-    }
-}
-
-@media(max-width:500px){
-    header{
-        padding:15px;
-    }
-
-    main{
-        padding:0 12px;
-    }
-
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    h1{
-        font-size:25px;
     }
 }
 </style>
@@ -466,27 +396,18 @@ tr:hover{
     </div>
 
     <div class="header-right">
-        <div class="user-role">OWNER</div>
+        <span class="user-role" id="userName">OWNER</span>
         <button class="logout" onclick="logout()">LOGOUT</button>
     </div>
 </header>
 
 <main>
 
-    <div class="page-head">
+    <div class="page-title">
         <div>
             <h1>Kelola Invoice</h1>
             <div class="desc">
-                Kelola invoice dan pembayaran WAT ERP.
-            </div>
-
-            <div style="
-                margin-top:8px;
-                color:#166534;
-                font-size:13px;
-                font-weight:bold;
-            ">
-                🔗 Job COMPLETED akan otomatis tersedia untuk dibuat Invoice.
+                Kelola invoice, tagihan dan pembayaran WAT ERP.
             </div>
         </div>
 
@@ -495,28 +416,30 @@ tr:hover{
         </button>
     </div>
 
-    <div id="alert" class="alert"></div>
+    <div id="alertArea"></div>
 
     <div class="stats">
 
         <div class="stat">
             <div class="stat-label">Total Invoice</div>
-            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-value" id="totalInvoice">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Belum Lunas</div>
-            <div class="stat-value" id="statUnpaid">0</div>
+            <div class="stat-value" id="unpaidInvoice">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Lunas</div>
-            <div class="stat-value" id="statPaid">0</div>
+            <div class="stat-value" id="paidInvoice">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Total Tagihan</div>
-            <div class="stat-value" id="statAmount">Rp 0</div>
+            <div class="stat-value" id="totalBilling">
+                Rp 0
+            </div>
         </div>
 
     </div>
@@ -533,14 +456,14 @@ tr:hover{
 
         <select id="statusFilter" onchange="renderInvoices()">
             <option value="">Semua Status</option>
-            <option value="DRAFT">Draft</option>
-            <option value="ISSUED">Terbit</option>
-            <option value="PAID">Lunas</option>
-            <option value="PARTIAL">Sebagian Dibayar</option>
-            <option value="CANCELLED">Dibatalkan</option>
+            <option value="DRAFT">DRAFT</option>
+            <option value="ISSUED">ISSUED</option>
+            <option value="PARTIAL">PARTIAL</option>
+            <option value="PAID">PAID</option>
+            <option value="CANCELLED">CANCELLED</option>
         </select>
 
-        <button class="btn btn-secondary" onclick="loadInvoices()">
+        <button class="btn btn-secondary" onclick="loadData()">
             ↻ Refresh
         </button>
 
@@ -548,66 +471,56 @@ tr:hover{
 
     <div class="table-card">
 
-        <div id="loading" class="loading">
-            Memuat invoice...
-        </div>
+        <table>
 
-        <div id="empty" class="empty" style="display:none;">
-            Belum ada invoice.
-        </div>
+            <thead>
+                <tr>
+                    <th>No. Invoice</th>
+                    <th>Customer</th>
+                    <th>Tanggal</th>
+                    <th>Jatuh Tempo</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
 
-        <div id="tableWrap" class="table-wrap" style="display:none;">
+            <tbody id="invoiceTable">
+                <tr>
+                    <td colspan="7" class="loading">
+                        Memuat data...
+                    </td>
+                </tr>
+            </tbody>
 
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>No Invoice</th>
-                        <th>Customer</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody id="invoiceTable"></tbody>
-
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
 </main>
 
 
-<!-- ================================================= -->
-<!-- MODAL INVOICE -->
-<!-- ================================================= -->
+<!-- ================= MODAL INVOICE ================= -->
 
-<div id="invoiceModal" class="modal">
+<div class="modal-overlay" id="invoiceModal">
 
-    <div class="modal-box">
+    <div class="modal">
 
-        <div class="modal-head">
-            <h2 id="invoiceModalTitle">Buat Invoice</h2>
+        <div class="modal-header">
+            <h2>Buat Invoice</h2>
 
-            <button class="close"
-                    onclick="closeModal('invoiceModal')">
+            <button class="close" onclick="closeInvoiceModal()">
                 ×
             </button>
         </div>
 
         <div class="modal-body">
 
-            <input type="hidden" id="invoiceId">
+            <div class="form-group">
 
-            <div class="form-group full">
-                <label>Job Selesai *</label>
+                <label>Job COMPLETED *</label>
 
-                <select id="completedJobId"
-                        onchange="selectCompletedJob()">
+                <select id="jobSelect" onchange="selectJob()">
 
                     <option value="">
                         -- Pilih Job COMPLETED --
@@ -615,189 +528,229 @@ tr:hover{
 
                 </select>
 
-                <div id="jobInfo"
-                     style="margin-top:10px;">
-                </div>
             </div>
 
-            <div class="form-grid">
+
+            <div id="jobInfo" style="display:none;">
+
+                <div class="grid-2">
+
+                    <div class="info-box">
+                        <div class="info-title">
+                            Customer
+                        </div>
+
+                        <div
+                            class="info-value"
+                            id="customerName">
+                        </div>
+                    </div>
+
+
+                    <div class="info-box">
+                        <div class="info-title">
+                            No. WhatsApp
+                        </div>
+
+                        <div
+                            class="info-value"
+                            id="customerPhone">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-title">
+                        Alamat Customer
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="customerAddress">
+                    </div>
+
+                </div>
+
 
                 <div class="form-group">
-                    <label>Nomor Invoice</label>
 
-                    <input
-                        type="text"
-                        id="invoiceNumber"
-                        placeholder="INV/WAT/08/2026/0001"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Status</label>
-
-                    <select id="invoiceStatus">
-
-                        <option value="DRAFT">
-                            Draft
-                        </option>
-
-                        <option value="ISSUED">
-                            Terbit
-                        </option>
-
-                        <option value="PARTIAL">
-                            Sebagian Dibayar
-                        </option>
-
-                        <option value="PAID">
-                            Lunas
-                        </option>
-
-                        <option value="CANCELLED">
-                            Dibatalkan
-                        </option>
-
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Customer</label>
-
-                    <input
-                        type="text"
-                        id="customerName"
-                        readonly
-                    >
-
-                    <input
-                        type="hidden"
-                        id="customerId"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>No. WhatsApp</label>
-
-                    <input
-                        type="text"
-                        id="customerWhatsapp"
-                        readonly
-                    >
-                </div>
-
-                <div class="form-group full">
-                    <label>Alamat Customer</label>
-
-                    <textarea
-                        id="customerAddress"
-                        rows="2"
-                        readonly
-                    ></textarea>
-                </div>
-
-                <div class="form-group full">
                     <label>Rincian Pekerjaan</label>
 
-                    <textarea
-                        id="workDescription"
-                        rows="4"
-                        readonly
-                    ></textarea>
+                    <textarea id="billingDetail"></textarea>
+
                 </div>
+
+
+                <div class="grid-2">
+
+                    <div class="form-group">
+
+                        <label>Subtotal *</label>
+
+                        <input
+                            type="number"
+                            id="subtotal"
+                            value="0"
+                            oninput="calculateTotal()"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Diskon</label>
+
+                        <input
+                            type="number"
+                            id="discount"
+                            value="0"
+                            oninput="calculateTotal()"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-2">
+
+                    <div class="form-group">
+
+                        <label>Pajak / PPN</label>
+
+                        <input
+                            type="number"
+                            id="tax"
+                            value="0"
+                            oninput="calculateTotal()"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Status</label>
+
+                        <select id="invoiceStatus">
+
+                            <option value="ISSUED">
+                                ISSUED
+                            </option>
+
+                            <option value="DRAFT">
+                                DRAFT
+                            </option>
+
+                            <option value="PAID">
+                                PAID
+                            </option>
+
+                            <option value="PARTIAL">
+                                PARTIAL
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-2">
+
+                    <div class="form-group">
+
+                        <label>Tanggal Terbit</label>
+
+                        <input
+                            type="date"
+                            id="issueDate"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Jatuh Tempo</label>
+
+                        <input
+                            type="date"
+                            id="dueDate"
+                        >
+
+                    </div>
+
+                </div>
+
 
                 <div class="form-group">
-                    <label>Subtotal *</label>
 
-                    <input
-                        type="number"
-                        id="subtotal"
-                        min="0"
-                        value="0"
-                        oninput="calculateTotal()"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Diskon</label>
-
-                    <input
-                        type="number"
-                        id="discount"
-                        min="0"
-                        value="0"
-                        oninput="calculateTotal()"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Pajak / PPN</label>
-
-                    <input
-                        type="number"
-                        id="tax"
-                        min="0"
-                        value="0"
-                        oninput="calculateTotal()"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Total</label>
-
-                    <input
-                        type="number"
-                        id="total"
-                        min="0"
-                        value="0"
-                        readonly
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Tanggal Terbit</label>
-
-                    <input
-                        type="datetime-local"
-                        id="issuedAt"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Jatuh Tempo</label>
-
-                    <input
-                        type="datetime-local"
-                        id="dueAt"
-                    >
-                </div>
-
-                <div class="form-group full">
                     <label>Catatan</label>
 
                     <textarea
-                        id="notes"
-                        rows="3"
+                        id="invoiceNotes"
                         placeholder="Catatan invoice..."
                     ></textarea>
+
+                </div>
+
+
+                <div class="total-box">
+
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <strong id="displaySubtotal">
+                            Rp 0
+                        </strong>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Diskon</span>
+                        <strong id="displayDiscount">
+                            Rp 0
+                        </strong>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Pajak / PPN</span>
+                        <strong id="displayTax">
+                            Rp 0
+                        </strong>
+                    </div>
+
+                    <div class="total-row total-final">
+                        <span>TOTAL</span>
+                        <strong id="displayTotal">
+                            Rp 0
+                        </strong>
+                    </div>
+
                 </div>
 
             </div>
 
         </div>
 
+
         <div class="modal-footer">
 
             <button
                 class="btn btn-secondary"
-                onclick="closeModal('invoiceModal')"
-            >
+                onclick="closeInvoiceModal()">
                 Batal
             </button>
 
             <button
                 class="btn btn-primary"
+                id="saveInvoiceButton"
                 onclick="saveInvoice()"
-            >
+                disabled>
                 Simpan Invoice
             </button>
 
@@ -808,244 +761,76 @@ tr:hover{
 </div>
 
 
-<!-- ================================================= -->
-<!-- MODAL DETAIL -->
-<!-- ================================================= -->
-
-<div id="detailModal" class="modal">
-
-    <div class="modal-box">
-
-        <div class="modal-head">
-
-            <h2>Detail Invoice</h2>
-
-            <button class="close" onclick="closeModal('detailModal')">
-                ×
-            </button>
-
-        </div>
-
-        <div class="modal-body">
-
-            <div id="detailContent"></div>
-
-        </div>
-
-        <div class="modal-footer">
-
-            <button
-                class="btn btn-secondary"
-                onclick="closeModal('detailModal')"
-            >
-                Tutup
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================================================= -->
-<!-- MODAL PEMBAYARAN -->
-<!-- ================================================= -->
-
-<div id="paymentModal" class="modal">
-
-    <div class="modal-box">
-
-        <div class="modal-head">
-
-            <h2>Input Pembayaran</h2>
-
-            <button class="close" onclick="closeModal('paymentModal')">
-                ×
-            </button>
-
-        </div>
-
-        <div class="modal-body">
-
-            <input type="hidden" id="paymentInvoiceId">
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label>Tanggal Pembayaran</label>
-
-                    <input
-                        type="datetime-local"
-                        id="paymentDate"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Jumlah Pembayaran</label>
-
-                    <input
-                        type="number"
-                        id="paymentAmount"
-                        min="0"
-                        placeholder="0"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Metode Pembayaran</label>
-
-                    <select id="paymentMethod" onchange="toggleTransferFields()">
-
-                        <option value="TRANSFER">
-                            Transfer
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="form-group">
-                    <label>Nama Bank</label>
-
-                    <input
-                        type="text"
-                        id="bankName"
-                        value="BCA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>No. Rekening</label>
-
-                    <input
-                        type="text"
-                        id="accountNumber"
-                        value="2190176561"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Nama Rekening</label>
-
-                    <input
-                        type="text"
-                        id="accountName"
-                        value="Roni Wijaya"
-                    >
-                </div>
-
-                <div class="form-group full">
-                    <label>No. Referensi Transfer</label>
-
-                    <input
-                        type="text"
-                        id="referenceNumber"
-                        placeholder="Nomor referensi transfer"
-                    >
-                </div>
-
-                <div class="form-group full">
-                    <label>Catatan</label>
-
-                    <textarea
-                        id="paymentNotes"
-                        rows="3"
-                        placeholder="Catatan pembayaran..."
-                    ></textarea>
-                </div>
-
-            </div>
-
-            <div class="payment-info">
-
-                <strong>Informasi Pembayaran</strong>
-
-                <div style="margin-top:7px;">
-                    Bank BCA<br>
-                    No. Rekening: 2190176561<br>
-                    a.n. Roni Wijaya
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="modal-footer">
-
-            <button
-                class="btn btn-secondary"
-                onclick="closeModal('paymentModal')"
-            >
-                Batal
-            </button>
-
-            <button
-                class="btn btn-success"
-                onclick="savePayment()"
-            >
-                Simpan Pembayaran
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================================================= -->
 <!-- SUPABASE -->
-<!-- ================================================= -->
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- CONFIG -->
 <script src="assets/js/config.js"></script>
 
+
 <script>
+
+/* =====================================================
+   WAT ERP - INVOICE
+   JOB COMPLETED → INVOICE
+===================================================== */
 
 let supabaseClient = null;
 
 let invoices = [];
 let completedJobs = [];
-let customers = [];
-let editingInvoice = null;
+let selectedJob = null;
 
 
 /* =====================================================
-   INIT
+   INIT SUPABASE
 ===================================================== */
 
 function initSupabase(){
 
-    if(
-        !window.SUPABASE_URL ||
-        !window.SUPABASE_PUBLISHABLE_KEY
-    ){
-
-        showFatalError(
-            "Konfigurasi Supabase tidak ditemukan."
-        );
-
-        return false;
-    }
-
     try{
+
+        if(
+            typeof window.supabase === "undefined"
+        ){
+            throw new Error(
+                "Library Supabase tidak termuat."
+            );
+        }
+
+
+        if(
+            typeof SUPABASE_URL === "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+        ){
+            throw new Error(
+                "SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY tidak ditemukan."
+            );
+        }
+
 
         supabaseClient =
             window.supabase.createClient(
-                window.SUPABASE_URL,
-                window.SUPABASE_PUBLISHABLE_KEY
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
             );
+
+        console.log(
+            "WAT ERP Supabase berhasil terhubung."
+        );
 
         return true;
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Supabase Init Error:",
+            error
+        );
 
-        showFatalError(
-            "Gagal menghubungkan ke Supabase."
+        showAlert(
+            error.message,
+            "error"
         );
 
         return false;
@@ -1054,7 +839,7 @@ function initSupabase(){
 
 
 /* =====================================================
-   FORMAT
+   FORMAT RUPIAH
 ===================================================== */
 
 function rupiah(value){
@@ -1071,114 +856,68 @@ function rupiah(value){
 }
 
 
-function formatDate(value){
-
-    if(!value) return "-";
-
-    return new Date(value).toLocaleString(
-        "id-ID",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit"
-        }
-    );
-}
-
-
-function toDateTimeLocal(value){
-
-    if(!value) return "";
-
-    const date = new Date(value);
-
-    const offset =
-        date.getTimezoneOffset() * 60000;
-
-    return new Date(
-        date.getTime() - offset
-    )
-    .toISOString()
-    .slice(0,16);
-}
-
-
-function escapeHtml(value){
-
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-
-
 /* =====================================================
    ALERT
 ===================================================== */
 
-function showAlert(message,type="success"){
+function showAlert(message,type="error"){
 
-    const alert =
-        document.getElementById("alert");
+    const area =
+        document.getElementById("alertArea");
 
-    alert.textContent = message;
-
-    alert.className =
-        "alert show " +
-        (
-            type === "error"
-            ? "alert-error"
-            : "alert-success"
-        );
-
-    setTimeout(()=>{
-        alert.classList.remove("show");
-    },4000);
-}
-
-
-function showFatalError(message){
-
-    document.getElementById("loading").innerHTML =
-        `
-        <div style="
-            color:#991b1b;
-            background:#fef2f2;
-            padding:20px;
-            border-radius:10px;
-            border:1px solid #fecaca;
-        ">
-            <strong>${escapeHtml(message)}</strong>
+    area.innerHTML = `
+        <div class="alert alert-${type}">
+            ${message}
         </div>
-        `;
+    `;
+
 }
 
 
 /* =====================================================
-   LOAD INVOICES
+   LOAD DATA
 ===================================================== */
 
-async function loadInvoices(){
+async function loadData(){
 
-    document.getElementById("loading")
-        .style.display = "block";
+    if(!supabaseClient){
 
-    document.getElementById("tableWrap")
-        .style.display = "none";
+        if(!initSupabase()){
+            return;
+        }
 
-    document.getElementById("empty")
-        .style.display = "none";
+    }
+
 
     try{
 
-        const { data,error } =
+        console.log(
+            "Loading invoices..."
+        );
+
+
+        /* ==========================
+           INVOICES
+        ========================== */
+
+        const invoiceResult =
             await supabaseClient
                 .from("invoices")
-                .select("*")
+                .select(`
+                    id,
+                    invoice_number,
+                    job_id,
+                    customer_id,
+                    subtotal,
+                    discount,
+                    tax,
+                    total,
+                    status,
+                    issue_date,
+                    due_date,
+                    notes,
+                    created_at
+                `)
                 .order(
                     "created_at",
                     {
@@ -1186,419 +925,244 @@ async function loadInvoices(){
                     }
                 );
 
-        if(error) throw error;
 
-        invoices = data || [];
+        if(invoiceResult.error){
 
-        updateStats();
-        renderInvoices();
+            throw invoiceResult.error;
 
-    }catch(error){
+        }
 
-        console.error(
-            "LOAD INVOICE ERROR:",
-            error
+
+        invoices =
+            invoiceResult.data || [];
+
+
+        console.log(
+            "Invoices:",
+            invoices
         );
 
-        document.getElementById("loading")
-            .innerHTML =
-            `
-            <div style="color:#991b1b;">
-                Gagal memuat invoice.<br>
-                <small>
-                    ${escapeHtml(error.message)}
-                </small>
-            </div>
-            `;
-    }
-}
 
+        /* ==========================
+           JOB COMPLETED
+        ========================== */
 
-/* =====================================================
-   LOAD CUSTOMER
-===================================================== */
-
-async function loadCustomers(){
-
-    try{
-
-        const { data,error } =
-            await supabaseClient
-                .from("customers")
-                .select(
-                    "id,customer_code,name,whatsapp,phone,address,city"
-                );
-
-        if(error) throw error;
-
-        customers = data || [];
-
-    }catch(error){
-
-        console.error(
-            "LOAD CUSTOMER ERROR:",
-            error
-        );
-
-        customers = [];
-    }
-}
-
-
-function getCustomer(id){
-
-    return customers.find(
-        customer => customer.id === id
-    ) || null;
-}
-
-
-/* =====================================================
-   LOAD JOB COMPLETED
-===================================================== */
-
-async function loadCompletedJobs(){
-
-    try{
-
-        const { data,error } =
+        const jobResult =
             await supabaseClient
                 .from("jobs")
-                .select("*")
-                .eq("status","COMPLETED")
+                .select(`
+                    id,
+                    job_code,
+                    status,
+                    customer_id,
+                    customer_name,
+                    customer_phone,
+                    customer_address,
+                    technician_notes,
+                    service_price,
+                    actual_cost,
+                    completed_at
+                `)
+                .eq(
+                    "status",
+                    "COMPLETED"
+                )
                 .order(
                     "completed_at",
                     {
-                        ascending:false,
-                        nullsFirst:false
+                        ascending:false
                     }
                 );
 
-        if(error) throw error;
 
-        const alreadyInvoiced =
+        if(jobResult.error){
+
+            throw jobResult.error;
+
+        }
+
+
+        const allCompletedJobs =
+            jobResult.data || [];
+
+
+        /* ==========================
+           JOB YANG SUDAH ADA INVOICE
+        ========================== */
+
+        const invoicedJobIds =
             new Set(
                 invoices
-                    .map(invoice => invoice.job_id)
-                    .filter(Boolean)
+                    .filter(x => x.job_id)
+                    .map(x => x.job_id)
             );
+
 
         completedJobs =
-            (data || []).filter(
+            allCompletedJobs.filter(
                 job =>
-                    !alreadyInvoiced.has(job.id)
+                    !invoicedJobIds.has(
+                        job.id
+                    )
             );
 
-        renderCompletedJobOptions();
+
+        console.log(
+            "Semua COMPLETED:",
+            allCompletedJobs
+        );
+
+        console.log(
+            "Belum invoice:",
+            completedJobs
+        );
+
+
+        renderInvoices();
+
+        updateStats();
 
     }catch(error){
 
         console.error(
-            "LOAD COMPLETED JOB ERROR:",
+            "Load Data Error:",
             error
         );
 
-        completedJobs = [];
-
-        renderCompletedJobOptions();
-
         showAlert(
-            "Gagal mengambil Job COMPLETED: " +
+            "Gagal mengambil data: " +
             error.message,
             "error"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   COMPLETED JOB DROPDOWN
+   RENDER INVOICE
 ===================================================== */
 
-function renderCompletedJobOptions(){
+function renderInvoices(){
 
-    const select =
+    const tbody =
         document.getElementById(
-            "completedJobId"
+            "invoiceTable"
         );
 
-    if(!select) return;
 
-    select.innerHTML =
-        `
-        <option value="">
-            -- Pilih Job COMPLETED --
-        </option>
-        `;
-
-    if(!completedJobs.length){
-
-        select.innerHTML +=
-            `
-            <option value="" disabled>
-                Tidak ada Job COMPLETED yang belum dibuat invoice
-            </option>
-            `;
-
-        return;
-    }
-
-    completedJobs.forEach(job => {
-
-        const customer =
-            getCustomer(job.customer_id);
-
-        const customerName =
-            customer?.name ||
-            job.customer_name ||
-            "Customer";
-
-        const work =
-            job.title ||
-            job.description ||
-            job.work_description ||
-            "Pekerjaan";
-
-        select.innerHTML +=
-            `
-            <option value="${escapeHtml(job.id)}">
-                ${escapeHtml(job.job_code || "-")}
-                — ${escapeHtml(customerName)}
-                — ${escapeHtml(work)}
-            </option>
-            `;
-    });
-}
-
-
-/* =====================================================
-   SELECT COMPLETED JOB
-===================================================== */
-
-function selectCompletedJob(){
-
-    const jobId =
+    const search =
         document.getElementById(
-            "completedJobId"
-        ).value;
+            "searchInput"
+        )
+        .value
+        .toLowerCase();
 
-    const job =
-        completedJobs.find(
-            item => item.id === jobId
-        );
 
-    if(!job){
+    const status =
+        document.getElementById(
+            "statusFilter"
+        )
+        .value;
 
-        clearJobFields();
+
+    const filtered =
+        invoices.filter(invoice => {
+
+            const matchSearch =
+                !search ||
+                String(
+                    invoice.invoice_number || ""
+                )
+                .toLowerCase()
+                .includes(search);
+
+
+            const matchStatus =
+                !status ||
+                invoice.status === status;
+
+
+            return (
+                matchSearch &&
+                matchStatus
+            );
+
+        });
+
+
+    if(filtered.length === 0){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7"
+                    class="empty">
+                    Belum ada invoice.
+                </td>
+            </tr>
+        `;
 
         return;
+
     }
 
-    const customer =
-        getCustomer(job.customer_id);
 
-    const customerName =
-        customer?.name ||
-        job.customer_name ||
-        "Customer";
+    tbody.innerHTML =
+        filtered.map(invoice => {
 
-    const customerWhatsapp =
-        customer?.whatsapp ||
-        customer?.phone ||
-        job.customer_phone ||
-        "";
+            return `
+                <tr>
 
-    const customerAddress =
-        customer?.address ||
-        job.customer_address ||
-        "";
+                    <td>
+                        <span class="invoice-number">
+                            ${invoice.invoice_number || "-"}
+                        </span>
+                    </td>
 
-    const work =
-        job.work_description ||
-        job.description ||
-        job.title ||
-        "";
+                    <td>
+                        -
+                    </td>
 
-    const billingDetail =
-        job.billing_detail ||
-        job.technician_notes ||
-        work ||
-        "";
+                    <td>
+                        ${formatDate(
+                            invoice.issue_date
+                        )}
+                    </td>
 
-    /*
-     * Harga otomatis:
-     * billing_total -> service_price -> estimated_cost
-     */
-    const servicePrice =
-        Number(
-            job.billing_total ??
-            job.service_price ??
-            job.estimated_cost ??
-            0
-        ) || 0;
+                    <td>
+                        ${formatDate(
+                            invoice.due_date
+                        )}
+                    </td>
 
-    document.getElementById("customerId")
-        .value = job.customer_id || "";
+                    <td>
+                        <strong>
+                            ${rupiah(
+                                invoice.total
+                            )}
+                        </strong>
+                    </td>
 
-    document.getElementById("customerName")
-        .value = customerName;
+                    <td>
+                        ${statusBadge(
+                            invoice.status
+                        )}
+                    </td>
 
-    document.getElementById("customerWhatsapp")
-        .value = customerWhatsapp;
+                    <td>
+                        <button
+                            class="btn btn-secondary"
+                            onclick="viewInvoice('${invoice.id}')">
+                            Detail
+                        </button>
+                    </td>
 
-    document.getElementById("customerAddress")
-        .value = customerAddress;
+                </tr>
+            `;
 
-    document.getElementById("workDescription")
-        .value = billingDetail;
+        }).join("");
 
-    document.getElementById("subtotal")
-        .value = servicePrice;
-
-    document.getElementById("discount")
-        .value = 0;
-
-    document.getElementById("tax")
-        .value = 0;
-
-    calculateTotal();
-
-    /*
-     * Simpan laporan teknisi ke Catatan Invoice sekaligus
-     * dengan referensi Job, sehingga laporan tidak putus
-     * saat invoice dicetak/diedit.
-     */
-    document.getElementById("notes")
-        .value =
-        `${billingDetail || "Jasa service"}\n\n` +
-        `Referensi Job: ${job.job_code || "-"}\n` +
-        `Selesai: ${job.completed_at ? formatDate(job.completed_at) : "-"}`;
-
-    /*
-     * Generate nomor invoice otomatis.
-     */
-    document.getElementById("invoiceNumber")
-        .value = generateInvoiceNumber();
-
-    /*
-     * Default jatuh tempo 7 hari.
-     */
-    const due =
-        new Date();
-
-    due.setDate(
-        due.getDate() + 7
-    );
-
-    document.getElementById("dueAt")
-        .value =
-        toDateTimeLocal(due);
-
-    document.getElementById("jobInfo")
-        .innerHTML =
-        `
-        <div style="
-            padding:14px;
-            background:#eff6ff;
-            border:1px solid #bfdbfe;
-            border-radius:9px;
-        ">
-
-            <strong>
-                ${escapeHtml(job.job_code || "-")}
-            </strong>
-
-            <div style="
-                margin-top:7px;
-                color:#475569;
-                font-size:13px;
-            ">
-                Status:
-                <strong style="color:#166534;">
-                    COMPLETED
-                </strong>
-                <br>
-
-                Teknisi:
-                ${escapeHtml(
-                    job.assigned_to ||
-                    job.technician_id ||
-                    "-"
-                )}
-                <br>
-
-                Selesai:
-                ${escapeHtml(
-                    job.completed_at
-                    ? formatDate(job.completed_at)
-                    : "-"
-                )}
-            </div>
-
-        </div>
-        `;
-}
-
-
-function clearJobFields(){
-
-    document.getElementById("customerId")
-        .value = "";
-
-    document.getElementById("customerName")
-        .value = "";
-
-    document.getElementById("customerWhatsapp")
-        .value = "";
-
-    document.getElementById("customerAddress")
-        .value = "";
-
-    document.getElementById("workDescription")
-        .value = "";
-
-    document.getElementById("subtotal")
-        .value = 0;
-
-    document.getElementById("discount")
-        .value = 0;
-
-    document.getElementById("tax")
-        .value = 0;
-
-    calculateTotal();
-
-    document.getElementById("jobInfo")
-        .innerHTML = "";
-}
-
-
-/* =====================================================
-   INVOICE NUMBER
-===================================================== */
-
-function generateInvoiceNumber(){
-
-    const now = new Date();
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2,"0");
-
-    const year =
-        now.getFullYear();
-
-    /*
-     * Nomor urut sederhana.
-     * Tidak memakai job ID supaya format tetap rapi.
-     */
-    const sequence =
-        String(
-            invoices.length + 1
-        ).padStart(4,"0");
-
-    return `INV/WAT/${month}/${year}/${sequence}`;
 }
 
 
@@ -1611,422 +1175,288 @@ function updateStats(){
     const total =
         invoices.length;
 
+
+    const unpaid =
+        invoices.filter(
+            x =>
+                ![
+                    "PAID",
+                    "CANCELLED"
+                ].includes(
+                    x.status
+                )
+        ).length;
+
+
     const paid =
         invoices.filter(
             x =>
-                String(x.status)
-                    .toUpperCase()
-                === "PAID"
-                ||
-                x.paid_at
+                x.status === "PAID"
         ).length;
 
-    const unpaid =
-        total - paid;
 
-    const amount =
+    const billing =
         invoices.reduce(
             (sum,x) =>
                 sum +
-                Number(x.total || 0),
+                Number(
+                    x.total || 0
+                ),
             0
         );
 
-    document.getElementById("statTotal")
-        .textContent = total;
 
-    document.getElementById("statPaid")
-        .textContent = paid;
+    document.getElementById(
+        "totalInvoice"
+    ).textContent = total;
 
-    document.getElementById("statUnpaid")
-        .textContent = unpaid;
 
-    document.getElementById("statAmount")
-        .textContent = rupiah(amount);
+    document.getElementById(
+        "unpaidInvoice"
+    ).textContent = unpaid;
+
+
+    document.getElementById(
+        "paidInvoice"
+    ).textContent = paid;
+
+
+    document.getElementById(
+        "totalBilling"
+    ).textContent =
+        rupiah(billing);
+
 }
 
 
 /* =====================================================
-   RENDER INVOICES
+   STATUS BADGE
 ===================================================== */
-
-function renderInvoices(){
-
-    const tbody =
-        document.getElementById(
-            "invoiceTable"
-        );
-
-    const search =
-        document.getElementById(
-            "searchInput"
-        )
-        .value
-        .toLowerCase()
-        .trim();
-
-    const status =
-        document.getElementById(
-            "statusFilter"
-        ).value;
-
-    const filtered =
-        invoices.filter(invoice => {
-
-            const customer =
-                getCustomer(
-                    invoice.customer_id
-                );
-
-            const text =
-                [
-                    invoice.invoice_number,
-                    invoice.customer_id,
-                    customer?.name,
-                    customer?.whatsapp
-                ]
-                .join(" ")
-                .toLowerCase();
-
-            const matchSearch =
-                !search ||
-                text.includes(search);
-
-            const matchStatus =
-                !status ||
-                String(invoice.status)
-                    .toUpperCase()
-                === status;
-
-            return (
-                matchSearch &&
-                matchStatus
-            );
-        });
-
-    document.getElementById("loading")
-        .style.display = "none";
-
-    if(!filtered.length){
-
-        document.getElementById("tableWrap")
-            .style.display = "none";
-
-        document.getElementById("empty")
-            .style.display = "block";
-
-        return;
-    }
-
-    document.getElementById("empty")
-        .style.display = "none";
-
-    document.getElementById("tableWrap")
-        .style.display = "block";
-
-    tbody.innerHTML =
-        filtered
-        .map(invoice => {
-
-            const customer =
-                getCustomer(
-                    invoice.customer_id
-                );
-
-            const customerName =
-                customer?.name ||
-                invoice.customer_id ||
-                "-";
-
-            const status =
-                String(
-                    invoice.status ||
-                    "DRAFT"
-                ).toUpperCase();
-
-            return `
-            <tr>
-
-                <td>
-                    <strong>
-                        ${escapeHtml(
-                            invoice.invoice_number ||
-                            "-"
-                        )}
-                    </strong>
-                </td>
-
-                <td>
-                    ${escapeHtml(
-                        customerName
-                    )}
-                </td>
-
-                <td>
-                    <strong>
-                        ${rupiah(
-                            invoice.total
-                        )}
-                    </strong>
-                </td>
-
-                <td>
-                    ${statusBadge(status)}
-                </td>
-
-                <td>
-                    ${formatDate(
-                        invoice.issued_at ||
-                        invoice.created_at
-                    )}
-                </td>
-
-                <td>
-
-                    <div class="actions">
-
-                        <button
-                            class="btn btn-primary"
-                            onclick="viewInvoice('${invoice.id}')"
-                        >
-                            Detail
-                        </button>
-
-                        <button
-                            class="btn btn-warning"
-                            onclick="editInvoice('${invoice.id}')"
-                        >
-                            Edit
-                        </button>
-
-                        <button
-                            class="btn btn-success"
-                            onclick="openPaymentModal('${invoice.id}')"
-                        >
-                            Bayar
-                        </button>
-
-                        <button
-                            class="btn btn-secondary"
-                            onclick="printInvoice('${invoice.id}')"
-                        >
-                            Cetak
-                        </button>
-
-                        <button
-                            class="btn btn-danger"
-                            onclick="deleteInvoice('${invoice.id}')"
-                        >
-                            Hapus
-                        </button>
-
-                    </div>
-
-                </td>
-
-            </tr>
-            `;
-
-        })
-        .join("");
-}
-
 
 function statusBadge(status){
 
-    let cls = "status-draft";
-    let label = status;
+    let cls =
+        "status-issued";
 
     if(status === "PAID"){
-
         cls = "status-paid";
-        label = "LUNAS";
+    }
 
-    }else if(status === "ISSUED"){
-
-        cls = "status-sent";
-        label = "TERBIT";
-
-    }else if(status === "PARTIAL"){
-
-        cls = "status-sent";
-        label = "SEBAGIAN";
-
-    }else if(status === "CANCELLED"){
-
-        cls = "status-cancelled";
-        label = "DIBATALKAN";
-
-    }else{
-
+    if(status === "DRAFT"){
         cls = "status-draft";
-        label = "DRAFT";
     }
 
     return `
         <span class="status ${cls}">
-            ${label}
+            ${status || "-"}
         </span>
     `;
+
 }
 
 
 /* =====================================================
-   OPEN INVOICE
+   OPEN MODAL
 ===================================================== */
 
-async function openInvoiceModal(){
+function openInvoiceModal(){
 
-    editingInvoice = null;
+    const modal =
+        document.getElementById(
+            "invoiceModal"
+        );
+
+
+    modal.classList.add("show");
+
+
+    selectedJob = null;
+
 
     document.getElementById(
-        "invoiceModalTitle"
-    ).textContent = "Buat Invoice";
+        "jobInfo"
+    ).style.display = "none";
 
-    document.getElementById("invoiceId")
-        .value = "";
 
-    document.getElementById("invoiceNumber")
-        .value = generateInvoiceNumber();
+    document.getElementById(
+        "saveInvoiceButton"
+    ).disabled = true;
 
-    document.getElementById("invoiceStatus")
-        .value = "ISSUED";
 
-    document.getElementById("completedJobId")
-        .value = "";
+    loadCompletedJobs();
 
-    clearJobFields();
-
-    const now = new Date();
-
-    document.getElementById("issuedAt")
-        .value =
-        toDateTimeLocal(now);
-
-    document.getElementById("dueAt")
-        .value = "";
-
-    document.getElementById("notes")
-        .value = "";
-
-    document.getElementById("invoiceModal")
-        .classList.add("show");
-
-    /*
-     * Pastikan daftar Job COMPLETED selalu terbaru
-     * saat modal dibuka.
-     */
-    await loadCompletedJobs();
 }
 
 
 /* =====================================================
-   EDIT
+   CLOSE MODAL
 ===================================================== */
 
-function editInvoice(id){
+function closeInvoiceModal(){
 
-    const invoice =
-        invoices.find(
-            x => x.id === id
+    document
+        .getElementById(
+            "invoiceModal"
+        )
+        .classList.remove(
+            "show"
         );
 
-    if(!invoice) return;
-
-    editingInvoice = invoice;
-
-    document.getElementById(
-        "invoiceModalTitle"
-    ).textContent = "Edit Invoice";
-
-    document.getElementById("invoiceId")
-        .value = invoice.id;
-
-    document.getElementById("invoiceNumber")
-        .value =
-        invoice.invoice_number || "";
-
-    document.getElementById("invoiceStatus")
-        .value =
-        String(
-            invoice.status ||
-            "DRAFT"
-        ).toUpperCase();
-
-    document.getElementById("customerId")
-        .value =
-        invoice.customer_id || "";
-
-    const customer =
-        getCustomer(
-            invoice.customer_id
-        );
-
-    document.getElementById("customerName")
-        .value =
-        customer?.name || "";
-
-    document.getElementById("customerWhatsapp")
-        .value =
-        customer?.whatsapp ||
-        customer?.phone ||
-        "";
-
-    document.getElementById("customerAddress")
-        .value =
-        customer?.address || "";
-
-    document.getElementById("completedJobId")
-        .value =
-        invoice.job_id || "";
-
-    document.getElementById("subtotal")
-        .value =
-        invoice.subtotal || 0;
-
-    document.getElementById("discount")
-        .value =
-        invoice.discount || 0;
-
-    document.getElementById("tax")
-        .value =
-        invoice.tax || 0;
-
-    document.getElementById("total")
-        .value =
-        invoice.total || 0;
-
-    document.getElementById("issuedAt")
-        .value =
-        toDateTimeLocal(
-            invoice.issued_at
-        );
-
-    document.getElementById("dueAt")
-        .value =
-        toDateTimeLocal(
-            invoice.due_at
-        );
-
-    document.getElementById("notes")
-        .value =
-        invoice.notes || "";
-
-    /*
-     * Laporan teknisi sudah ikut tersimpan di notes saat
-     * invoice dibuat dari Job COMPLETED.
-     */
-    document.getElementById("workDescription")
-        .value =
-        invoice.notes || "";
-
-    document.getElementById("invoiceModal")
-        .classList.add("show");
 }
 
 
 /* =====================================================
-   TOTAL
+   LOAD COMPLETED JOB KE DROPDOWN
+===================================================== */
+
+function loadCompletedJobs(){
+
+    const select =
+        document.getElementById(
+            "jobSelect"
+        );
+
+
+    select.innerHTML = `
+        <option value="">
+            -- Pilih Job COMPLETED --
+        </option>
+    `;
+
+
+    if(completedJobs.length === 0){
+
+        select.innerHTML += `
+            <option value="">
+                Tidak ada Job COMPLETED
+                yang belum dibuat invoice
+            </option>
+        `;
+
+        return;
+
+    }
+
+
+    completedJobs.forEach(job => {
+
+        select.innerHTML += `
+            <option value="${job.id}">
+                ${job.job_code}
+                — ${job.customer_name || "-"}
+                — ${rupiah(
+                    job.service_price
+                )}
+            </option>
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   SELECT JOB
+===================================================== */
+
+function selectJob(){
+
+    const id =
+        document.getElementById(
+            "jobSelect"
+        ).value;
+
+
+    selectedJob =
+        completedJobs.find(
+            job =>
+                job.id === id
+        );
+
+
+    if(!selectedJob){
+
+        document.getElementById(
+            "jobInfo"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "saveInvoiceButton"
+        ).disabled = true;
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "jobInfo"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "customerName"
+    ).textContent =
+        selectedJob.customer_name || "-";
+
+
+    document.getElementById(
+        "customerPhone"
+    ).textContent =
+        selectedJob.customer_phone || "-";
+
+
+    document.getElementById(
+        "customerAddress"
+    ).textContent =
+        selectedJob.customer_address || "-";
+
+
+    document.getElementById(
+        "billingDetail"
+    ).value =
+        selectedJob.technician_notes || "";
+
+
+    document.getElementById(
+        "subtotal"
+    ).value =
+        Number(
+            selectedJob.service_price || 0
+        );
+
+
+    document.getElementById(
+        "discount"
+    ).value = 0;
+
+
+    document.getElementById(
+        "tax"
+    ).value = 0;
+
+
+    document.getElementById(
+        "issueDate"
+    ).value =
+        new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+    calculateTotal();
+
+
+    document.getElementById(
+        "saveInvoiceButton"
+    ).disabled = false;
+
+}
+
+
+/* =====================================================
+   CALCULATE TOTAL
 ===================================================== */
 
 function calculateTotal(){
@@ -2035,33 +1465,92 @@ function calculateTotal(){
         Number(
             document.getElementById(
                 "subtotal"
-            ).value
-        ) || 0;
+            ).value || 0
+        );
+
 
     const discount =
         Number(
             document.getElementById(
                 "discount"
-            ).value
-        ) || 0;
+            ).value || 0
+        );
+
 
     const tax =
         Number(
             document.getElementById(
                 "tax"
-            ).value
-        ) || 0;
-
-    const total =
-        Math.max(
-            0,
-            subtotal -
-            discount +
-            tax
+            ).value || 0
         );
 
-    document.getElementById("total")
-        .value = total;
+
+    const total =
+        subtotal -
+        discount +
+        tax;
+
+
+    document.getElementById(
+        "displaySubtotal"
+    ).textContent =
+        rupiah(subtotal);
+
+
+    document.getElementById(
+        "displayDiscount"
+    ).textContent =
+        rupiah(discount);
+
+
+    document.getElementById(
+        "displayTax"
+    ).textContent =
+        rupiah(tax);
+
+
+    document.getElementById(
+        "displayTotal"
+    ).textContent =
+        rupiah(total);
+
+}
+
+
+/* =====================================================
+   GENERATE NOMOR INVOICE
+===================================================== */
+
+function generateInvoiceNumber(){
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth()+1
+        )
+        .padStart(2,"0");
+
+
+    const count =
+        invoices.length + 1;
+
+
+    const sequence =
+        String(count)
+        .padStart(4,"0");
+
+
+    return `
+        INV-${year}${month}-${sequence}
+    `.trim();
+
 }
 
 
@@ -2071,218 +1560,184 @@ function calculateTotal(){
 
 async function saveInvoice(){
 
-    const invoiceId =
-        document.getElementById(
-            "invoiceId"
-        ).value;
+    if(!selectedJob){
 
-    const invoiceNumber =
-        document.getElementById(
-            "invoiceNumber"
-        ).value.trim();
-
-    const customerId =
-        document.getElementById(
-            "customerId"
-        ).value.trim();
-
-    const jobId =
-        document.getElementById(
-            "completedJobId"
-        ).value.trim();
-
-    const subtotal =
-        Number(
-            document.getElementById(
-                "subtotal"
-            ).value
-        ) || 0;
-
-    const discount =
-        Number(
-            document.getElementById(
-                "discount"
-            ).value
-        ) || 0;
-
-    const tax =
-        Number(
-            document.getElementById(
-                "tax"
-            ).value
-        ) || 0;
-
-    const total =
-        Math.max(
-            0,
-            subtotal -
-            discount +
-            tax
-        );
-
-    const status =
-        document.getElementById(
-            "invoiceStatus"
-        ).value;
-
-    const issuedAt =
-        document.getElementById(
-            "issuedAt"
-        ).value;
-
-    const dueAt =
-        document.getElementById(
-            "dueAt"
-        ).value;
-
-    const notes =
-        document.getElementById(
-            "notes"
-        ).value.trim();
-
-    if(!jobId){
-
-        showAlert(
-            "Pilih Job COMPLETED terlebih dahulu.",
-            "error"
+        alert(
+            "Pilih Job COMPLETED terlebih dahulu."
         );
 
         return;
+
     }
 
-    if(!customerId){
 
-        showAlert(
-            "Customer dari Job tidak ditemukan.",
-            "error"
+    const button =
+        document.getElementById(
+            "saveInvoiceButton"
         );
 
-        return;
-    }
 
-    if(!invoiceNumber){
+    button.disabled = true;
+    button.textContent =
+        "MENYIMPAN...";
 
-        showAlert(
-            "Nomor invoice wajib diisi.",
-            "error"
-        );
-
-        return;
-    }
-
-    if(total <= 0){
-
-        showAlert(
-            "Total invoice harus lebih dari 0.",
-            "error"
-        );
-
-        return;
-    }
-
-    const payload = {
-
-        invoice_number:
-            invoiceNumber,
-
-        customer_id:
-            customerId,
-
-        job_id:
-            jobId,
-
-        subtotal:
-            subtotal,
-
-        discount:
-            discount,
-
-        tax:
-            tax,
-
-        total:
-            total,
-
-        status:
-            status,
-
-        issued_at:
-            issuedAt
-            ? new Date(
-                issuedAt
-              ).toISOString()
-            : new Date().toISOString(),
-
-        due_at:
-            dueAt
-            ? new Date(
-                dueAt
-              ).toISOString()
-            : null,
-
-        notes:
-            notes || null
-    };
 
     try{
 
-        let error;
+        const subtotal =
+            Number(
+                document.getElementById(
+                    "subtotal"
+                ).value || 0
+            );
 
-        if(invoiceId){
 
-            const result =
-                await supabaseClient
-                    .from("invoices")
-                    .update(payload)
-                    .eq("id",invoiceId);
+        const discount =
+            Number(
+                document.getElementById(
+                    "discount"
+                ).value || 0
+            );
 
-            error =
-                result.error;
 
-        }else{
+        const tax =
+            Number(
+                document.getElementById(
+                    "tax"
+                ).value || 0
+            );
 
-            const result =
-                await supabaseClient
-                    .from("invoices")
-                    .insert(payload);
 
-            error =
-                result.error;
+        const total =
+            subtotal -
+            discount +
+            tax;
+
+
+        if(total < 0){
+
+            throw new Error(
+                "Total invoice tidak boleh negatif."
+            );
+
         }
 
-        if(error) throw error;
 
-        closeModal(
-            "invoiceModal"
+        const invoiceNumber =
+            generateInvoiceNumber();
+
+
+        const payload = {
+
+            invoice_number:
+                invoiceNumber,
+
+            job_id:
+                selectedJob.id,
+
+            customer_id:
+                selectedJob.customer_id,
+
+            subtotal:
+                subtotal,
+
+            discount:
+                discount,
+
+            tax:
+                tax,
+
+            total:
+                total,
+
+            status:
+                document.getElementById(
+                    "invoiceStatus"
+                ).value,
+
+            issue_date:
+                document.getElementById(
+                    "issueDate"
+                ).value || null,
+
+            due_date:
+                document.getElementById(
+                    "dueDate"
+                ).value || null,
+
+            notes:
+                document.getElementById(
+                    "invoiceNotes"
+                ).value || null
+
+        };
+
+
+        console.log(
+            "Invoice payload:",
+            payload
         );
+
+
+        const result =
+            await supabaseClient
+                .from("invoices")
+                .insert(
+                    payload
+                )
+                .select()
+                .single();
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
 
         showAlert(
-            invoiceId
-            ? "Invoice berhasil diperbarui."
-            : "Invoice berhasil dibuat dari Job COMPLETED."
+            "Invoice berhasil dibuat untuk " +
+            selectedJob.job_code +
+            ".",
+            "success"
         );
 
-        await loadInvoices();
-        await loadCompletedJobs();
+
+        closeInvoiceModal();
+
+
+        await loadData();
+
 
     }catch(error){
 
         console.error(
-            "SAVE INVOICE ERROR:",
+            "Save Invoice Error:",
             error
         );
+
 
         showAlert(
             "Gagal menyimpan invoice: " +
             error.message,
             "error"
         );
+
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent =
+            "Simpan Invoice";
+
     }
+
 }
 
 
 /* =====================================================
-   DETAIL
+   VIEW INVOICE
 ===================================================== */
 
 function viewInvoice(id){
@@ -2292,758 +1747,49 @@ function viewInvoice(id){
             x => x.id === id
         );
 
-    if(!invoice) return;
 
-    const customer =
-        getCustomer(
-            invoice.customer_id
-        );
-
-    const status =
-        String(
-            invoice.status ||
-            "DRAFT"
-        ).toUpperCase();
-
-    document.getElementById(
-        "detailContent"
-    ).innerHTML =
-        `
-        <div class="detail-grid">
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Nomor Invoice
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        invoice.invoice_number ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Status
-                </div>
-                <div>
-                    ${statusBadge(status)}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Customer
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        customer?.name ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    No. WhatsApp
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        customer?.whatsapp ||
-                        customer?.phone ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item full">
-                <div class="detail-label">
-                    Alamat
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        customer?.address ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Job ID
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        invoice.job_id ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Subtotal
-                </div>
-                <div class="detail-value">
-                    ${rupiah(
-                        invoice.subtotal
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Diskon
-                </div>
-                <div class="detail-value">
-                    ${rupiah(
-                        invoice.discount
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Pajak / PPN
-                </div>
-                <div class="detail-value">
-                    ${rupiah(
-                        invoice.tax
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Total
-                </div>
-                <div class="detail-value"
-                     style="font-size:20px;">
-                    ${rupiah(
-                        invoice.total
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Tanggal Terbit
-                </div>
-                <div class="detail-value">
-                    ${formatDate(
-                        invoice.issued_at
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">
-                    Jatuh Tempo
-                </div>
-                <div class="detail-value">
-                    ${formatDate(
-                        invoice.due_at
-                    )}
-                </div>
-            </div>
-
-            <div class="detail-item full">
-                <div class="detail-label">
-                    Catatan
-                </div>
-                <div class="detail-value">
-                    ${escapeHtml(
-                        invoice.notes ||
-                        "-"
-                    )}
-                </div>
-            </div>
-
-        </div>
-        `;
-
-    document.getElementById(
-        "detailModal"
-    ).classList.add("show");
-}
-
-
-/* =====================================================
-   PRINT INVOICE
-===================================================== */
-
-function printInvoice(id){
-
-    const invoice =
-        invoices.find(
-            x => x.id === id
-        );
-
-    if(!invoice) return;
-
-    const customer =
-        getCustomer(
-            invoice.customer_id
-        );
-
-    const html =
-        `
-        <!DOCTYPE html>
-        <html lang="id">
-        <head>
-            <meta charset="UTF-8">
-            <title>${escapeHtml(
-                invoice.invoice_number
-            )}</title>
-
-            <style>
-                body{
-                    font-family:Arial,sans-serif;
-                    padding:40px;
-                    color:#172033;
-                }
-
-                .head{
-                    display:flex;
-                    justify-content:space-between;
-                    border-bottom:3px solid #0d47a1;
-                    padding-bottom:15px;
-                    margin-bottom:25px;
-                }
-
-                h1{
-                    color:#0d47a1;
-                    margin:0;
-                }
-
-                .muted{
-                    color:#64748b;
-                }
-
-                table{
-                    width:100%;
-                    border-collapse:collapse;
-                    margin-top:20px;
-                }
-
-                th,td{
-                    border:1px solid #d7dee9;
-                    padding:10px;
-                    text-align:left;
-                }
-
-                .total{
-                    text-align:right;
-                    font-size:20px;
-                    font-weight:bold;
-                    margin-top:20px;
-                }
-
-                .payment{
-                    margin-top:35px;
-                    padding:15px;
-                    background:#eff6ff;
-                    border:1px solid #bfdbfe;
-                }
-            </style>
-        </head>
-
-        <body>
-
-            <div class="head">
-                <div>
-                    <h1>WAT ERP</h1>
-                    <div class="muted">
-                        Wijaya Anugrah Teknik
-                    </div>
-                </div>
-
-                <div>
-                    <strong>INVOICE</strong><br>
-                    ${escapeHtml(
-                        invoice.invoice_number
-                    )}
-                </div>
-            </div>
-
-            <p>
-                <strong>Customer:</strong>
-                ${escapeHtml(
-                    customer?.name || "-"
-                )}
-            </p>
-
-            <p>
-                <strong>WhatsApp:</strong>
-                ${escapeHtml(
-                    customer?.whatsapp ||
-                    customer?.phone ||
-                    "-"
-                )}
-            </p>
-
-            <p>
-                <strong>Alamat:</strong>
-                ${escapeHtml(
-                    customer?.address ||
-                    "-"
-                )}
-            </p>
-
-            <p>
-                <strong>Job Teknisi:</strong>
-                ${escapeHtml(invoice.job_id || "-")}
-            </p>
-
-            <table>
-
-                <tr>
-                    <th>Rincian</th>
-                    <th style="width:180px;">
-                        Jumlah
-                    </th>
-                </tr>
-
-                <tr>
-                    <td>
-                        ${escapeHtml(
-                            invoice.notes ||
-                            "Jasa service"
-                        )}
-                    </td>
-
-                    <td>
-                        ${rupiah(
-                            invoice.subtotal
-                        )}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Diskon</td>
-                    <td>
-                        - ${rupiah(
-                            invoice.discount
-                        )}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Pajak / PPN</td>
-                    <td>
-                        ${rupiah(
-                            invoice.tax
-                        )}
-                    </td>
-                </tr>
-
-            </table>
-
-            <div class="total">
-                TOTAL:
-                ${rupiah(
-                    invoice.total
-                )}
-            </div>
-
-            <div class="payment">
-
-                <strong>
-                    INFORMASI PEMBAYARAN
-                </strong>
-
-                <br><br>
-
-                Bank BCA<br>
-                No. Rekening: 2190176561<br>
-                a.n. Roni Wijaya
-
-            </div>
-
-            <script>
-                window.onload = function(){
-                    window.print();
-                };
-            <\/script>
-
-        </body>
-        </html>
-        `;
-
-    const win =
-        window.open(
-            "",
-            "_blank"
-        );
-
-    if(!win){
-
-        showAlert(
-            "Popup diblokir browser. Izinkan popup untuk mencetak invoice.",
-            "error"
-        );
-
+    if(!invoice){
         return;
     }
 
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
+
+    alert(
+        "Invoice: " +
+        invoice.invoice_number +
+        "\nTotal: " +
+        rupiah(invoice.total) +
+        "\nStatus: " +
+        invoice.status
+    );
+
 }
 
 
 /* =====================================================
-   PAYMENT
+   DATE
 ===================================================== */
 
-function openPaymentModal(id){
+function formatDate(date){
 
-    const invoice =
-        invoices.find(
-            x => x.id === id
-        );
-
-    if(!invoice) return;
-
-    document.getElementById(
-        "paymentInvoiceId"
-    ).value = invoice.id;
-
-    document.getElementById(
-        "paymentDate"
-    ).value =
-        toDateTimeLocal(
-            new Date()
-        );
-
-    document.getElementById(
-        "paymentAmount"
-    ).value =
-        invoice.total || 0;
-
-    document.getElementById(
-        "paymentMethod"
-    ).value =
-        "TRANSFER";
-
-    document.getElementById(
-        "bankName"
-    ).value = "BCA";
-
-    document.getElementById(
-        "accountNumber"
-    ).value = "2190176561";
-
-    document.getElementById(
-        "accountName"
-    ).value = "Roni Wijaya";
-
-    document.getElementById(
-        "referenceNumber"
-    ).value = "";
-
-    document.getElementById(
-        "paymentNotes"
-    ).value = "";
-
-    document.getElementById(
-        "paymentModal"
-    ).classList.add("show");
-}
-
-
-function toggleTransferFields(){
-
-    const method =
-        document.getElementById(
-            "paymentMethod"
-        ).value;
-
-    const disabled =
-        method !== "TRANSFER";
-
-    document.getElementById(
-        "bankName"
-    ).disabled = disabled;
-
-    document.getElementById(
-        "accountNumber"
-    ).disabled = disabled;
-
-    document.getElementById(
-        "accountName"
-    ).disabled = disabled;
-
-    document.getElementById(
-        "referenceNumber"
-    ).disabled = disabled;
-}
-
-
-async function savePayment(){
-
-    const invoiceId =
-        document.getElementById(
-            "paymentInvoiceId"
-        ).value;
-
-    const paymentDate =
-        document.getElementById(
-            "paymentDate"
-        ).value;
-
-    const amount =
-        Number(
-            document.getElementById(
-                "paymentAmount"
-            ).value
-        ) || 0;
-
-    const paymentMethod =
-        document.getElementById(
-            "paymentMethod"
-        ).value;
-
-    const bankName =
-        document.getElementById(
-            "bankName"
-        ).value.trim();
-
-    const accountNumber =
-        document.getElementById(
-            "accountNumber"
-        ).value.trim();
-
-    const accountName =
-        document.getElementById(
-            "accountName"
-        ).value.trim();
-
-    const referenceNumber =
-        document.getElementById(
-            "referenceNumber"
-        ).value.trim();
-
-    const notes =
-        document.getElementById(
-            "paymentNotes"
-        ).value.trim();
-
-    if(!invoiceId){
-
-        showAlert(
-            "Invoice tidak ditemukan.",
-            "error"
-        );
-
-        return;
+    if(!date){
+        return "-";
     }
 
-    if(amount <= 0){
 
-        showAlert(
-            "Jumlah pembayaran harus lebih dari 0.",
-            "error"
-        );
+    const d =
+        new Date(date);
 
-        return;
+
+    if(isNaN(d)){
+        return date;
     }
 
-    try{
 
-        const { error } =
-            await supabaseClient
-                .from("invoice_payments")
-                .insert({
+    return d.toLocaleDateString(
+        "id-ID"
+    );
 
-                    invoice_id:
-                        invoiceId,
-
-                    payment_date:
-                        paymentDate
-                        ? new Date(
-                            paymentDate
-                          ).toISOString()
-                        : new Date().toISOString(),
-
-                    amount:
-                        amount,
-
-                    payment_method:
-                        paymentMethod,
-
-                    bank_name:
-                        bankName || null,
-
-                    account_number:
-                        accountNumber || null,
-
-                    account_name:
-                        accountName || null,
-
-                    reference_number:
-                        referenceNumber || null,
-
-                    notes:
-                        notes || null
-                });
-
-        if(error) throw error;
-
-        const invoice =
-            invoices.find(
-                x => x.id === invoiceId
-            );
-
-        if(
-            invoice &&
-            amount >=
-            Number(invoice.total || 0)
-        ){
-
-            const { error:updateError } =
-                await supabaseClient
-                    .from("invoices")
-                    .update({
-
-                        paid_at:
-                            paymentDate
-                            ? new Date(
-                                paymentDate
-                              ).toISOString()
-                            : new Date().toISOString(),
-
-                        status:"PAID"
-                    })
-                    .eq(
-                        "id",
-                        invoiceId
-                    );
-
-            if(updateError)
-                throw updateError;
-
-        }else if(invoice){
-
-            await supabaseClient
-                .from("invoices")
-                .update({
-                    status:"PARTIAL"
-                })
-                .eq(
-                    "id",
-                    invoiceId
-                );
-        }
-
-        closeModal(
-            "paymentModal"
-        );
-
-        showAlert(
-            "Pembayaran berhasil dicatat."
-        );
-
-        await loadInvoices();
-
-    }catch(error){
-
-        console.error(
-            "SAVE PAYMENT ERROR:",
-            error
-        );
-
-        showAlert(
-            "Gagal menyimpan pembayaran: " +
-            error.message,
-            "error"
-        );
-    }
 }
-
-
-/* =====================================================
-   DELETE
-===================================================== */
-
-async function deleteInvoice(id){
-
-    const invoice =
-        invoices.find(
-            x => x.id === id
-        );
-
-    if(!invoice) return;
-
-    if(
-        !confirm(
-            "Hapus invoice " +
-            invoice.invoice_number +
-            "?"
-        )
-    ) return;
-
-    try{
-
-        const { error } =
-            await supabaseClient
-                .from("invoices")
-                .delete()
-                .eq("id",id);
-
-        if(error) throw error;
-
-        showAlert(
-            "Invoice berhasil dihapus."
-        );
-
-        await loadInvoices();
-        await loadCompletedJobs();
-
-    }catch(error){
-
-        console.error(
-            "DELETE INVOICE ERROR:",
-            error
-        );
-
-        showAlert(
-            "Gagal menghapus invoice: " +
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =====================================================
-   MODAL
-===================================================== */
-
-function closeModal(id){
-
-    document
-        .getElementById(id)
-        .classList
-        .remove("show");
-}
-
-
-window.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target.classList
-                .contains("modal")
-        ){
-
-            event.target.classList
-                .remove("show");
-        }
-    }
-);
 
 
 /* =====================================================
@@ -3054,20 +1800,26 @@ async function logout(){
 
     try{
 
-        if(supabaseClient)
-            await supabaseClient
-                .auth
-                .signOut();
+        if(supabaseClient){
+
+            await supabaseClient.auth.signOut();
+
+        }
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
+
     }
+
 
     sessionStorage.clear();
 
     window.location.href =
         "login.html";
+
 }
 
 
@@ -3079,14 +1831,28 @@ document.addEventListener(
     "DOMContentLoaded",
     async function(){
 
-        if(!initSupabase())
-            return;
+        const name =
+            sessionStorage.getItem(
+                "wat_user_name"
+            );
 
-        await loadCustomers();
 
-        await loadInvoices();
+        if(name){
 
-        await loadCompletedJobs();
+            document.getElementById(
+                "userName"
+            ).textContent =
+                name.toUpperCase();
+
+        }
+
+
+        if(initSupabase()){
+
+            await loadData();
+
+        }
+
     }
 );
 
