@@ -262,6 +262,11 @@
             color: #166534;
         }
 
+        .status-action-btn {
+            background: #1261db;
+            color: white;
+        }
+
         /* MODAL */
 
         .modal {
@@ -378,6 +383,17 @@
             padding: 11px 18px;
             border-radius: 7px;
             cursor: pointer;
+        }
+
+        .flow-note {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e3a8a;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .message {
@@ -559,7 +575,7 @@
 
         <div class="modal-header">
 
-            <h2>Tambah Jadwal</h2>
+            <h2>Tambah Job / Jadwal</h2>
 
             <button class="close" id="closeModal">
                 ×
@@ -723,21 +739,7 @@
                 </div>
 
 
-                <div class="field">
-
-                    <label>Actual Cost</label>
-
-                    <input
-                        type="number"
-                        id="actual_cost"
-                        min="0"
-                        value="0"
-                    >
-
-                </div>
-
-
-                <div class="field">
+                <div class="field full">
 
                     <label>Harga Service</label>
 
@@ -748,22 +750,20 @@
                         value="0"
                     >
 
+                    <div class="muted" style="margin-top:6px;">
+                        Harga service awal. Harga final dapat dikonfirmasi teknisi melalui laporan pekerjaan.
+                    </div>
+
                 </div>
-
-
-                <div class="field full">
-
-                    <label>Catatan Teknisi</label>
-
-                    <textarea
-                        id="technician_notes"
-                        placeholder="Catatan teknisi..."
-                    ></textarea>
 
                 </div>
 
             </div>
 
+
+            <div class="flow-note">
+                <strong>Alur:</strong> Job dibuat → teknisi menerima → menuju lokasi → check in → mulai pekerjaan → isi laporan → otomatis <strong>COMPLETED</strong>.
+            </div>
 
             <div id="formMessage" class="message"></div>
 
@@ -1285,6 +1285,21 @@ function renderJobs(jobs) {
                 </button>
 
                 ${
+                    nextStatusAction(job) && canChangeStatus(job)
+                    ?
+                    `
+                    <button
+                        class="action-btn status-action-btn"
+                        onclick="advanceJobStatus('${job.id}')"
+                    >
+                        ${nextStatusAction(job)[1]}
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
+                ${
                     canReportJob(job)
                     ?
                     `
@@ -1292,7 +1307,7 @@ function renderJobs(jobs) {
                         class="action-btn report-btn"
                         onclick="openReportModal('${job.id}')"
                     >
-                        Laporan
+                        📋 Laporan
                     </button>
                     `
                     :
@@ -1490,9 +1505,6 @@ function clearForm() {
         .value = 0;
 
 
-    document.getElementById("actual_cost")
-        .value = 0;
-
 
     document.getElementById("service_price")
         .value = 0;
@@ -1614,31 +1626,13 @@ document
                         "estimated_cost"
                     ).value || 0
                 );
-
-
-            const actualCost =
-                Number(
-                    document.getElementById(
-                        "actual_cost"
-                    ).value || 0
-                );
-
-
-            const servicePrice =
+const servicePrice =
                 Number(
                     document.getElementById(
                         "service_price"
                     ).value || 0
                 );
-
-
-            const technicianNotes =
-                document.getElementById(
-                    "technician_notes"
-                ).value.trim();
-
-
-            if (!technicianId)
+if (!technicianId)
                 throw new Error(
                     "Pilih teknisi terlebih dahulu."
                 );
@@ -1841,7 +1835,7 @@ document
                         "NEW",
 
                     technician_notes:
-                        technicianNotes,
+                        "",
 
                     job_type:
                         jobType || null,
@@ -1853,7 +1847,7 @@ document
                         estimatedCost,
 
                     actual_cost:
-                        actualCost,
+                        0,
 
                     service_price:
                         servicePrice,
@@ -2105,9 +2099,74 @@ window.showDetail = function(id) {
 
 
 /* ==========================================
-   LAPORAN PEKERJAAN TEKNISI
-   STEP 2A
-   ========================================== */
+   ALUR STATUS JOB TEKNISI
+========================================== */
+
+window.advanceJobStatus = async function(id) {
+
+    const job = allJobs.find(item => item.id === id);
+
+    if (!job || !canChangeStatus(job)) {
+        alert("Anda tidak memiliki akses untuk mengubah status job ini.");
+        return;
+    }
+
+    const action = nextStatusAction(job);
+
+    if (!action)
+        return;
+
+    const [nextStatus, label] = action;
+
+    let confirmText = `Ubah status job ${job.job_code} menjadi ${statusBadgeText(nextStatus)}?`;
+
+    if (!confirm(confirmText))
+        return;
+
+    try {
+
+        const { error } = await supabaseClient
+            .from("jobs")
+            .update({
+                status: nextStatus,
+                updated_at: new Date().toISOString()
+            })
+            .eq("id", job.id)
+            .eq("technician_id", currentUser.id);
+
+        if (error)
+            throw error;
+
+        await loadJobs();
+
+    } catch (error) {
+
+        console.error("Update status error:", error);
+
+        alert("Gagal mengubah status: " + (error.message || error));
+
+    }
+};
+
+
+function statusBadgeText(status) {
+
+    const map = {
+        NEW: "Baru",
+        ASSIGNED: "Diterima Teknisi",
+        ON_THE_WAY: "Menuju Lokasi",
+        CHECKED_IN: "Check In",
+        IN_PROGRESS: "Sedang Dikerjakan",
+        COMPLETED: "Selesai",
+        CANCELLED: "Dibatalkan"
+    };
+
+    return map[status] || status;
+}
+
+
+
+
 
 function canReportJob(job) {
 
@@ -2120,10 +2179,38 @@ function canReportJob(job) {
     if (job.technician_id !== currentUser?.id)
         return false;
 
-    return ![
-        "COMPLETED",
-        "CANCELLED"
+    return job.status === "IN_PROGRESS";
+}
+
+
+function canChangeStatus(job) {
+
+    if (!currentProfile || currentProfile.role !== "TEKNISI")
+        return false;
+
+    if (!job || job.technician_id !== currentUser?.id)
+        return false;
+
+    return [
+        "NEW",
+        "ASSIGNED",
+        "ON_THE_WAY",
+        "CHECKED_IN",
+        "IN_PROGRESS"
     ].includes(job.status);
+}
+
+
+function nextStatusAction(job) {
+
+    const map = {
+        NEW: ["ASSIGNED", "Terima Job"],
+        ASSIGNED: ["ON_THE_WAY", "Berangkat"],
+        ON_THE_WAY: ["CHECKED_IN", "Check In"],
+        CHECKED_IN: ["IN_PROGRESS", "Mulai Pekerjaan"]
+    };
+
+    return map[job.status] || null;
 }
 
 
@@ -2150,7 +2237,8 @@ window.openReportModal = function(id) {
     document.getElementById("reportTitle").value =
         job.title || "-";
 
-    document.getElementById("reportDetails").value = "";
+    document.getElementById("reportDetails").value =
+        (job.technician_notes || "").replace(/^RINCIAN PEKERJAAN:\s*/i, "").split(/\n\nCATATAN TAMBAHAN:/i)[0] || "";
 
     document.getElementById("reportActualCost").value =
         job.actual_cost || 0;
@@ -2158,7 +2246,8 @@ window.openReportModal = function(id) {
     document.getElementById("reportServicePrice").value =
         job.service_price || 0;
 
-    document.getElementById("reportNotes").value = "";
+    document.getElementById("reportNotes").value =
+        (job.technician_notes || "").split(/\n\nCATATAN TAMBAHAN:/i)[1] || "";
 
     clearReportMessage();
 
@@ -2197,6 +2286,14 @@ document
 
         if (!currentReportJob || !currentUser)
             return;
+
+        if (currentReportJob.status !== "IN_PROGRESS") {
+            showReportMessage(
+                "Laporan hanya dapat dibuat setelah pekerjaan berstatus SEDANG DIKERJAKAN.",
+                "error"
+            );
+            return;
+        }
 
         const details =
             document.getElementById("reportDetails")
