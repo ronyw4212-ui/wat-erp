@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Kelola Teknisi - WAT ERP</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="assets/js/config.js"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+
+        /* HEADER */
+
+        header {
+            background: #0d47a1;
+            color: white;
+            padding: 18px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            opacity: .8;
+            margin-top: 3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .role {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .logout {
+            background: white;
+            color: #0d47a1;
+
+            border: none;
+            border-radius: 7px;
+
+            padding: 9px 15px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+
+        /* MAIN */
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .desc {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+
+        /* BUTTON */
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+
+            padding: 10px 16px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #083b88;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #172033;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+
+        /* MESSAGE */
+
+        .message {
+            display: none;
+
+            margin-bottom: 20px;
+
+            padding: 13px 16px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        .message.success {
+            display: block;
+
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+        .summary-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+
+            border-left: 4px solid #0d47a1;
+        }
+
+        .summary-title {
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+        .summary-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+
+        /* TOOLBAR */
+
+        .toolbar {
+            background: white;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            display: flex;
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.04);
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 11px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            flex: 1;
+        }
+
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef3f8;
+
+            color: #334155;
+
+            font-size: 13px;
+
+            text-align: left;
+
+            padding: 12px;
+        }
+
+        td {
+            padding: 13px 12px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            font-size: 13px;
+        }
+
+        .name {
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .phone {
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+
+        /* ACTION */
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(15,23,42,.65);
+
+            z-index: 9999;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+
+            width: 100%;
+            max-width: 550px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.25);
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .close {
+            border: none;
+            background: none;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #64748b;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+
+            border-top:
+                1px solid #e2e8f0;
+
+            display: flex;
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            padding: 11px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 7px;
+
+            font-family: inherit;
+
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            padding: 50px 20px;
+
+            color: #64748b;
+        }
+
+
+        /* LOADING */
+
+        .loading {
+            text-align: center;
+
+            padding: 40px;
+
+            color: #64748b;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media(max-width: 750px) {
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .title-row {
+                flex-direction: column;
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header>
+
+    <div>
+
+        <div class="brand">
+            WAT ERP
+        </div>
+
+        <div class="subtitle">
+            Kelola Teknisi
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span
+            class="role"
+            id="userRole"
+        >
+            OWNER
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            LOGOUT
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main>
+
+
+    <div class="title-row">
+
+        <div>
+
+            <h1>
+                Kelola Teknisi
+            </h1>
+
+            <div class="desc">
+                Kelola daftar karyawan dan lihat hasil pekerjaan teknisi.
+            </div>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            onclick="openAddModal()"
+        >
+            + Tambah Teknisi
+        </button>
+
+    </div>
+
+
+
+    <!-- MESSAGE -->
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+
+    <!-- =================================================
+         SUMMARY
+    ================================================== -->
+
+    <div class="summary">
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Total Teknisi Aktif
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalTechnician"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Total Pekerjaan Selesai
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalJobs"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Total Nilai Pekerjaan
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalAmount"
+            >
+                Rp 0
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         TOOLBAR
+    ================================================== -->
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Cari nama teknisi..."
+            oninput="renderTechnicians()"
+        >
+
+
+        <select
+            id="statusFilter"
+            onchange="renderTechnicians()"
+        >
+
+            <option value="">
+                Semua Status
+            </option>
+
+            <option value="ACTIVE">
+                Aktif
+            </option>
+
+            <option value="INACTIVE">
+                Tidak Aktif
+            </option>
+
+        </select>
+
+
+        <button
+            class="btn btn-secondary"
+            onclick="loadData()"
+        >
+            ↻ Refresh
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <div class="table-card">
+
+        <div id="technicianTable">
+
+            <div class="loading">
+                Memuat data teknisi...
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     MODAL TAMBAH / EDIT
+====================================================== -->
+
+<div
+    class="modal"
+    id="technicianModal"
+>
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Tambah Teknisi
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+
+            <div class="form-group">
+
+                <label>
+                    Nama Teknisi *
+                </label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Nama lengkap"
+                >
+
+            </div>
+
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        No. HP / WhatsApp
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="08xxxxxxxxxx"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="email@gmail.com"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select id="status">
+
+                    <option value="ACTIVE">
+                        ACTIVE
+                    </option>
+
+                    <option value="INACTIVE">
+                        INACTIVE
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeModal()"
+            >
+                Batal
+            </button>
+
+
+            <button
+                class="btn btn-primary"
+                id="saveButton"
+                onclick="saveTechnician()"
+            >
+                Simpan
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let technicians = [];
+
+let jobs = [];
+
+let editingTechnician = null;
+
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+
+async function init() {
+
+    try {
+
+        if (
+            typeof window.supabase ===
+            "undefined"
+        ) {
+
+            throw new Error(
+                "Library Supabase tidak ditemukan."
+            );
+
+        }
+
+
+        if (
+            typeof SUPABASE_URL ===
+                "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY ===
+                "undefined"
+        ) {
+
+            throw new Error(
+                "Konfigurasi Supabase tidak ditemukan."
+            );
+
+        }
+
+
+        supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        /* SESSION */
+
+        const {
+            data: sessionData
+        } =
+            await supabaseClient.auth.getSession();
+
+
+        if (
+            !sessionData ||
+            !sessionData.session
+        ) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser =
+            sessionData.session.user;
+
+
+        /* PROFILE */
+
+        const {
+            data: profile,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "id, full_name, email, role, status"
+                )
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .single();
+
+
+        if (profileError) {
+
+            throw profileError;
+
+        }
+
+
+        if (
+            profile.status !==
+            "ACTIVE"
+        ) {
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        if (
+            profile.role !== "OWNER"
+        ) {
+
+            showMessage(
+                "Halaman Kelola Teknisi hanya dapat diakses Owner.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "userRole"
+        ).textContent =
+            profile.role;
+
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            "INIT ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Gagal membuka Kelola Teknisi.",
+            true
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   LOAD DATA
+===================================================== */
+
+async function loadData() {
+
+    try {
+
+        showLoading();
+
+
+        /* =================================================
+           TECHNICIANS
+        ================================================== */
+
+        const {
+            data: technicianData,
+            error: technicianError
+        } =
+            await supabaseClient
+                .from("technicians")
+                .select(`
+                    id,
+                    technician_code,
+                    full_name,
+                    phone,
+                    email,
+                    user_id,
+                    status,
+                    device_id,
+                    device_name,
+                    notes,
+                    created_by,
+                    created_at,
+                    updated_at
+                `)
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (technicianError) {
+
+            throw technicianError;
+
+        }
+
+
+        technicians =
+            technicianData || [];
+
+
+        /* =================================================
+           JOBS
+        ================================================== */
+
+        const {
+            data: jobData,
+            error: jobError
+        } =
+            await supabaseClient
+                .from("jobs")
+                .select(`
+                    id,
+                    technician_id,
+                    assigned_to,
+                    status,
+                    service_price,
+                    billing_total
+                `);
+
+
+        if (jobError) {
+
+            throw jobError;
+
+        }
+
+
+        jobs =
+            jobData || [];
+
+
+        updateSummary();
+
+        renderTechnicians();
+
+
+    } catch (error) {
+
+        console.error(
+            "LOAD ERROR:",
+            error
+        );
+
+        showMessage(
+            "Gagal mengambil data: " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   UPDATE SUMMARY
+===================================================== */
+
+function updateSummary() {
+
+    const activeTechnicians =
+        technicians.filter(
+            technician =>
+                technician.status ===
+                "ACTIVE"
+        );
+
+
+    const completedJobs =
+        jobs.filter(
+            job =>
+                job.status ===
+                "COMPLETED"
+        );
+
+
+    const totalAmount =
+        completedJobs.reduce(
+            (
+                total,
+                job
+            ) => {
+
+                return (
+                    total +
+                    getJobAmount(
+                        job
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    document.getElementById(
+        "totalTechnician"
+    ).textContent =
+        activeTechnicians.length;
+
+
+    document.getElementById(
+        "totalJobs"
+    ).textContent =
+        completedJobs.length;
+
+
+    document.getElementById(
+        "totalAmount"
+    ).textContent =
+        formatRupiah(
+            totalAmount
+        );
+
+}
+
+
+
+/* =====================================================
+   RENDER TECHNICIANS
+===================================================== */
+
+function renderTechnicians() {
+
+    const container =
+        document.getElementById(
+            "technicianTable"
+        );
+
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        ).value
+            .toLowerCase()
+            .trim();
+
+
+    const status =
+        document.getElementById(
+            "statusFilter"
+        ).value;
+
+
+    const filtered =
+        technicians.filter(
+            technician => {
+
+                const name =
+                    String(
+                        technician.full_name ||
+                        ""
+                    ).toLowerCase();
+
+
+                const matchesSearch =
+                    !search ||
+                    name.includes(
+                        search
+                    );
+
+
+                const matchesStatus =
+                    !status ||
+                    technician.status ===
+                    status;
+
+
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
+
+            }
+        );
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Belum ada teknisi.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Teknisi
+                    </th>
+
+                    <th>
+                        Pekerjaan Selesai
+                    </th>
+
+                    <th>
+                        Total Rupiah
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Aksi
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    filtered.forEach(
+        technician => {
+
+            const technicianJobs =
+                getTechnicianJobs(
+                    technician
+                );
+
+
+            const completedJobs =
+                technicianJobs.filter(
+                    job =>
+                        job.status ===
+                        "COMPLETED"
+                );
+
+
+            const totalAmount =
+                completedJobs.reduce(
+                    (
+                        total,
+                        job
+                    ) => {
+
+                        return (
+                            total +
+                            getJobAmount(
+                                job
+                            )
+                        );
+
+                    },
+                    0
+                );
+
+
+            const statusClass =
+                technician.status ===
+                "ACTIVE"
+                    ? "active"
+                    : "inactive";
+
+
+            const statusText =
+                technician.status ===
+                "ACTIVE"
+                    ? "ACTIVE"
+                    : "INACTIVE";
+
+
+            html += `
+
+                <tr>
+
+
+                    <td>
+
+                        <div class="name">
+                            ${escapeHtml(
+                                technician.full_name ||
+                                "-"
+                            )}
+                        </div>
+
+                        <div class="phone">
+                            ${escapeHtml(
+                                technician.phone ||
+                                "-"
+                            )}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            ${completedJobs.length}
+                        </strong>
+
+                        pekerjaan
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            ${formatRupiah(
+                                totalAmount
+                            )}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="
+                                status
+                                ${statusClass}
+                            "
+                        >
+                            ${statusText}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="actions">
+
+
+                            <button
+                                class="
+                                    btn
+                                    btn-warning
+                                    btn-small
+                                "
+                                onclick="
+                                    editTechnician(
+                                        '${technician.id}'
+                                    )
+                                "
+                            >
+                                Edit
+                            </button>
+
+
+                            ${
+                                technician.status ===
+                                "ACTIVE"
+                                    ? `
+                                        <button
+                                            class="
+                                                btn
+                                                btn-danger
+                                                btn-small
+                                            "
+                                            onclick="
+                                                deactivateTechnician(
+                                                    '${technician.id}'
+                                                )
+                                            "
+                                        >
+                                            Nonaktifkan
+                                        </button>
+                                      `
+                                    : `
+                                        <button
+                                            class="
+                                                btn
+                                                btn-primary
+                                                btn-small
+                                            "
+                                            onclick="
+                                                activateTechnician(
+                                                    '${technician.id}'
+                                                )
+                                            "
+                                        >
+                                            Aktifkan
+                                        </button>
+                                      `
+                            }
+
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+
+/* =====================================================
+   GET TECHNICIAN JOBS
+===================================================== */
+
+function getTechnicianJobs(
+    technician
+) {
+
+    return jobs.filter(
+        job => {
+
+            return (
+                job.technician_id ===
+                    technician.id ||
+
+                job.assigned_to ===
+                    technician.id ||
+
+                (
+                    technician.user_id &&
+                    (
+                        job.technician_id ===
+                            technician.user_id ||
+
+                        job.assigned_to ===
+                            technician.user_id
+                    )
+                )
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   GET JOB AMOUNT
+===================================================== */
+
+function getJobAmount(
+    job
+) {
+
+    let amount =
+        Number(
+            job.billing_total
+        ) || 0;
+
+
+    if (
+        amount <= 0
+    ) {
+
+        amount =
+            Number(
+                job.service_price
+            ) || 0;
+
+    }
+
+
+    return amount;
+
+}
+
+
+
+/* =====================================================
+   OPEN ADD
+===================================================== */
+
+function openAddModal() {
+
+    editingTechnician =
+        null;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Tambah Teknisi";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Simpan";
+
+
+    document.getElementById(
+        "fullName"
+    ).value = "";
+
+
+    document.getElementById(
+        "phone"
+    ).value = "";
+
+
+    document.getElementById(
+        "email"
+    ).value = "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        "ACTIVE";
+
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   EDIT
+===================================================== */
+
+function editTechnician(
+    id
+) {
+
+    const technician =
+        technicians.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!technician) {
+
+        showMessage(
+            "Data teknisi tidak ditemukan.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    editingTechnician =
+        technician;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Edit Teknisi";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Update";
+
+
+    document.getElementById(
+        "fullName"
+    ).value =
+        technician.full_name ||
+        "";
+
+
+    document.getElementById(
+        "phone"
+    ).value =
+        technician.phone ||
+        "";
+
+
+    document.getElementById(
+        "email"
+    ).value =
+        technician.email ||
+        "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        technician.status ||
+        "ACTIVE";
+
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   SAVE TECHNICIAN
+===================================================== */
+
+async function saveTechnician() {
+
+    try {
+
+        const fullName =
+            document.getElementById(
+                "fullName"
+            ).value.trim();
+
+
+        const phone =
+            document.getElementById(
+                "phone"
+            ).value.trim();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const status =
+            document.getElementById(
+                "status"
+            ).value;
+
+
+        if (!fullName) {
+
+            throw new Error(
+                "Nama teknisi wajib diisi."
+            );
+
+        }
+
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+
+        saveButton.disabled =
+            true;
+
+
+        saveButton.textContent =
+            "MENYIMPAN...";
+
+
+        /* =================================================
+           EDIT
+        ================================================== */
+
+        if (
+            editingTechnician
+        ) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("technicians")
+                    .update({
+
+                        full_name:
+                            fullName,
+
+                        phone:
+                            phone ||
+                            null,
+
+                        email:
+                            email ||
+                            null,
+
+                        status:
+                            status,
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        editingTechnician.id
+                    );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            showMessage(
+                "Data teknisi berhasil diperbarui.",
+                false
+            );
+
+        }
+
+
+        /* =================================================
+           TAMBAH
+        ================================================== */
+
+        else {
+
+            const technicianCode =
+                await generateTechnicianCode();
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("technicians")
+                    .insert({
+
+                        technician_code:
+                            technicianCode,
+
+                        full_name:
+                            fullName,
+
+                        phone:
+                            phone ||
+                            null,
+
+                        email:
+                            email ||
+                            null,
+
+                        status:
+                            status,
+
+                        created_by:
+                            currentUser.id,
+
+                        created_at:
+                            new Date()
+                                .toISOString(),
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            showMessage(
+                "Teknisi berhasil ditambahkan.",
+                false
+            );
+
+        }
+
+
+        closeModal();
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE TECHNICIAN ERROR:",
+            error
+        );
+
+        showMessage(
+            "Gagal menyimpan teknisi: " +
+            error.message,
+            true
+        );
+
+    } finally {
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+
+        saveButton.disabled =
+            false;
+
+
+        saveButton.textContent =
+            editingTechnician
+                ? "Update"
+                : "Simpan";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   GENERATE TECHNICIAN CODE
+===================================================== */
+
+async function generateTechnicianCode() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("technicians")
+            .select(
+                "technician_code"
+            );
+
+
+    if (error) {
+
+        throw error;
+
+    }
+
+
+    let maxNumber = 0;
+
+
+    (data || []).forEach(
+        technician => {
+
+            const code =
+                technician.technician_code ||
+                "";
+
+
+            const match =
+                code.match(
+                    /^TEK-(\d+)$/
+                );
+
+
+            if (!match) return;
+
+
+            const number =
+                Number(
+                    match[1]
+                );
+
+
+            if (
+                number > maxNumber
+            ) {
+
+                maxNumber =
+                    number;
+
+            }
+
+        }
+    );
+
+
+    return (
+        "TEK-" +
+        String(
+            maxNumber + 1
+        ).padStart(
+            3,
+            "0"
+        )
+    );
+
+}
+
+
+
+/* =====================================================
+   DEACTIVATE
+===================================================== */
+
+async function deactivateTechnician(
+    id
+) {
+
+    const technician =
+        technicians.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!technician) return;
+
+
+    const confirmed =
+        confirm(
+            `Nonaktifkan teknisi ${technician.full_name}?`
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("technicians")
+                .update({
+
+                    status:
+                        "INACTIVE",
+
+                    updated_at:
+                        new Date()
+                            .toISOString()
+
+                })
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        showMessage(
+            "Teknisi berhasil dinonaktifkan.",
+            false
+        );
+
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Gagal menonaktifkan teknisi: " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   ACTIVATE
+===================================================== */
+
+async function activateTechnician(
+    id
+) {
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("technicians")
+                .update({
+
+                    status:
+                        "ACTIVE",
+
+                    updated_at:
+                        new Date()
+                            .toISOString()
+
+                })
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        showMessage(
+            "Teknisi berhasil diaktifkan kembali.",
+            false
+        );
+
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Gagal mengaktifkan teknisi: " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeModal() {
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout() {
+
+    try {
+
+        if (supabaseClient) {
+
+            await supabaseClient.auth.signOut();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+
+    sessionStorage.clear();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function formatRupiah(
+    value
+) {
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }
+    ).format(
+        Number(value) || 0
+    );
+
+}
+
+
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+function showMessage(
+    text,
+    isError = false
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
+        text;
+
+
+    message.className =
+        "message " +
+        (
+            isError
+                ? "error"
+                : "success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            message.className =
+                "message";
+
+        },
+        5000
+    );
+
+}
+
+
+
+function showLoading() {
+
+    document.getElementById(
+        "technicianTable"
+    ).innerHTML = `
+
+        <div class="loading">
+            Memuat data teknisi...
+        </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   CLOSE WHEN CLICK OUTSIDE
+===================================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const modal =
+            document.getElementById(
+                "technicianModal"
+            );
+
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
