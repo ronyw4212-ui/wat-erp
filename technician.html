@@ -1,789 +1,1036 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Jadwal Saya - WAT ERP</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js"></script>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#172033;
-}
-
-.header{
-    height:72px;
-    background:linear-gradient(135deg,#0b4ea2,#0876ff);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 28px;
-    box-shadow:0 3px 12px rgba(0,0,0,.12);
-}
-
-.brand h2{
-    font-size:20px;
-}
-
-.brand span{
-    display:block;
-    font-size:12px;
-    opacity:.85;
-    margin-top:3px;
-}
-
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:14px;
-}
-
-.user-name{
-    font-size:14px;
-    font-weight:bold;
-}
-
-.logout{
-    border:0;
-    background:white;
-    color:#075dcc;
-    padding:9px 16px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.container{
-    max-width:1100px;
-    margin:28px auto;
-    padding:0 18px;
-}
-
-.page-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    margin-bottom:22px;
-}
-
-.page-head h1{
-    font-size:28px;
-}
-
-.page-head p{
-    color:#718096;
-    margin-top:6px;
-    font-size:14px;
-}
-
-.summary{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-    margin-bottom:20px;
-}
-
-.summary-card{
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.06);
-    border-left:4px solid #0876ff;
-}
-
-.summary-card span{
-    color:#718096;
-    font-size:13px;
-}
-
-.summary-card strong{
-    display:block;
-    font-size:28px;
-    margin-top:7px;
-}
-
-.toolbar{
-    background:white;
-    padding:14px;
-    border-radius:12px;
-    display:flex;
-    gap:12px;
-    margin-bottom:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.05);
-}
-
-.toolbar input,
-.toolbar select{
-    width:100%;
-    padding:11px 13px;
-    border:1px solid #d7deea;
-    border-radius:8px;
-    outline:none;
-    font-size:14px;
-}
-
-.toolbar input:focus,
-.toolbar select:focus{
-    border-color:#0876ff;
-}
-
-.jobs{
-    display:grid;
-    gap:15px;
-}
-
-.job-card{
-    background:white;
-    border-radius:13px;
-    padding:20px;
-    box-shadow:0 3px 14px rgba(0,0,0,.06);
-    border-left:4px solid #0876ff;
-}
-
-.job-top{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    align-items:flex-start;
-}
-
-.job-date{
-    color:#0876ff;
-    font-weight:bold;
-    font-size:15px;
-}
-
-.job-time{
-    color:#718096;
-    font-size:13px;
-    margin-top:4px;
-}
-
-.job-title{
-    font-size:18px;
-    font-weight:bold;
-    margin:14px 0 8px;
-}
-
-.job-code{
-    font-size:12px;
-    color:#718096;
-}
-
-.customer-box{
-    background:#f7f9fc;
-    border-radius:10px;
-    padding:14px;
-    margin-top:15px;
-}
-
-.customer-box strong{
-    display:block;
-    margin-bottom:7px;
-}
-
-.customer-box div{
-    font-size:13px;
-    margin-top:5px;
-}
-
-.status{
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.status-new{
-    background:#e8f1ff;
-    color:#075dcc;
-}
-
-.status-assigned{
-    background:#e9f2ff;
-    color:#075dcc;
-}
-
-.status-way{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.status-checkin{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.status-progress{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.status-completed{
-    background:#dcfce7;
-    color:#15803d;
-}
-
-.status-cancelled{
-    background:#fee2e2;
-    color:#b91c1c;
-}
-
-.actions{
-    display:flex;
-    gap:8px;
-    margin-top:16px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    border:0;
-    padding:9px 13px;
-    border-radius:7px;
-    cursor:pointer;
-    font-size:12px;
-    font-weight:bold;
-}
-
-.btn-primary{
-    background:#0876ff;
-    color:white;
-}
-
-.btn-secondary{
-    background:#edf2f7;
-    color:#334155;
-}
-
-.btn-success{
-    background:#16a34a;
-    color:white;
-}
-
-.btn-warning{
-    background:#f59e0b;
-    color:white;
-}
-
-.btn-danger{
-    background:#dc2626;
-    color:white;
-}
-
-.btn-location{
-    background:#2563eb;
-    color:white;
-}
-
-.empty{
-    background:white;
-    border-radius:12px;
-    padding:40px 20px;
-    text-align:center;
-    color:#718096;
-}
-
-.loading{
-    text-align:center;
-    padding:40px;
-    color:#718096;
-}
-
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,.62);
-    z-index:1000;
-    padding:20px;
-    overflow:auto;
-}
-
-.modal.show{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.modal-box{
-    background:white;
-    width:100%;
-    max-width:650px;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 20px 50px rgba(0,0,0,.25);
-}
-
-.modal-header{
-    padding:18px 20px;
-    border-bottom:1px solid #e5e7eb;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.modal-header h2{
-    font-size:19px;
-}
-
-.close{
-    border:0;
-    background:transparent;
-    font-size:25px;
-    cursor:pointer;
-    color:#64748b;
-}
-
-.modal-body{
-    padding:20px;
-}
-
-.detail-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.detail-item{
-    background:#f7f9fc;
-    padding:13px;
-    border-radius:9px;
-}
-
-.detail-item.full{
-    grid-column:1/-1;
-}
-
-.detail-item span{
-    display:block;
-    font-size:11px;
-    color:#718096;
-    margin-bottom:5px;
-}
-
-.detail-item strong{
-    font-size:14px;
-}
-
-.notes{
-    margin-top:18px;
-}
-
-.notes label{
-    display:block;
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:7px;
-}
-
-.notes textarea{
-    width:100%;
-    min-height:110px;
-    padding:11px;
-    border:1px solid #d7deea;
-    border-radius:8px;
-    resize:vertical;
-    font-family:inherit;
-}
-
-.modal-footer{
-    padding:16px 20px;
-    border-top:1px solid #e5e7eb;
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-}
-
-.progress-buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:20px;
-}
-
-.progress-buttons button{
-    padding:12px;
-    border:1px solid #d7deea;
-    border-radius:8px;
-    background:white;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.progress-buttons button:hover{
-    border-color:#0876ff;
-    background:#f5f9ff;
-}
-
-.alert{
-    display:none;
-    margin-bottom:15px;
-    padding:12px 14px;
-    border-radius:8px;
-    font-size:13px;
-}
-
-.alert.show{
-    display:block;
-}
-
-.alert-error{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.alert-success{
-    background:#dcfce7;
-    color:#166534;
-}
-
-@media(max-width:700px){
-
-    .header{
-        padding:0 15px;
-    }
-
-    .brand h2{
-        font-size:18px;
-    }
-
-    .user-name{
-        display:none;
-    }
-
-    .container{
-        margin:20px auto;
-        padding:0 12px;
-    }
-
-    .page-head{
-        display:block;
-    }
-
-    .page-head h1{
-        font-size:24px;
-    }
-
-    .summary{
-        grid-template-columns:1fr;
-    }
-
-    .toolbar{
-        flex-direction:column;
-    }
-
-    .job-top{
-        display:block;
-    }
-
-    .job-top .status{
-        margin-top:10px;
-    }
-
-    .detail-grid{
-        grid-template-columns:1fr;
-    }
-
-    .detail-item.full{
-        grid-column:auto;
-    }
-
-    .progress-buttons{
-        grid-template-columns:1fr;
-    }
-}
-</style>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Kelola Teknisi - WAT ERP</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="assets/js/config.js"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+
+        /* HEADER */
+
+        header {
+            background: #0d47a1;
+            color: white;
+            padding: 18px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            opacity: .8;
+            margin-top: 3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .role {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .logout {
+            background: white;
+            color: #0d47a1;
+
+            border: none;
+            border-radius: 7px;
+
+            padding: 9px 15px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+
+        /* MAIN */
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .desc {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+
+        /* BUTTON */
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+
+            padding: 10px 16px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #0d47a1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #083b88;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #172033;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+
+        /* MESSAGE */
+
+        .message {
+            display: none;
+
+            margin-bottom: 20px;
+
+            padding: 13px 16px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        .message.success {
+            display: block;
+
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+        .summary-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+
+            border-left: 4px solid #0d47a1;
+        }
+
+        .summary-title {
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+        .summary-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+
+        /* TOOLBAR */
+
+        .toolbar {
+            background: white;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            display: flex;
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.04);
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 11px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            flex: 1;
+        }
+
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef3f8;
+
+            color: #334155;
+
+            font-size: 13px;
+
+            text-align: left;
+
+            padding: 12px;
+        }
+
+        td {
+            padding: 13px 12px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            font-size: 13px;
+        }
+
+        .name {
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .phone {
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+
+        /* ACTION */
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(15,23,42,.65);
+
+            z-index: 9999;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+
+            width: 100%;
+            max-width: 550px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.25);
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .close {
+            border: none;
+            background: none;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #64748b;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+
+            border-top:
+                1px solid #e2e8f0;
+
+            display: flex;
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            padding: 11px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 7px;
+
+            font-family: inherit;
+
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            padding: 50px 20px;
+
+            color: #64748b;
+        }
+
+
+        /* LOADING */
+
+        .loading {
+            text-align: center;
+
+            padding: 40px;
+
+            color: #64748b;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media(max-width: 750px) {
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .title-row {
+                flex-direction: column;
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<header class="header">
 
-    <div class="brand">
-        <h2>WAT ERP</h2>
-        <span>Jadwal & Progres Teknisi</span>
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header>
+
+    <div>
+
+        <div class="brand">
+            WAT ERP
+        </div>
+
+        <div class="subtitle">
+            Kelola Teknisi
+        </div>
+
     </div>
 
+
     <div class="header-right">
-        <span class="user-name" id="userName">Teknisi</span>
-        <button class="logout" onclick="logout()">LOGOUT</button>
+
+        <span
+            class="role"
+            id="userRole"
+        >
+            OWNER
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            LOGOUT
+        </button>
+
     </div>
 
 </header>
 
 
-<main class="container">
 
-    <div class="page-head">
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main>
+
+
+    <div class="title-row">
+
         <div>
-            <h1>Jadwal Saya</h1>
-            <p>Daftar pekerjaan yang ditugaskan kepada Anda.</p>
+
+            <h1>
+                Kelola Teknisi
+            </h1>
+
+            <div class="desc">
+                Kelola daftar karyawan dan lihat hasil pekerjaan teknisi.
+            </div>
+
         </div>
 
-        <button class="btn btn-primary" onclick="loadJobs()">
-            ↻ Refresh
+
+        <button
+            class="btn btn-primary"
+            onclick="openAddModal()"
+        >
+            + Tambah Teknisi
         </button>
+
     </div>
 
-    <div id="alert" class="alert"></div>
 
-    <section class="summary">
+
+    <!-- MESSAGE -->
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+
+    <!-- =================================================
+         SUMMARY
+    ================================================== -->
+
+    <div class="summary">
+
 
         <div class="summary-card">
-            <span>Total Jadwal</span>
-            <strong id="totalJobs">0</strong>
+
+            <div class="summary-title">
+                Total Teknisi Aktif
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalTechnician"
+            >
+                0
+            </div>
+
         </div>
+
 
         <div class="summary-card">
-            <span>Jadwal Hari Ini</span>
-            <strong id="todayJobs">0</strong>
+
+            <div class="summary-title">
+                Total Pekerjaan Selesai
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalJobs"
+            >
+                0
+            </div>
+
         </div>
+
 
         <div class="summary-card">
-            <span>Belum Selesai</span>
-            <strong id="pendingJobs">0</strong>
+
+            <div class="summary-title">
+                Total Nilai Pekerjaan
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalAmount"
+            >
+                Rp 0
+            </div>
+
         </div>
 
-    </section>
+
+    </div>
 
 
-    <section class="toolbar">
+
+    <!-- =================================================
+         TOOLBAR
+    ================================================== -->
+
+    <div class="toolbar">
 
         <input
             type="text"
             id="searchInput"
-            placeholder="Cari customer, alamat, pekerjaan..."
-            oninput="renderJobs()"
+            placeholder="Cari nama teknisi..."
+            oninput="renderTechnicians()"
         >
 
-        <select id="statusFilter" onchange="renderJobs()">
-            <option value="">Semua Status</option>
-            <option value="NEW">Baru</option>
-            <option value="ASSIGNED">Ditugaskan</option>
-            <option value="ON_THE_WAY">Menuju Lokasi</option>
-            <option value="CHECKED_IN">Check In</option>
-            <option value="IN_PROGRESS">Dalam Pengerjaan</option>
-            <option value="COMPLETED">Selesai</option>
-            <option value="CANCELLED">Dibatalkan</option>
+
+        <select
+            id="statusFilter"
+            onchange="renderTechnicians()"
+        >
+
+            <option value="">
+                Semua Status
+            </option>
+
+            <option value="ACTIVE">
+                Aktif
+            </option>
+
+            <option value="INACTIVE">
+                Tidak Aktif
+            </option>
+
         </select>
 
-    </section>
+
+        <button
+            class="btn btn-secondary"
+            onclick="loadData()"
+        >
+            ↻ Refresh
+        </button>
+
+    </div>
 
 
-    <section id="jobsContainer" class="jobs">
 
-        <div class="loading">
-            Memuat jadwal...
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <div class="table-card">
+
+        <div id="technicianTable">
+
+            <div class="loading">
+                Memuat data teknisi...
+            </div>
+
         </div>
 
-    </section>
+    </div>
+
 
 </main>
 
-<!-- DETAIL MODAL -->
 
-<div class="modal" id="detailModal">
+
+<!-- =====================================================
+     MODAL TAMBAH / EDIT
+====================================================== -->
+
+<div
+    class="modal"
+    id="technicianModal"
+>
 
     <div class="modal-box">
 
+
         <div class="modal-header">
-            <h2>Detail Pekerjaan</h2>
-            <button class="close" onclick="closeModal()">×</button>
+
+            <h2 id="modalTitle">
+                Tambah Teknisi
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
         </div>
+
 
         <div class="modal-body">
 
-            <div class="detail-grid">
 
-                <div class="detail-item">
-                    <span>Kode Job</span>
-                    <strong id="dJobCode">-</strong>
-                </div>
+            <div class="form-group">
 
-                <div class="detail-item">
-                    <span>Status</span>
-                    <strong id="dStatus">-</strong>
-                </div>
-
-                <div class="detail-item">
-                    <span>Tanggal</span>
-                    <strong id="dDate">-</strong>
-                </div>
-
-                <div class="detail-item">
-                    <span>Jam</span>
-                    <strong id="dTime">-</strong>
-                </div>
-
-                <div class="detail-item">
-                    <span>Customer</span>
-                    <strong id="dCustomer">-</strong>
-                </div>
-
-                <div class="detail-item">
-                    <span>No. WhatsApp</span>
-                    <strong id="dPhone">-</strong>
-                </div>
-
-                <div class="detail-item full">
-                    <span>Alamat Customer</span>
-                    <strong id="dAddress">-</strong>
-                </div>
-
-                <div class="detail-item full">
-                    <span>Jenis Pekerjaan</span>
-                    <strong id="dJobType">-</strong>
-                </div>
-
-                <div class="detail-item full">
-                    <span>Keterangan Pekerjaan</span>
-                    <strong id="dDescription">-</strong>
-                </div>
-
-            </div>
-
-
-            <div class="notes">
-
-                <label for="technicianNotes">
-                    Catatan Teknisi
+                <label>
+                    Nama Teknisi *
                 </label>
 
-                <textarea
-                    id="technicianNotes"
-                    placeholder="Tulis hasil pekerjaan, kondisi unit, sparepart, dll..."
-                ></textarea>
-
-            </div>
-
-
-            <div style="margin-top:16px;padding:12px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;font-size:12px;color:#1e40af;">
-                <strong>Alur:</strong> isi laporan/rincian pekerjaan → klik <b>✅ Selesaikan Pekerjaan</b>.
-                Setelah status <b>COMPLETED</b>, job otomatis tersedia untuk diproses menjadi Invoice oleh Owner/CS.
-            </div>
-
-            <div class="progress-buttons">
-
-                <button
-                    class="btn btn-success"
-                    onclick="sendAttendanceWhatsApp()"
-                    style="color:white;background:#16a34a;"
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Nama lengkap"
                 >
-                    💬 Konfirmasi Kehadiran
-                </button>
-
-                <button onclick="updateStatus('ON_THE_WAY')">
-                    🚗 Menuju Lokasi
-                </button>
-
-                <button onclick="checkIn()">
-                    📍 Check In
-                </button>
-
-                <button onclick="updateStatus('IN_PROGRESS')">
-                    🔧 Mulai Pekerjaan
-                </button>
-
-                <button
-                    class="btn-success"
-                    onclick="completeJob()"
-                    style="color:white;background:#16a34a;"
-                >
-                    ✅ Selesaikan Pekerjaan
-                </button>
 
             </div>
+
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        No. HP / WhatsApp
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="08xxxxxxxxxx"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="email@gmail.com"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select id="status">
+
+                    <option value="ACTIVE">
+                        ACTIVE
+                    </option>
+
+                    <option value="INACTIVE">
+                        INACTIVE
+                    </option>
+
+                </select>
+
+            </div>
+
+
 
         </div>
 
 
         <div class="modal-footer">
 
-            <button class="btn btn-secondary" onclick="closeModal()">
-                Tutup
+            <button
+                class="btn btn-secondary"
+                onclick="closeModal()"
+            >
+                Batal
             </button>
 
-            <button class="btn btn-primary" onclick="saveNotes()">
-                Simpan Catatan
+
+            <button
+                class="btn btn-primary"
+                id="saveButton"
+                onclick="saveTechnician()"
+            >
+                Simpan
             </button>
 
         </div>
+
 
     </div>
 
 </div>
 
 
+
 <script>
 
-const { createClient } = window.supabase;
 
-const supabaseClient = createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let technicians = [];
+
+let jobs = [];
+
+let editingTechnician = null;
+
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
 );
 
 
-let currentUser = null;
-let currentProfile = null;
-let jobs = [];
-let selectedJob = null;
+async function init() {
+
+    try {
+
+        if (
+            typeof window.supabase ===
+            "undefined"
+        ) {
+
+            throw new Error(
+                "Library Supabase tidak ditemukan."
+            );
+
+        }
 
 
-/* =========================
-   INIT
-========================= */
+        if (
+            typeof SUPABASE_URL ===
+                "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY ===
+                "undefined"
+        ) {
 
-document.addEventListener("DOMContentLoaded", init);
+            throw new Error(
+                "Konfigurasi Supabase tidak ditemukan."
+            );
+
+        }
 
 
-async function init(){
+        supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
 
-    try{
+
+        /* SESSION */
 
         const {
-            data: {
-                session
-            }
-        } = await supabaseClient.auth.getSession();
+            data: sessionData
+        } =
+            await supabaseClient.auth.getSession();
 
 
-        if(!session){
+        if (
+            !sessionData ||
+            !sessionData.session
+        ) {
 
-            window.location.href = "login.html";
+            window.location.href =
+                "login.html";
+
             return;
 
         }
 
 
-        currentUser = session.user;
+        currentUser =
+            sessionData.session.user;
 
 
-        await loadProfile();
+        /* PROFILE */
 
-        await loadJobs();
+        const {
+            data: profile,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "id, full_name, email, role, status"
+                )
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .single();
 
-    }
-    catch(error){
 
-        console.error(error);
+        if (profileError) {
 
-        showAlert(
-            "Gagal memuat aplikasi: " + error.message,
-            "error"
+            throw profileError;
+
+        }
+
+
+        if (
+            profile.status !==
+            "ACTIVE"
+        ) {
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        if (
+            profile.role !== "OWNER"
+        ) {
+
+            showMessage(
+                "Halaman Kelola Teknisi hanya dapat diakses Owner.",
+                true
+            );
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "userRole"
+        ).textContent =
+            profile.role;
+
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            "INIT ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Gagal membuka Kelola Teknisi.",
+            true
         );
 
     }
@@ -791,218 +1038,247 @@ async function init(){
 }
 
 
-/* =========================
-   PROFILE
-========================= */
 
-async function loadProfile(){
+/* =====================================================
+   LOAD DATA
+===================================================== */
 
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from("profiles")
-        .select("id,full_name,email,role,status")
-        .eq("id", currentUser.id)
-        .single();
+async function loadData() {
+
+    try {
+
+        showLoading();
 
 
-    if(error){
+        /* =================================================
+           TECHNICIANS
+        ================================================== */
 
-        console.error(error);
+        const {
+            data: technicianData,
+            error: technicianError
+        } =
+            await supabaseClient
+                .from("technicians")
+                .select(`
+                    id,
+                    technician_code,
+                    full_name,
+                    phone,
+                    email,
+                    user_id,
+                    status,
+                    device_id,
+                    device_name,
+                    notes,
+                    created_by,
+                    created_at,
+                    updated_at
+                `)
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
 
-        document.getElementById("userName").textContent =
-            currentUser.email || "Teknisi";
 
-        return;
+        if (technicianError) {
 
-    }
+            throw technicianError;
 
-
-    currentProfile = data;
+        }
 
 
-    document.getElementById("userName").textContent =
-        data.full_name || data.email || "Teknisi";
+        technicians =
+            technicianData || [];
 
 
-    /*
-       Pastikan akun yang login memang teknisi.
-       OWNER tetap bisa masuk untuk testing,
-       tapi halaman ini mengambil job berdasarkan ID user.
-    */
+        /* =================================================
+           JOBS
+        ================================================== */
 
-}
+        const {
+            data: jobData,
+            error: jobError
+        } =
+            await supabaseClient
+                .from("jobs")
+                .select(`
+                    id,
+                    technician_id,
+                    assigned_to,
+                    status,
+                    service_price,
+                    billing_total
+                `);
 
 
-/* =========================
-   LOAD JOBS
-========================= */
+        if (jobError) {
 
-async function loadJobs(){
+            throw jobError;
 
-    document.getElementById("jobsContainer").innerHTML =
-        '<div class="loading">Memuat jadwal...</div>';
+        }
 
-    try{
-        // Ambil seluruh kolom agar query tidak gagal hanya karena
-        // ada satu nama kolom yang berbeda di schema Supabase.
-        const { data, error } = await supabaseClient
-            .from("jobs")
-            .select("*")
-            .order("scheduled_at", {
-                ascending:true,
-                nullsFirst:false
-            });
 
-        if(error) throw error;
+        jobs =
+            jobData || [];
 
-        // Job teknisi = assigned_to ATAU technician_id sesuai user login.
-        jobs = (data || []).filter(job =>
-            job.assigned_to === currentUser.id ||
-            job.technician_id === currentUser.id
-        );
-
-        jobs.sort((a,b) => {
-            const da = a.scheduled_at
-                ? new Date(a.scheduled_at)
-                : new Date(9999,0,1);
-            const db = b.scheduled_at
-                ? new Date(b.scheduled_at)
-                : new Date(9999,0,1);
-            return da - db;
-        });
 
         updateSummary();
-        renderJobs();
 
-    }catch(error){
+        renderTechnicians();
 
-        console.error("LOAD JOBS ERROR:", error);
-        jobs = [];
-        updateSummary();
 
-        document.getElementById("jobsContainer").innerHTML = `
-            <div class="empty" style="color:#b91c1c;">
-                <strong>Gagal memuat jadwal teknisi.</strong>
-                <div style="margin-top:8px;font-size:12px;">
-                    ${escapeHtml(error.message || "Terjadi kesalahan saat mengambil data jobs.")}
-                </div>
-            </div>
-        `;
+    } catch (error) {
 
-        showAlert(
-            "Gagal memuat job: " + (error.message || "Unknown error"),
-            "error"
+        console.error(
+            "LOAD ERROR:",
+            error
         );
+
+        showMessage(
+            "Gagal mengambil data: " +
+            error.message,
+            true
+        );
+
     }
-}
-
-/* =========================
-   SUMMARY
-========================= */
-
-function updateSummary(){
-
-    const today = new Date();
-
-    const todayString =
-        today.toISOString().slice(0,10);
-
-
-    const todayJobs = jobs.filter(job => {
-
-        if(!job.scheduled_at) return false;
-
-        return new Date(job.scheduled_at)
-            .toISOString()
-            .slice(0,10) === todayString;
-
-    });
-
-
-    const pendingJobs = jobs.filter(job => {
-
-        return ![
-            "COMPLETED",
-            "CANCELLED"
-        ].includes(job.status);
-
-    });
-
-
-    document.getElementById("totalJobs")
-        .textContent = jobs.length;
-
-
-    document.getElementById("todayJobs")
-        .textContent = todayJobs.length;
-
-
-    document.getElementById("pendingJobs")
-        .textContent = pendingJobs.length;
 
 }
 
 
-/* =========================
-   RENDER JOBS
-========================= */
 
-function renderJobs(){
+/* =====================================================
+   UPDATE SUMMARY
+===================================================== */
+
+function updateSummary() {
+
+    const activeTechnicians =
+        technicians.filter(
+            technician =>
+                technician.status ===
+                "ACTIVE"
+        );
+
+
+    const completedJobs =
+        jobs.filter(
+            job =>
+                job.status ===
+                "COMPLETED"
+        );
+
+
+    const totalAmount =
+        completedJobs.reduce(
+            (
+                total,
+                job
+            ) => {
+
+                return (
+                    total +
+                    getJobAmount(
+                        job
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    document.getElementById(
+        "totalTechnician"
+    ).textContent =
+        activeTechnicians.length;
+
+
+    document.getElementById(
+        "totalJobs"
+    ).textContent =
+        completedJobs.length;
+
+
+    document.getElementById(
+        "totalAmount"
+    ).textContent =
+        formatRupiah(
+            totalAmount
+        );
+
+}
+
+
+
+/* =====================================================
+   RENDER TECHNICIANS
+===================================================== */
+
+function renderTechnicians() {
 
     const container =
-        document.getElementById("jobsContainer");
+        document.getElementById(
+            "technicianTable"
+        );
 
 
     const search =
-        document.getElementById("searchInput")
-            .value
+        document.getElementById(
+            "searchInput"
+        ).value
             .toLowerCase()
             .trim();
 
 
     const status =
-        document.getElementById("statusFilter")
-            .value;
+        document.getElementById(
+            "statusFilter"
+        ).value;
 
 
-    const filtered = jobs.filter(job => {
+    const filtered =
+        technicians.filter(
+            technician => {
 
-        const text = [
-
-            job.job_code,
-            job.title,
-            job.description,
-            job.customer_name,
-            job.customer_phone,
-            job.customer_address,
-            job.job_type,
-            job.work_description
-
-        ]
-        .join(" ")
-        .toLowerCase();
+                const name =
+                    String(
+                        technician.full_name ||
+                        ""
+                    ).toLowerCase();
 
 
-        const matchSearch =
-            !search || text.includes(search);
+                const matchesSearch =
+                    !search ||
+                    name.includes(
+                        search
+                    );
 
 
-        const matchStatus =
-            !status || job.status === status;
+                const matchesStatus =
+                    !status ||
+                    technician.status ===
+                    status;
 
 
-        return matchSearch && matchStatus;
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
 
-    });
+            }
+        );
 
 
-    if(filtered.length === 0){
+    if (
+        filtered.length === 0
+    ) {
 
         container.innerHTML = `
             <div class="empty">
-                Tidak ada jadwal yang sesuai.
+                Belum ada teknisi.
             </div>
         `;
 
@@ -1011,640 +1287,810 @@ function renderJobs(){
     }
 
 
-    container.innerHTML =
-        filtered.map(renderJobCard).join("");
+    let html = `
 
-}
+        <table>
 
+            <thead>
 
-/* =========================
-   JOB CARD
-========================= */
+                <tr>
 
-function renderJobCard(job){
+                    <th>
+                        Teknisi
+                    </th>
 
-    const date = formatDate(job.scheduled_at);
+                    <th>
+                        Pekerjaan Selesai
+                    </th>
 
-    const time = formatTime(job.scheduled_at);
+                    <th>
+                        Total Rupiah
+                    </th>
 
-    const statusText =
-        getStatusText(job.status);
+                    <th>
+                        Status
+                    </th>
 
-    const statusClass =
-        getStatusClass(job.status);
+                    <th>
+                        Aksi
+                    </th>
 
+                </tr>
 
-    return `
+            </thead>
 
-        <article class="job-card">
-
-            <div class="job-top">
-
-                <div>
-
-                    <div class="job-date">
-                        ${escapeHtml(date)}
-                    </div>
-
-                    <div class="job-time">
-                        ${escapeHtml(time)}
-                    </div>
-
-                </div>
-
-                <span class="status ${statusClass}">
-                    ${escapeHtml(statusText)}
-                </span>
-
-            </div>
-
-
-            <div class="job-title">
-                ${escapeHtml(
-                    job.title ||
-                    job.work_description ||
-                    "Pekerjaan"
-                )}
-            </div>
-
-
-            <div class="job-code">
-                ${escapeHtml(job.job_code || "-")}
-            </div>
-
-
-            <div class="customer-box">
-
-                <strong>
-                    👤 ${escapeHtml(
-                        job.customer_name ||
-                        "Customer"
-                    )}
-                </strong>
-
-                <div>
-                    📍 ${escapeHtml(
-                        job.customer_address ||
-                        "-"
-                    )}
-                </div>
-
-                <div>
-                    📱 ${escapeHtml(
-                        job.customer_phone ||
-                        "-"
-                    )}
-                </div>
-
-            </div>
-
-
-            <div class="actions">
-
-                <button
-                    class="btn btn-primary"
-                    onclick="showDetail('${job.id}')"
-                >
-                    Detail
-                </button>
-
-                ${
-                    job.customer_phone
-                    ?
-                    `
-                    <button
-                        class="btn btn-success"
-                        onclick="sendAttendanceWhatsApp('${job.id}')"
-                    >
-                        💬 Konfirmasi WhatsApp
-                    </button>
-                    `
-                    :
-                    ""
-                }
-
-
-                ${
-                    job.customer_address
-                    ?
-                    `
-                    <button
-                        class="btn btn-location"
-                        onclick="openMaps('${escapeJs(job.customer_address)}')"
-                    >
-                        Maps
-                    </button>
-                    `
-                    :
-                    ""
-                }
-
-            </div>
-
-        </article>
+            <tbody>
 
     `;
 
-}
 
+    filtered.forEach(
+        technician => {
 
-/* =========================
-   DETAIL
-========================= */
+            const technicianJobs =
+                getTechnicianJobs(
+                    technician
+                );
 
-function showDetail(id){
 
-    const job =
-        jobs.find(x => x.id === id);
+            const completedJobs =
+                technicianJobs.filter(
+                    job =>
+                        job.status ===
+                        "COMPLETED"
+                );
 
 
-    if(!job) return;
+            const totalAmount =
+                completedJobs.reduce(
+                    (
+                        total,
+                        job
+                    ) => {
 
+                        return (
+                            total +
+                            getJobAmount(
+                                job
+                            )
+                        );
 
-    selectedJob = job;
+                    },
+                    0
+                );
 
 
-    document.getElementById("dJobCode")
-        .textContent =
-        job.job_code || "-";
+            const statusClass =
+                technician.status ===
+                "ACTIVE"
+                    ? "active"
+                    : "inactive";
 
 
-    document.getElementById("dStatus")
-        .textContent =
-        getStatusText(job.status);
+            const statusText =
+                technician.status ===
+                "ACTIVE"
+                    ? "ACTIVE"
+                    : "INACTIVE";
 
 
-    document.getElementById("dDate")
-        .textContent =
-        formatDate(job.scheduled_at);
+            html += `
 
+                <tr>
 
-    document.getElementById("dTime")
-        .textContent =
-        formatTime(job.scheduled_at);
 
+                    <td>
 
-    document.getElementById("dCustomer")
-        .textContent =
-        job.customer_name || "-";
+                        <div class="name">
+                            ${escapeHtml(
+                                technician.full_name ||
+                                "-"
+                            )}
+                        </div>
+
+                        <div class="phone">
+                            ${escapeHtml(
+                                technician.phone ||
+                                "-"
+                            )}
+                        </div>
+
+                    </td>
+
 
+                    <td>
 
-    document.getElementById("dPhone")
-        .textContent =
-        job.customer_phone || "-";
+                        <strong>
+                            ${completedJobs.length}
+                        </strong>
 
+                        pekerjaan
 
-    document.getElementById("dAddress")
-        .textContent =
-        job.customer_address || "-";
+                    </td>
 
 
-    document.getElementById("dJobType")
-        .textContent =
-        job.job_type || "-";
+                    <td>
 
+                        <strong>
+                            ${formatRupiah(
+                                totalAmount
+                            )}
+                        </strong>
 
-    document.getElementById("dDescription")
-        .textContent =
-        job.work_description ||
-        job.description ||
-        job.title ||
-        "-";
+                    </td>
 
 
-    document.getElementById("technicianNotes")
-        .value =
-        job.technician_notes || "";
+                    <td>
 
-
-    document
-        .getElementById("detailModal")
-        .classList.add("show");
-
-}
-
-
-function closeModal(){
-
-    document
-        .getElementById("detailModal")
-        .classList.remove("show");
-
-    selectedJob = null;
-
-}
-
-
-/* =========================
-   WHATSAPP KONFIRMASI KEHADIRAN
-========================= */
-
-function normalizeWhatsAppNumber(phone){
-
-    let value = String(phone || "")
-        .replace(/[^0-9+]/g, "")
-        .replace(/^\+/, "");
-
-    // Indonesia: 08xxxx -> 628xxxx
-    if(value.startsWith("0")){
-        value = "62" + value.substring(1);
-    }
-
-    // Jika user memasukkan 8xxxx tanpa 0/62.
-    if(value.startsWith("8")){
-        value = "62" + value;
-    }
-
-    return value;
-}
-
-
-function sendAttendanceWhatsApp(jobId = null){
-
-    const job = jobId
-        ? jobs.find(x => x.id === jobId)
-        : selectedJob;
-
-    if(!job){
-        showAlert("Job belum dipilih.", "error");
-        return;
-    }
-
-    if(!job.customer_phone){
-        showAlert("Nomor WhatsApp customer belum tersedia.", "error");
-        return;
-    }
-
-    const phone = normalizeWhatsAppNumber(job.customer_phone);
-
-    if(!phone || phone.length < 10){
-        showAlert("Nomor WhatsApp customer tidak valid.", "error");
-        return;
-    }
-
-    const customer = job.customer_name || "Bapak/Ibu";
-    const date = formatDate(job.scheduled_at);
-    const time = formatTime(job.scheduled_at);
-    const pekerjaan =
-        job.work_description ||
-        job.description ||
-        job.title ||
-        "pekerjaan teknisi";
-
-    const message =
-`Halo ${customer},
-
-Kami dari WAT / Wijaya AC menginformasikan bahwa teknisi kami akan datang untuk pekerjaan berikut:
-
-📋 Job: ${job.job_code || "-"}
-🔧 Pekerjaan: ${pekerjaan}
-📅 Tanggal: ${date}
-🕐 Jam: ${time}
-
-Mohon konfirmasi apakah Bapak/Ibu dapat menerima kedatangan teknisi pada jadwal tersebut.
-
-Terima kasih.
-WAT / Wijaya AC`;
-
-    const url =
-        "https://wa.me/" +
-        phone +
-        "?text=" +
-        encodeURIComponent(message);
-
-    window.open(url, "_blank");
-}
-
-
-/* =========================
-   UPDATE STATUS
-========================= */
-
-async function updateStatus(newStatus){
-
-    if(!selectedJob){
-
-        showAlert(
-            "Job belum dipilih.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const updateData = {
-
-            status:newStatus,
-            updated_at:new Date().toISOString()
-
-        };
-
-
-        if(newStatus === "IN_PROGRESS"){
-
-            updateData.started_at =
-                new Date().toISOString();
+                        <span
+                            class="
+                                status
+                                ${statusClass}
+                            "
+                        >
+                            ${statusText}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="actions">
+
+
+                            <button
+                                class="
+                                    btn
+                                    btn-warning
+                                    btn-small
+                                "
+                                onclick="
+                                    editTechnician(
+                                        '${technician.id}'
+                                    )
+                                "
+                            >
+                                Edit
+                            </button>
+
+
+                            ${
+                                technician.status ===
+                                "ACTIVE"
+                                    ? `
+                                        <button
+                                            class="
+                                                btn
+                                                btn-danger
+                                                btn-small
+                                            "
+                                            onclick="
+                                                deactivateTechnician(
+                                                    '${technician.id}'
+                                                )
+                                            "
+                                        >
+                                            Nonaktifkan
+                                        </button>
+                                      `
+                                    : `
+                                        <button
+                                            class="
+                                                btn
+                                                btn-primary
+                                                btn-small
+                                            "
+                                            onclick="
+                                                activateTechnician(
+                                                    '${technician.id}'
+                                                )
+                                            "
+                                        >
+                                            Aktifkan
+                                        </button>
+                                      `
+                            }
+
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
 
         }
-
-
-        const {
-            error
-        } = await supabaseClient
-            .from("jobs")
-            .update(updateData)
-            .eq("id", selectedJob.id);
-
-
-        if(error) throw error;
-
-
-        showAlert(
-            "Status berhasil diperbarui.",
-            "success"
-        );
-
-
-        closeModal();
-
-        await loadJobs();
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        showAlert(
-            "Gagal update status: " +
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================
-   CHECK IN
-========================= */
-
-async function checkIn(){
-
-    if(!selectedJob) return;
-
-
-    if(!navigator.geolocation){
-
-        showAlert(
-            "Browser tidak mendukung lokasi.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    showAlert(
-        "Mengambil lokasi GPS...",
-        "success"
     );
 
 
-    navigator.geolocation.getCurrentPosition(
+    html += `
 
-        async position => {
+            </tbody>
 
-            try{
+        </table>
 
-                const lat =
-                    position.coords.latitude;
-
-                const lng =
-                    position.coords.longitude;
+    `;
 
 
-                const {
-                    error
-                } = await supabaseClient
-                    .from("jobs")
-                    .update({
+    container.innerHTML =
+        html;
 
-                        status:"CHECKED_IN",
-
-                        checkin_at:
-                            new Date().toISOString(),
-
-                        checkin_lat:lat,
-
-                        checkin_lng:lng,
-
-                        updated_at:
-                            new Date().toISOString()
-
-                    })
-                    .eq("id", selectedJob.id);
+}
 
 
-                if(error) throw error;
 
+/* =====================================================
+   GET TECHNICIAN JOBS
+===================================================== */
 
-                showAlert(
-                    "Check In berhasil. Lokasi GPS tersimpan.",
-                    "success"
-                );
+function getTechnicianJobs(
+    technician
+) {
 
+    return jobs.filter(
+        job => {
 
-                closeModal();
+            return (
+                job.technician_id ===
+                    technician.id ||
 
-                await loadJobs();
+                job.assigned_to ===
+                    technician.id ||
 
-            }
-            catch(error){
+                (
+                    technician.user_id &&
+                    (
+                        job.technician_id ===
+                            technician.user_id ||
 
-                console.error(error);
-
-                showAlert(
-                    "Gagal Check In: " +
-                    error.message,
-                    "error"
-                );
-
-            }
-
-        },
-
-        error => {
-
-            console.error(error);
-
-            let message =
-                "Lokasi tidak dapat diambil.";
-
-
-            if(error.code === 1){
-
-                message =
-                    "Izin lokasi ditolak. Aktifkan GPS/lokasi browser.";
-
-            }
-
-
-            showAlert(
-                message,
-                "error"
+                        job.assigned_to ===
+                            technician.user_id
+                    )
+                )
             );
 
-        },
-
-        {
-            enableHighAccuracy:true,
-            timeout:15000,
-            maximumAge:0
         }
-
     );
 
 }
 
 
-/* =========================
-   COMPLETE JOB
-========================= */
 
-async function completeJob(){
+/* =====================================================
+   GET JOB AMOUNT
+===================================================== */
 
-    if(!selectedJob) return;
+function getJobAmount(
+    job
+) {
 
-    const notes =
-        document.getElementById("technicianNotes")
-            .value.trim();
+    let amount =
+        Number(
+            job.billing_total
+        ) || 0;
 
-    if(!notes){
-        showAlert(
-            "Isi laporan/rincian pekerjaan terlebih dahulu sebelum menyelesaikan pekerjaan.",
-            "error"
+
+    if (
+        amount <= 0
+    ) {
+
+        amount =
+            Number(
+                job.service_price
+            ) || 0;
+
+    }
+
+
+    return amount;
+
+}
+
+
+
+/* =====================================================
+   OPEN ADD
+===================================================== */
+
+function openAddModal() {
+
+    editingTechnician =
+        null;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Tambah Teknisi";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Simpan";
+
+
+    document.getElementById(
+        "fullName"
+    ).value = "";
+
+
+    document.getElementById(
+        "phone"
+    ).value = "";
+
+
+    document.getElementById(
+        "email"
+    ).value = "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        "ACTIVE";
+
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   EDIT
+===================================================== */
+
+function editTechnician(
+    id
+) {
+
+    const technician =
+        technicians.find(
+            item =>
+                item.id === id
         );
-        return;
-    }
 
-    if(!["IN_PROGRESS","CHECKED_IN"].includes(selectedJob.status)){
-        showAlert(
-            "Pekerjaan belum dalam proses. Klik Check In atau Mulai Pekerjaan terlebih dahulu.",
-            "error"
+
+    if (!technician) {
+
+        showMessage(
+            "Data teknisi tidak ditemukan.",
+            true
         );
+
         return;
+
     }
 
-    if(!confirm(
-        "Yakin pekerjaan ini sudah selesai?\\n\\nSetelah selesai, status Job menjadi COMPLETED dan Job akan tersedia di halaman Invoice Owner/CS."
-    )){
-        return;
-    }
 
-    try{
+    editingTechnician =
+        technician;
 
-        const now = new Date().toISOString();
 
-        const { data, error } =
-            await supabaseClient
-                .from("jobs")
-                .update({
-                    status:"COMPLETED",
-                    completed_at:now,
-                    technician_notes:notes,
-                    updated_at:now
-                })
-                .eq("id", selectedJob.id)
-                .select("*")
-                .single();
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Edit Teknisi";
 
-        if(error) throw error;
 
-        if(!data || data.status !== "COMPLETED"){
-            throw new Error("Job tidak berhasil berubah menjadi COMPLETED.");
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Update";
+
+
+    document.getElementById(
+        "fullName"
+    ).value =
+        technician.full_name ||
+        "";
+
+
+    document.getElementById(
+        "phone"
+    ).value =
+        technician.phone ||
+        "";
+
+
+    document.getElementById(
+        "email"
+    ).value =
+        technician.email ||
+        "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        technician.status ||
+        "ACTIVE";
+
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   SAVE TECHNICIAN
+===================================================== */
+
+async function saveTechnician() {
+
+    try {
+
+        const fullName =
+            document.getElementById(
+                "fullName"
+            ).value.trim();
+
+
+        const phone =
+            document.getElementById(
+                "phone"
+            ).value.trim();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const status =
+            document.getElementById(
+                "status"
+            ).value;
+
+
+        if (!fullName) {
+
+            throw new Error(
+                "Nama teknisi wajib diisi."
+            );
+
         }
+
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+
+        saveButton.disabled =
+            true;
+
+
+        saveButton.textContent =
+            "MENYIMPAN...";
+
+
+        /* =================================================
+           EDIT
+        ================================================== */
+
+        if (
+            editingTechnician
+        ) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("technicians")
+                    .update({
+
+                        full_name:
+                            fullName,
+
+                        phone:
+                            phone ||
+                            null,
+
+                        email:
+                            email ||
+                            null,
+
+                        status:
+                            status,
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        editingTechnician.id
+                    );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            showMessage(
+                "Data teknisi berhasil diperbarui.",
+                false
+            );
+
+        }
+
+
+        /* =================================================
+           TAMBAH
+        ================================================== */
+
+        else {
+
+            const technicianCode =
+                await generateTechnicianCode();
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("technicians")
+                    .insert({
+
+                        technician_code:
+                            technicianCode,
+
+                        full_name:
+                            fullName,
+
+                        phone:
+                            phone ||
+                            null,
+
+                        email:
+                            email ||
+                            null,
+
+                        status:
+                            status,
+
+                        created_by:
+                            currentUser.id,
+
+                        created_at:
+                            new Date()
+                                .toISOString(),
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            showMessage(
+                "Teknisi berhasil ditambahkan.",
+                false
+            );
+
+        }
+
 
         closeModal();
 
-        showAlert(
-            "✅ Pekerjaan selesai. Laporan tersimpan dan Job siap diproses menjadi Invoice.",
-            "success"
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE TECHNICIAN ERROR:",
+            error
         );
 
-        await loadJobs();
-
-    }catch(error){
-
-        console.error("COMPLETE JOB ERROR:", error);
-
-        showAlert(
-            "Gagal menyelesaikan pekerjaan: " +
-            (error.message || "Unknown error"),
-            "error"
+        showMessage(
+            "Gagal menyimpan teknisi: " +
+            error.message,
+            true
         );
+
+    } finally {
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+
+        saveButton.disabled =
+            false;
+
+
+        saveButton.textContent =
+            editingTechnician
+                ? "Update"
+                : "Simpan";
+
     }
+
 }
 
-/* =========================
-   SAVE NOTES
-========================= */
-
-async function saveNotes(){
-
-    if(!selectedJob) return;
 
 
-    const notes =
-        document.getElementById(
-            "technicianNotes"
-        ).value.trim();
+/* =====================================================
+   GENERATE TECHNICIAN CODE
+===================================================== */
+
+async function generateTechnicianCode() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("technicians")
+            .select(
+                "technician_code"
+            );
 
 
-    try{
+    if (error) {
+
+        throw error;
+
+    }
+
+
+    let maxNumber = 0;
+
+
+    (data || []).forEach(
+        technician => {
+
+            const code =
+                technician.technician_code ||
+                "";
+
+
+            const match =
+                code.match(
+                    /^TEK-(\d+)$/
+                );
+
+
+            if (!match) return;
+
+
+            const number =
+                Number(
+                    match[1]
+                );
+
+
+            if (
+                number > maxNumber
+            ) {
+
+                maxNumber =
+                    number;
+
+            }
+
+        }
+    );
+
+
+    return (
+        "TEK-" +
+        String(
+            maxNumber + 1
+        ).padStart(
+            3,
+            "0"
+        )
+    );
+
+}
+
+
+
+/* =====================================================
+   DEACTIVATE
+===================================================== */
+
+async function deactivateTechnician(
+    id
+) {
+
+    const technician =
+        technicians.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!technician) return;
+
+
+    const confirmed =
+        confirm(
+            `Nonaktifkan teknisi ${technician.full_name}?`
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
 
         const {
             error
-        } = await supabaseClient
-            .from("jobs")
-            .update({
+        } =
+            await supabaseClient
+                .from("technicians")
+                .update({
 
-                technician_notes:notes,
+                    status:
+                        "INACTIVE",
 
-                updated_at:
-                    new Date().toISOString()
+                    updated_at:
+                        new Date()
+                            .toISOString()
 
-            })
-            .eq("id", selectedJob.id);
+                })
+                .eq(
+                    "id",
+                    id
+                );
 
 
-        if(error) throw error;
+        if (error) {
+
+            throw error;
+
+        }
 
 
-        showAlert(
-            "Catatan teknisi berhasil disimpan.",
-            "success"
+        showMessage(
+            "Teknisi berhasil dinonaktifkan.",
+            false
         );
 
 
-        closeModal();
+        await loadData();
 
-        await loadJobs();
 
-    }
-    catch(error){
+    } catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
-        showAlert(
-            "Gagal menyimpan catatan: " +
+        showMessage(
+            "Gagal menonaktifkan teknisi: " +
             error.message,
-            "error"
+            true
         );
 
     }
@@ -1652,39 +2098,113 @@ async function saveNotes(){
 }
 
 
-/* =========================
-   WHATSAPP
-   =========================
-   Pengiriman tagihan/customer message tidak lagi dilakukan
-   dari halaman teknisi. Setelah Job COMPLETED, Owner/CS
-   memprosesnya di halaman Invoice.
-*/
 
-/* =========================
-   GOOGLE MAPS
-========================= */
+/* =====================================================
+   ACTIVATE
+===================================================== */
 
-function openMaps(address){
+async function activateTechnician(
+    id
+) {
 
-    if(!address) return;
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("technicians")
+                .update({
+
+                    status:
+                        "ACTIVE",
+
+                    updated_at:
+                        new Date()
+                            .toISOString()
+
+                })
+                .eq(
+                    "id",
+                    id
+                );
 
 
-    window.open(
-        "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(address),
-        "_blank"
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        showMessage(
+            "Teknisi berhasil diaktifkan kembali.",
+            false
+        );
+
+
+        await loadData();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Gagal mengaktifkan teknisi: " +
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeModal() {
+
+    document.getElementById(
+        "technicianModal"
+    ).classList.remove(
+        "active"
     );
 
 }
 
 
-/* =========================
+
+/* =====================================================
    LOGOUT
-========================= */
+===================================================== */
 
-async function logout(){
+async function logout() {
 
-    await supabaseClient.auth.signOut();
+    try {
+
+        if (supabaseClient) {
+
+            await supabaseClient.auth.signOut();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+
+    sessionStorage.clear();
+
 
     window.location.href =
         "login.html";
@@ -1692,186 +2212,145 @@ async function logout(){
 }
 
 
-/* =========================
+
+/* =====================================================
    HELPERS
-========================= */
+===================================================== */
 
-function formatDate(value){
+function formatRupiah(
+    value
+) {
 
-    if(!value) return "-";
-
-
-    const date = new Date(value);
-
-
-    return date.toLocaleDateString(
+    return new Intl.NumberFormat(
         "id-ID",
         {
-            weekday:"long",
-            day:"2-digit",
-            month:"long",
-            year:"numeric"
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
         }
+    ).format(
+        Number(value) || 0
     );
 
 }
 
 
-function formatTime(value){
 
-    if(!value) return "-";
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
 
 
-    const date = new Date(value);
+
+function showMessage(
+    text,
+    isError = false
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
 
 
-    return date.toLocaleTimeString(
-        "id-ID",
-        {
-            hour:"2-digit",
-            minute:"2-digit"
-        }
+    message.textContent =
+        text;
+
+
+    message.className =
+        "message " +
+        (
+            isError
+                ? "error"
+                : "success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            message.className =
+                "message";
+
+        },
+        5000
     );
 
 }
 
 
-function getStatusText(status){
 
-    const map = {
+function showLoading() {
 
-        NEW:"Baru",
+    document.getElementById(
+        "technicianTable"
+    ).innerHTML = `
 
-        ASSIGNED:"Ditugaskan",
+        <div class="loading">
+            Memuat data teknisi...
+        </div>
 
-        ON_THE_WAY:"Menuju Lokasi",
-
-        CHECKED_IN:"Check In",
-
-        IN_PROGRESS:"Dalam Pengerjaan",
-
-        COMPLETED:"Selesai",
-
-        CANCELLED:"Dibatalkan"
-
-    };
-
-
-    return map[status] || status || "-";
+    `;
 
 }
 
 
-function getStatusClass(status){
 
-    const map = {
+/* =====================================================
+   CLOSE WHEN CLICK OUTSIDE
+===================================================== */
 
-        NEW:"status-new",
+document.addEventListener(
+    "click",
+    function(event) {
 
-        ASSIGNED:"status-assigned",
-
-        ON_THE_WAY:"status-way",
-
-        CHECKED_IN:"status-checkin",
-
-        IN_PROGRESS:"status-progress",
-
-        COMPLETED:"status-completed",
-
-        CANCELLED:"status-cancelled"
-
-    };
+        const modal =
+            document.getElementById(
+                "technicianModal"
+            );
 
 
-    return map[status] || "status-new";
-
-}
-
-
-function escapeHtml(value){
-
-    if(value === null ||
-       value === undefined){
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJs(value){
-
-    if(value === null ||
-       value === undefined){
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replace(/\\/g,"\\\\")
-        .replace(/'/g,"\\'")
-        .replace(/"/g,'\\"')
-        .replace(/\n/g,"\\n")
-        .replace(/\r/g,"\\r");
-
-}
-
-
-function showAlert(message,type){
-
-    const alert =
-        document.getElementById("alert");
-
-
-    alert.textContent = message;
-
-
-    alert.className =
-        "alert show " +
-        (type === "error"
-            ? "alert-error"
-            : "alert-success");
-
-
-    setTimeout(() => {
-
-        alert.classList.remove("show");
-
-    },5000);
-
-}
-
-
-/* =========================
-   CLOSE MODAL CLICK OUTSIDE
-========================= */
-
-
-document
-    .getElementById("detailModal")
-    .addEventListener("click",function(e){
-
-        if(e.target === this){
+        if (
+            event.target ===
+            modal
+        ) {
 
             closeModal();
 
         }
 
-    });
-
+    }
+);
 
 </script>
 
+
 </body>
+
 </html>
