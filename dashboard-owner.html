@@ -1,231 +1,317 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>WAT ERP - Dashboard Owner</title>
 
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css"
+    >
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
+        body{
+            font-family:Arial,sans-serif;
+            background:#f4f7fb;
+            color:#1f2937;
         }
 
-        .topbar {
-            height: 70px;
-            background: #0d6efd;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        .topbar{
+            height:70px;
+            background:#0d6efd;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 30px;
+            box-shadow:0 2px 10px rgba(0,0,0,.1);
         }
 
-        .brand {
-            font-size: 22px;
-            font-weight: bold;
+        .brand{
+            font-size:22px;
+            font-weight:bold;
         }
 
-        .brand span {
-            display: block;
-            font-size: 12px;
-            font-weight: normal;
-            opacity: .85;
+        .brand span{
+            display:block;
+            font-size:12px;
+            font-weight:normal;
+            opacity:.85;
         }
 
-        .user-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .user-area{
+            display:flex;
+            align-items:center;
+            gap:15px;
         }
 
-        .role {
-            background: rgba(255,255,255,.18);
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+        .role{
+            background:rgba(255,255,255,.18);
+            padding:7px 12px;
+            border-radius:20px;
+            font-size:12px;
         }
 
-        .logout {
-            border: none;
-            background: white;
-            color: #0d6efd;
-            padding: 9px 15px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
+        .logout{
+            border:none;
+            background:white;
+            color:#0d6efd;
+            padding:9px 15px;
+            border-radius:7px;
+            cursor:pointer;
+            font-weight:bold;
         }
 
-        .container {
-            padding: 30px;
-            max-width: 1400px;
-            margin: auto;
+        .logout:hover{
+            opacity:.9;
         }
 
-        .welcome {
-            margin-bottom: 25px;
+        .container{
+            padding:30px;
+            max-width:1400px;
+            margin:auto;
         }
 
-        .welcome h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
+        .welcome{
+            margin-bottom:25px;
         }
 
-        .welcome p {
-            color: #6b7280;
+        .welcome h1{
+            font-size:28px;
+            margin-bottom:5px;
         }
 
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+        .welcome p{
+            color:#6b7280;
         }
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        /* =========================
+           SUMMARY CARDS
+        ========================== */
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+            margin-bottom:30px;
         }
 
-        .card-title {
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 10px;
+        .card{
+            background:white;
+            border-radius:12px;
+            padding:22px;
+            box-shadow:0 3px 12px rgba(0,0,0,.06);
         }
 
-        .card-value {
-            font-size: 27px;
-            font-weight: bold;
+        .card-title{
+            color:#6b7280;
+            font-size:14px;
+            margin-bottom:10px;
         }
 
-        .blue {
-            border-left: 5px solid #0d6efd;
+        .card-value{
+            font-size:27px;
+            font-weight:bold;
         }
 
-        .green {
-            border-left: 5px solid #16a34a;
+        .blue{
+            border-left:5px solid #0d6efd;
         }
 
-        .orange {
-            border-left: 5px solid #f59e0b;
+        .green{
+            border-left:5px solid #16a34a;
         }
 
-        .red {
-            border-left: 5px solid #dc2626;
+        .orange{
+            border-left:5px solid #f59e0b;
         }
 
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+        .red{
+            border-left:5px solid #dc2626;
         }
 
-        .menu {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
-            transition: .2s;
+        /* =========================
+           MENU
+        ========================== */
+
+        .menu-grid{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
         }
 
-        .menu:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0,0,0,.1);
+        .menu{
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            cursor:pointer;
+            box-shadow:0 3px 12px rgba(0,0,0,.06);
+            transition:.2s;
         }
 
-        .menu-icon {
-            font-size: 30px;
-            margin-bottom: 12px;
+        .menu:hover{
+            transform:translateY(-3px);
+            box-shadow:0 6px 18px rgba(0,0,0,.1);
         }
 
-        .menu h3 {
-            margin-bottom: 7px;
+        .menu-icon{
+            font-size:30px;
+            margin-bottom:12px;
         }
 
-        .menu p {
-            font-size: 13px;
-            color: #6b7280;
+        .menu h3{
+            margin-bottom:7px;
         }
 
-        #loading {
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
+        .menu p{
+            font-size:13px;
+            color:#6b7280;
         }
 
-        #dashboard {
-            display: none;
+        /* =========================
+           PENGELUARAN HIGHLIGHT
+        ========================== */
+
+        .menu.pengeluaran{
+            border-left:5px solid #16a34a;
         }
 
-        @media(max-width: 1000px) {
+        .menu.pengeluaran .menu-icon{
+            color:#16a34a;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        #loading{
+            text-align:center;
+            padding:40px;
+            color:#6b7280;
+        }
+
+        #dashboard{
+            display:none;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media(max-width:1000px){
+
             .cards,
-            .menu-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .menu-grid{
+                grid-template-columns:repeat(2,1fr);
             }
+
         }
 
-        @media(max-width: 600px) {
-            .topbar {
-                padding: 0 15px;
+        @media(max-width:600px){
+
+            .topbar{
+                padding:0 15px;
             }
 
-            .container {
-                padding: 20px 15px;
+            .container{
+                padding:20px 15px;
             }
 
             .cards,
-            .menu-grid {
-                grid-template-columns: 1fr;
+            .menu-grid{
+                grid-template-columns:1fr;
             }
 
-            .brand {
-                font-size: 18px;
+            .brand{
+                font-size:18px;
             }
+
+            .role{
+                display:none;
+            }
+
         }
+
     </style>
+
 </head>
 
+
 <body>
+
+
+    <!-- =========================
+         TOPBAR
+    ========================== -->
 
     <header class="topbar">
 
         <div class="brand">
+
             WAT ERP
-            <span>Technician Control System</span>
+
+            <span>
+                Technician Control System
+            </span>
+
         </div>
 
+
         <div class="user-area">
-            <div class="role">OWNER</div>
-            <button class="logout" id="logoutButton">
+
+            <div class="role">
+                OWNER
+            </div>
+
+            <button
+                class="logout"
+                id="logoutButton"
+            >
                 LOGOUT
             </button>
+
         </div>
 
     </header>
 
 
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
     <main class="container">
 
+
         <div id="loading">
+
             Memuat dashboard...
+
         </div>
 
 
+
         <div id="dashboard">
+
+
+            <!-- =========================
+                 WELCOME
+            ========================== -->
 
             <section class="welcome">
 
@@ -240,9 +326,15 @@
             </section>
 
 
-            <!-- RINGKASAN -->
+
+            <!-- =========================
+                 SUMMARY
+            ========================== -->
 
             <section class="cards">
+
+
+                <!-- CUSTOMER -->
 
                 <div class="card blue">
 
@@ -250,12 +342,18 @@
                         Total Customer
                     </div>
 
-                    <div class="card-value" id="totalCustomer">
+                    <div
+                        class="card-value"
+                        id="totalCustomer"
+                    >
                         0
                     </div>
 
                 </div>
 
+
+
+                <!-- JOB -->
 
                 <div class="card green">
 
@@ -263,12 +361,18 @@
                         Total Job
                     </div>
 
-                    <div class="card-value" id="totalJobs">
+                    <div
+                        class="card-value"
+                        id="totalJobs"
+                    >
                         0
                     </div>
 
                 </div>
 
+
+
+                <!-- INVOICE -->
 
                 <div class="card orange">
 
@@ -276,12 +380,18 @@
                         Invoice
                     </div>
 
-                    <div class="card-value" id="totalInvoices">
+                    <div
+                        class="card-value"
+                        id="totalInvoices"
+                    >
                         0
                     </div>
 
                 </div>
 
+
+
+                <!-- TEKNISI -->
 
                 <div class="card red">
 
@@ -289,20 +399,33 @@
                         Teknisi Aktif
                     </div>
 
-                    <div class="card-value" id="totalTechnicians">
+                    <div
+                        class="card-value"
+                        id="totalTechnicians"
+                    >
                         0
                     </div>
 
                 </div>
 
+
             </section>
 
 
-            <!-- MENU OWNER -->
+
+            <!-- =========================
+                 MENU OWNER
+            ========================== -->
 
             <section class="menu-grid">
 
-                <div class="menu" onclick="goTo('customer.html')">
+
+                <!-- CUSTOMER -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('customer.html')"
+                >
 
                     <div class="menu-icon">
                         👥
@@ -319,7 +442,13 @@
                 </div>
 
 
-                <div class="menu" onclick="goTo('jobs.html')">
+
+                <!-- JOBS -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('jobs.html')"
+                >
 
                     <div class="menu-icon">
                         🔧
@@ -336,7 +465,13 @@
                 </div>
 
 
-                <div class="menu" onclick="goTo('invoice.html')">
+
+                <!-- INVOICE -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('invoice.html')"
+                >
 
                     <div class="menu-icon">
                         🧾
@@ -353,7 +488,13 @@
                 </div>
 
 
-               <div class="menu" onclick="goTo('teknisi.html')">
+
+                <!-- TEKNISI -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('teknisi.html')"
+                >
 
                     <div class="menu-icon">
                         👨‍🔧
@@ -370,7 +511,38 @@
                 </div>
 
 
-                <div class="menu" onclick="goTo('reports.html')">
+
+                <!-- =====================
+                     PENGELUARAN BARU
+                ====================== -->
+
+                <div
+                    class="menu pengeluaran"
+                    onclick="goTo('pengeluaran.html')"
+                >
+
+                    <div class="menu-icon">
+                        💰
+                    </div>
+
+                    <h3>
+                        Pengeluaran
+                    </h3>
+
+                    <p>
+                        Kelola belanja material dan biaya operasional.
+                    </p>
+
+                </div>
+
+
+
+                <!-- LAPORAN -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('reports.html')"
+                >
 
                     <div class="menu-icon">
                         📊
@@ -381,13 +553,19 @@
                     </h3>
 
                     <p>
-                        Lihat laporan operasional.
+                        Lihat laporan pendapatan, HPP dan laba rugi.
                     </p>
 
                 </div>
 
 
-                <div class="menu" onclick="goTo('audit-logs.html')">
+
+                <!-- AUDIT LOG -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('audit-logs.html')"
+                >
 
                     <div class="menu-icon">
                         🔐
@@ -404,7 +582,13 @@
                 </div>
 
 
-                <div class="menu" onclick="goTo('settings.html')">
+
+                <!-- SETTINGS -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('settings.html')"
+                >
 
                     <div class="menu-icon">
                         ⚙️
@@ -421,7 +605,13 @@
                 </div>
 
 
-                <div class="menu" onclick="goTo('index.html')">
+
+                <!-- HOME -->
+
+                <div
+                    class="menu"
+                    onclick="goTo('index.html')"
+                >
 
                     <div class="menu-icon">
                         🏠
@@ -437,175 +627,350 @@
 
                 </div>
 
+
             </section>
 
+
         </div>
+
 
     </main>
 
 
-    <!-- SUPABASE -->
+
+    <!-- =========================
+         SUPABASE
+    ========================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- CONFIG -->
 
     <script src="assets/js/config.js"></script>
 
 
+
     <script>
+
+        /* =====================================
+           SUPABASE CLIENT
+        ===================================== */
 
         const {
             createClient
         } = window.supabase;
 
 
-        const supabaseClient = createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+        const supabaseClient =
+            createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
 
 
-        async function checkOwner() {
 
-            const {
-                data: {
-                    user
+        /* =====================================
+           CHECK OWNER
+        ===================================== */
+
+        async function checkOwner(){
+
+            try{
+
+                const {
+                    data:{
+                        user
+                    }
+                } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+
+
+                /* =========================
+                   BELUM LOGIN
+                ========================== */
+
+                if(!user){
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
                 }
-            } = await supabaseClient.auth.getUser();
 
 
-            if (!user) {
 
-                window.location.href = "login.html";
+                /* =========================
+                   GET PROFILE
+                ========================== */
 
-                return;
+                const {
+                    data:profile,
+                    error
+                } =
+                await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "full_name,email,role,status"
+                    )
+                    .eq(
+                        "id",
+                        user.id
+                    )
+                    .single();
+
+
+
+                if(
+                    error ||
+                    !profile
+                ){
+
+                    alert(
+                        "Profile user tidak ditemukan."
+                    );
+
+                    await supabaseClient
+                        .auth
+                        .signOut();
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+
+                /* =========================
+                   ROLE CHECK
+                ========================== */
+
+                if(
+                    profile.role !==
+                    "OWNER"
+                ){
+
+                    alert(
+                        "Akses ditolak. Halaman ini hanya untuk OWNER."
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+
+                /* =========================
+                   STATUS CHECK
+                ========================== */
+
+                if(
+                    profile.status !==
+                    "ACTIVE"
+                ){
+
+                    alert(
+                        "Akun Anda tidak aktif."
+                    );
+
+                    await supabaseClient
+                        .auth
+                        .signOut();
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+
+                /* =========================
+                   WELCOME
+                ========================== */
+
+                document.getElementById(
+                    "welcomeText"
+                ).textContent =
+
+                    "Selamat datang, " +
+
+                    (
+                        profile.full_name ||
+                        "Owner"
+                    ) +
+
+                    ".";
+
+
+
+                /* =========================
+                   LOAD STATISTICS
+                ========================== */
+
+                await loadStatistics();
+
+
+
+                /* =========================
+                   SHOW DASHBOARD
+                ========================== */
+
+                document.getElementById(
+                    "loading"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "dashboard"
+                ).style.display =
+                    "block";
 
             }
 
+            catch(error){
 
-            const {
-                data: profile,
-                error
-            } = await supabaseClient
-                .from("profiles")
-                .select("full_name,email,role,status")
-                .eq("id", user.id)
-                .single();
+                console.error(
+                    "Gagal memuat dashboard:",
+                    error
+                );
 
-
-            if (error || !profile) {
-
-                alert("Profile user tidak ditemukan.");
-
-                await supabaseClient.auth.signOut();
-
-                window.location.href = "login.html";
-
-                return;
+                alert(
+                    "Terjadi kesalahan saat memuat dashboard."
+                );
 
             }
-
-
-            if (profile.role !== "OWNER") {
-
-                alert("Akses ditolak. Halaman ini hanya untuk OWNER.");
-
-                window.location.href = "login.html";
-
-                return;
-
-            }
-
-
-            if (profile.status !== "ACTIVE") {
-
-                alert("Akun Anda tidak aktif.");
-
-                await supabaseClient.auth.signOut();
-
-                window.location.href = "login.html";
-
-                return;
-
-            }
-
-
-            document.getElementById("welcomeText").textContent =
-                "Selamat datang, " +
-                (profile.full_name || "Owner") +
-                ".";
-
-
-            await loadStatistics();
-
-
-            document.getElementById("loading").style.display = "none";
-
-            document.getElementById("dashboard").style.display = "block";
 
         }
 
 
-        async function loadStatistics() {
 
-            try {
+        /* =====================================
+           LOAD STATISTICS
+        ===================================== */
+
+        async function loadStatistics(){
+
+            try{
+
+                /* =========================
+                   CUSTOMER
+                ========================== */
 
                 const customers =
                     await supabaseClient
-                    .from("customers")
-                    .select("id", {
-                        count: "exact",
-                        head: true
-                    });
+                        .from("customers")
+                        .select(
+                            "id",
+                            {
+                                count:"exact",
+                                head:true
+                            }
+                        );
 
+
+
+                /* =========================
+                   JOB
+                ========================== */
 
                 const jobs =
                     await supabaseClient
-                    .from("jobs")
-                    .select("id", {
-                        count: "exact",
-                        head: true
-                    });
+                        .from("jobs")
+                        .select(
+                            "id",
+                            {
+                                count:"exact",
+                                head:true
+                            }
+                        );
 
+
+
+                /* =========================
+                   INVOICE
+                ========================== */
 
                 const invoices =
                     await supabaseClient
-                    .from("invoices")
-                    .select("id", {
-                        count: "exact",
-                        head: true
-                    });
+                        .from("invoices")
+                        .select(
+                            "id",
+                            {
+                                count:"exact",
+                                head:true
+                            }
+                        );
 
+
+
+                /* =========================
+                   TEKNISI AKTIF
+                ========================== */
 
                 const technicians =
                     await supabaseClient
-                    .from("profiles")
-                    .select("id", {
-                        count: "exact",
-                        head: true
-                    })
-                    .eq("role", "TEKNISI")
-                    .eq("status", "ACTIVE");
+                        .from("profiles")
+                        .select(
+                            "id",
+                            {
+                                count:"exact",
+                                head:true
+                            }
+                        )
+                        .eq(
+                            "role",
+                            "TEKNISI"
+                        )
+                        .eq(
+                            "status",
+                            "ACTIVE"
+                        );
 
 
-                document.getElementById("totalCustomers").textContent =
-                    customers.count ?? 0;
+
+                /* =========================
+                   UPDATE UI
+                ========================== */
+
+                document.getElementById(
+                    "totalCustomer"
+                ).textContent =
+                    customers.count ??
+                    0;
 
 
-                document.getElementById("totalJobs").textContent =
-                    jobs.count ?? 0;
+                document.getElementById(
+                    "totalJobs"
+                ).textContent =
+                    jobs.count ??
+                    0;
 
 
-                document.getElementById("totalInvoices").textContent =
-                    invoices.count ?? 0;
+                document.getElementById(
+                    "totalInvoices"
+                ).textContent =
+                    invoices.count ??
+                    0;
 
 
-                document.getElementById("totalTechnicians").textContent =
-                    technicians.count ?? 0;
+                document.getElementById(
+                    "totalTechnicians"
+                ).textContent =
+                    technicians.count ??
+                    0;
 
+            }
 
-            } catch (error) {
+            catch(error){
 
                 console.error(
                     "Gagal memuat statistik:",
@@ -617,27 +982,52 @@
         }
 
 
+
+        /* =====================================
+           LOGOUT
+        ===================================== */
+
         document
-            .getElementById("logoutButton")
-            .addEventListener("click", async function() {
+            .getElementById(
+                "logoutButton"
+            )
+            .addEventListener(
+                "click",
+                async function(){
 
-                await supabaseClient.auth.signOut();
+                    await supabaseClient
+                        .auth
+                        .signOut();
 
-                window.location.href = "login.html";
+                    window.location.href =
+                        "login.html";
 
-            });
+                }
+            );
 
 
-        function goTo(page) {
 
-            window.location.href = page;
+        /* =====================================
+           NAVIGATION
+        ===================================== */
+
+        function goTo(page){
+
+            window.location.href =
+                page;
 
         }
 
+
+
+        /* =====================================
+           START
+        ===================================== */
 
         checkOwner();
 
     </script>
 
 </body>
+
 </html>
