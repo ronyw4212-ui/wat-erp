@@ -2633,7 +2633,6 @@ function sendReminderWhatsApp(
             customer.whatsapp
         );
 
-
     if(!phone){
 
         alert(
@@ -2643,34 +2642,41 @@ function sendReminderWhatsApp(
         return;
     }
 
-
     const customerName =
         customer.name ||
         "Bapak/Ibu";
 
+    const lastDate =
+        formatDate(
+            reminder.lastDate
+        );
 
     const nextDate =
         formatDate(
             reminder.nextDate
         );
 
-
     const message =
 
-`Halo ${customerName},
+`Halo Bapak/Ibu ${customerName} 👋
 
-Kami dari WAT / Wijaya AC ingin mengingatkan bahwa jadwal maintenance / cuci AC Bapak/Ibu sudah memasuki waktunya.
+Kami dari WAT / Wijaya AC ingin mengingatkan kembali mengenai jadwal perawatan AC Bapak/Ibu.
 
-📅 Jadwal reminder: ${nextDate}
+🧹 Cuci AC terakhir:
+${lastDate}
 
-Kami siap membantu untuk melakukan cuci / maintenance AC agar kondisi unit tetap optimal.
+📅 Perkiraan jadwal cuci berikutnya:
+${nextDate}
 
-Apabila Bapak/Ibu berkenan, kami dapat membantu menjadwalkan kunjungan teknisi.
+Untuk menjaga AC tetap dingin, bersih, dan bekerja optimal, kami menyarankan dilakukan maintenance / cuci AC secara rutin setiap 3 bulan.
 
-Terima kasih.
+Apabila Bapak/Ibu sudah siap melakukan service, kami siap membantu menjadwalkan kunjungan teknisi ke lokasi.
+
+Silakan balas pesan ini untuk menentukan jadwal yang sesuai.
+
+Terima kasih 🙏
 
 WAT / Wijaya AC`;
-
 
     const url =
         "https://wa.me/" +
@@ -2680,12 +2686,10 @@ WAT / Wijaya AC`;
             message
         );
 
-
     window.open(
         url,
         "_blank"
     );
-
 }
 
 
