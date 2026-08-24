@@ -1,18 +1,393 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beranda - WAT ERP</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <title>WAT ERP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#102a43}
+header{background:linear-gradient(90deg,#1257b8,#0878f9);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:20px;font-weight:bold}.brand small{display:block;font-size:11px;font-weight:normal;margin-top:3px}
+.header-right{display:flex;align-items:center;gap:10px}.role{background:rgba(255,255,255,.16);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:bold}
+button{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}.logout{background:#fff;color:#1267e8}
+.container{max-width:1100px;margin:28px auto;padding:0 16px 50px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:18px}
+h1{margin:0 0 5px;font-size:28px}h2{margin:0 0 15px;font-size:19px}
+p{margin:0;color:#627d98}
+.refresh{background:#1267e8;color:#fff}
+.message{display:none;padding:12px 14px;border-radius:8px;margin-bottom:15px;font-size:13px}
+.message.ok{display:block;background:#dcfce7;color:#166534}.message.error{display:block;background:#fee2e2;color:#991b1b}
+.period{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(16,42,67,.08);margin-bottom:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.period-label{font-size:12px;font-weight:bold;color:#627d98;margin-right:4px}
+.period button{background:#e8eef7;color:#102a43}.period button.active{background:#1267e8;color:#fff}
+.custom-period{display:none;gap:8px;align-items:center;margin-left:auto}.custom-period.show{display:flex}
+input,select{padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-family:inherit}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(16,42,67,.08);border-left:4px solid #1267e8}
+.card:nth-child(2){border-left-color:#16a34a}.card:nth-child(3){border-left-color:#f59e0b}.card:nth-child(4){border-left-color:#7c3aed}
+.card:nth-child(5){border-left-color:#0ea5e9}.card:nth-child(6){border-left-color:#dc2626}.card:nth-child(7){border-left-color:#16a34a}.card:nth-child(8){border-left-color:#f97316}
+.card small{color:#627d98;font-size:12px}.card strong{display:block;margin-top:7px;font-size:22px}.card .sub{display:block;margin-top:5px;color:#94a3b8;font-size:11px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.box{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(16,42,67,.08)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #edf2f7;font-size:13px}
+.stat-row:last-child{border-bottom:0}.stat-row b{font-size:14px}.green{color:#15803d}.orange{color:#b45309}.red{color:#b91c1c}.blue{color:#1d4ed8}.muted{color:#627d98}
+.alert-box{border-radius:9px;padding:12px;margin-bottom:10px;background:#f8fafc}
+.alert-box.redbg{background:#fee2e2}.alert-box.orangebg{background:#fff7ed}.alert-box.greenbg{background:#dcfce7}
+.alert-title{font-weight:bold;font-size:13px}.alert-text{font-size:12px;color:#627d98;margin-top:4px}
+.link-btn{background:#e8eef7;color:#102a43;font-size:12px;padding:8px 11px;margin-top:5px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}th{background:#edf3fa;padding:10px;text-align:left;font-size:11px}td{padding:10px;border-bottom:1px solid #edf2f7;font-size:12px}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:bold}
+.badge.green{background:#dcfce7}.badge.orange{background:#fef3c7}.badge.red{background:#fee2e2}.badge.blue{background:#dbeafe}.badge.gray{background:#e2e8f0;color:#475569}
+.empty{text-align:center;padding:22px;color:#627d98}
+.menu-box{margin-top:18px}
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.menu-item{border:1px solid #dbe4ef;border-radius:10px;padding:14px;text-decoration:none;color:#102a43;background:#fff;transition:.15s}
+.menu-item:hover{border-color:#1267e8;box-shadow:0 2px 8px rgba(18,103,232,.12)}
+.menu-icon{font-size:22px;margin-bottom:8px}.menu-title{font-weight:bold;font-size:13px}.menu-desc{font-size:10px;color:#627d98;margin-top:3px}
+.footer-note{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.menu-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.cards,.grid2,.menu-grid{grid-template-columns:1fr}.top{flex-direction:column}.custom-period{margin-left:0;width:100%;flex-wrap:wrap}.custom-period input{flex:1;min-width:130px}}
+</style>
 </head>
 
 <body>
+<header>
+  <div class="brand">WAT ERP<small>Beranda & Control Center</small></div>
+  <div class="header-right">
+    <span class="role" id="userName">OWNER</span>
+    <button class="logout" onclick="logout()">LOGOUT</button>
+  </div>
+</header>
 
-    <h1>WAT ERP</h1>
-    <p>Wijaya Anugrah Teknik</p>
+<div class="container">
+  <div class="top">
+    <div>
+      <h1>Beranda</h1>
+      <p>Ringkasan seluruh kegiatan operasional dan keuangan WAT ERP.</p>
+    </div>
+    <button class="refresh" id="refreshButton" onclick="loadAll()">↻ Refresh Data</button>
+  </div>
 
-    <p>Technician Control System</p>
+  <div id="message" class="message"></div>
 
+  <div class="period">
+    <span class="period-label">PERIODE</span>
+    <button data-period="today" onclick="setPeriod('today')">Hari Ini</button>
+    <button data-period="week" onclick="setPeriod('week')">Minggu Ini</button>
+    <button data-period="month" onclick="setPeriod('month')">Bulan Ini</button>
+    <button data-period="year" onclick="setPeriod('year')">Tahun Ini</button>
+    <button data-period="custom" onclick="setPeriod('custom')">Custom</button>
+    <div class="custom-period" id="customPeriod">
+      <input type="date" id="customFrom">
+      <span>-</span>
+      <input type="date" id="customTo">
+      <button class="refresh" onclick="applyCustom()">Terapkan</button>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><small>Total Customer</small><strong id="totalCustomers">0</strong><span class="sub">seluruh customer</span></div>
+    <div class="card"><small>Pekerjaan</small><strong id="totalJobs">0</strong><span class="sub">sesuai periode</span></div>
+    <div class="card"><small>Teknisi Aktif</small><strong id="activeTechnicians">0</strong><span class="sub">status aktif</span></div>
+    <div class="card"><small>Invoice</small><strong id="totalInvoices">0</strong><span class="sub">sesuai periode</span></div>
+    <div class="card"><small>Pendapatan</small><strong id="revenue">Rp 0</strong><span class="sub">pembayaran masuk</span></div>
+    <div class="card"><small>Pengeluaran</small><strong id="expenses">Rp 0</strong><span class="sub">belanja + operasional</span></div>
+    <div class="card"><small>Laba Bersih</small><strong id="profit">Rp 0</strong><span class="sub">pendapatan - pengeluaran</span></div>
+    <div class="card"><small>Reminder</small><strong id="reminderCount">0</strong><span class="sub">perlu ditindaklanjuti</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h2>🔧 Ringkasan Pekerjaan</h2>
+      <div class="stat-row"><span>Total Pekerjaan</span><b id="jobTotal">0</b></div>
+      <div class="stat-row"><span class="green">Pekerjaan Selesai</span><b id="jobCompleted">0</b></div>
+      <div class="stat-row"><span class="orange">Sedang Berjalan</span><b id="jobProgress">0</b></div>
+      <div class="stat-row"><span class="blue">Belum Dikerjakan</span><b id="jobPending">0</b></div>
+      <div class="stat-row"><span class="red">Dibatalkan</span><b id="jobCancelled">0</b></div>
+      <div class="stat-row"><span class="red">Belum Assign Teknisi</span><b id="jobUnassigned">0</b></div>
+    </div>
+
+    <div class="box">
+      <h2>💰 Ringkasan Keuangan</h2>
+      <div class="stat-row"><span>Pendapatan / Pembayaran Masuk</span><b id="financeRevenue">Rp 0</b></div>
+      <div class="stat-row"><span>Total Pengeluaran</span><b id="financeExpense">Rp 0</b></div>
+      <div class="stat-row"><span class="green">Laba Bersih</span><b id="financeProfit">Rp 0</b></div>
+      <div class="stat-row"><span>Invoice Lunas</span><b id="invoicePaid">0</b></div>
+      <div class="stat-row"><span class="orange">Invoice Belum Lunas</span><b id="invoiceUnpaid">0</b></div>
+      <div class="stat-row"><span class="red">Piutang</span><b id="receivable">Rp 0</b></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h2>🔔 Reminder Service AC</h2>
+      <div id="reminderSummary"><div class="empty">Memuat reminder...</div></div>
+      <button class="link-btn" onclick="location.href='customer.html'">Lihat Customer & Reminder →</button>
+    </div>
+
+    <div class="box">
+      <h2>📋 Aktivitas Terbaru</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waktu</th><th>Aktivitas</th><th>Modul</th></tr></thead>
+          <tbody id="activityTable"><tr><td colspan="3" class="empty">Memuat aktivitas...</td></tr></tbody>
+        </table>
+      </div>
+      <button class="link-btn" onclick="location.href='audit-log.html'">Lihat Audit Log →</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>📅 Pekerjaan Terdekat</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Jadwal</th><th>Job</th><th>Customer</th><th>Jenis</th><th>Status</th></tr></thead>
+        <tbody id="upcomingJobs"><tr><td colspan="5" class="empty">Memuat jadwal...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="link-btn" onclick="location.href='jobs.html'">Lihat Semua Pekerjaan →</button>
+  </div>
+
+  <div class="box menu-box">
+    <h2>Menu Utama</h2>
+    <div class="menu-grid">
+      <a class="menu-item" href="dashboard-owner.html"><div class="menu-icon">🏠</div><div class="menu-title">Beranda</div><div class="menu-desc">Pusat informasi WAT ERP</div></a>
+      <a class="menu-item" href="customer.html"><div class="menu-icon">👥</div><div class="menu-title">Customer</div><div class="menu-desc">Customer & reminder</div></a>
+      <a class="menu-item" href="jobs.html"><div class="menu-icon">🔧</div><div class="menu-title">Pekerjaan</div><div class="menu-desc">Jadwal & pekerjaan</div></a>
+      <a class="menu-item" href="invoice.html"><div class="menu-icon">🧾</div><div class="menu-title">Invoice</div><div class="menu-desc">Invoice & pembayaran</div></a>
+      <a class="menu-item" href="technician.html"><div class="menu-icon">👨‍🔧</div><div class="menu-title">Teknisi</div><div class="menu-desc">Kelola teknisi</div></a>
+      <a class="menu-item" href="pengeluaran.html"><div class="menu-icon">💸</div><div class="menu-title">Pengeluaran</div><div class="menu-desc">Belanja & operasional</div></a>
+      <a class="menu-item" href="reports.html"><div class="menu-icon">📊</div><div class="menu-title">Laporan</div><div class="menu-desc">Laporan usaha</div></a>
+      <a class="menu-item" href="audit-log.html"><div class="menu-icon">🛡️</div><div class="menu-title">Audit Log</div><div class="menu-desc">Aktivitas sistem</div></a>
+    </div>
+  </div>
+
+  <div class="footer-note">WAT ERP • Control Center Owner</div>
+</div>
+
+<script>
+const SUPABASE_URL = "PASTE_URL_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
+const SUPABASE_ANON_KEY = "PASTE_ANON_KEY_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
+const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+let currentUser=null;
+let periodMode="month";
+let periodFrom="";
+let periodTo="";
+let state={customers:[],jobs:[],invoices:[],payments:[],expenses:[],reminders:[],audit:[]};
+
+document.addEventListener("DOMContentLoaded",start);
+
+async function start(){
+  try{
+    const {data,error}=await client.auth.getUser();
+    if(error) throw error;
+    if(!data.user){location.href="login.html";return;}
+    currentUser=data.user;
+    document.getElementById("userName").textContent=currentUser.email||"OWNER";
+    setPeriod("month");
+    await loadAll();
+  }catch(e){console.error(e);showMessage("Gagal memuat dashboard: "+e.message,"error")}
+}
+
+async function loadAll(){
+  const btn=document.getElementById("refreshButton");
+  btn.disabled=true;btn.textContent="Memuat...";
+  try{
+    const results=await Promise.all([
+      safeQuery("customers", q=>q.select("*").order("created_at",{ascending:false})),
+      safeQuery("jobs", q=>q.select("*").order("scheduled_at",{ascending:true})),
+      safeQuery("invoices", q=>q.select("*").order("created_at",{ascending:false})),
+      safeQuery("invoice_payments", q=>q.select("*").order("payment_date",{ascending:false})),
+      safeQuery("expenses", q=>q.select("*").order("expense_date",{ascending:false})),
+      safeQuery("audit_logs", q=>q.select("*").order("created_at",{ascending:false}).limit(10)),
+      safeQuery("technicians", q=>q.select("*"))
+    ]);
+    state.customers=results[0]||[];
+    state.jobs=results[1]||[];
+    state.invoices=results[2]||[];
+    state.payments=results[3]||[];
+    state.expenses=results[4]||[];
+    state.audit=results[5]||[];
+    state.technicians=results[6]||[];
+    calculate();
+    renderActivities();
+    renderUpcomingJobs();
+  }catch(e){console.error(e);showMessage("Gagal mengambil data dashboard: "+e.message,"error")}
+  finally{btn.disabled=false;btn.textContent="↻ Refresh Data"}
+}
+
+async function safeQuery(table,fn){
+  const {data,error}=await fn(client.from(table));
+  if(error){
+    console.warn("Dashboard query",table,error.message);
+    return [];
+  }
+  return data||[];
+}
+
+function getPeriod(){
+  if(periodMode==="custom") return {from:periodFrom,to:periodTo};
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+  let from,to;
+  if(periodMode==="today"){from=new Date(y,m,d);to=new Date(y,m,d,23,59,59)}
+  else if(periodMode==="week"){
+    const day=(now.getDay()+6)%7;
+    from=new Date(y,m,d-day);to=new Date(from);to.setDate(from.getDate()+6);to.setHours(23,59,59);
+  }else if(periodMode==="year"){from=new Date(y,0,1);to=new Date(y,11,31,23,59,59)}
+  else{from=new Date(y,m,1);to=new Date(y,m+1,0,23,59,59)}
+  return {from:dateKey(from),to:dateKey(to)};
+}
+function dateKey(d){return d instanceof Date?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:d}
+function inDateRange(value,from,to){
+  if(!value)return false;
+  const s=String(value).slice(0,10);
+  return (!from||s>=from)&&(!to||s<=to);
+}
+
+function calculate(){
+  const {from,to}=getPeriod();
+  const jobs=state.jobs.filter(x=>inDateRange(x.scheduled_at||x.created_at,from,to));
+  const invoices=state.invoices.filter(x=>inDateRange(x.issued_at||x.created_at,from,to));
+  const payments=state.payments.filter(x=>inDateRange(x.payment_date,from,to));
+  const expenses=state.expenses.filter(x=>inDateRange(x.expense_date,from,to));
+
+  const revenue=payments.reduce((a,x)=>a+Number(x.amount||0),0);
+  const expense=expenses.reduce((a,x)=>a+Number(x.amount||0),0);
+  const profit=revenue-expense;
+
+  setText("totalCustomers",state.customers.length);
+  setText("totalJobs",jobs.length);
+  setText("activeTechnicians",(state.technicians||[]).filter(x=>String(x.status||"").toUpperCase()==="ACTIVE").length);
+  setText("totalInvoices",invoices.length);
+  setText("revenue",formatRupiah(revenue));
+  setText("expenses",formatRupiah(expense));
+  setText("profit",formatRupiah(profit));
+  setText("financeRevenue",formatRupiah(revenue));
+  setText("financeExpense",formatRupiah(expense));
+  setText("financeProfit",formatRupiah(profit));
+
+  const completed=jobs.filter(x=>statusIs(x,"COMPLETED","SELESAI")).length;
+  const cancelled=jobs.filter(x=>statusIs(x,"CANCELLED","CANCELED","DIBATALKAN")).length;
+  const progress=jobs.filter(x=>statusIs(x,"IN_PROGRESS","ONGOING","PROCESS","BERJALAN","PROSES")).length;
+  const pending=jobs.length-completed-cancelled-progress;
+  const unassigned=jobs.filter(x=>!x.technician_id&&!x.assigned_to).length;
+
+  setText("jobTotal",jobs.length);setText("jobCompleted",completed);setText("jobProgress",progress);
+  setText("jobPending",Math.max(0,pending));setText("jobCancelled",cancelled);setText("jobUnassigned",unassigned);
+
+  const paidInvoices=invoices.filter(x=>String(x.status||"").toUpperCase()==="PAID").length;
+  const unpaid=invoices.filter(x=>String(x.status||"").toUpperCase()!=="PAID").length;
+  const paidByInvoice={};
+  state.payments.forEach(p=>{paidByInvoice[p.invoice_id]=(paidByInvoice[p.invoice_id]||0)+Number(p.amount||0)});
+  const receivable=invoices.reduce((a,x)=>Math.max(0,Number(x.total||0)-(paidByInvoice[x.id]||0)),0);
+  setText("invoicePaid",paidInvoices);setText("invoiceUnpaid",unpaid);setText("receivable",formatRupiah(receivable));
+
+  state.reminders=buildReminders();
+  setText("reminderCount",state.reminders.filter(x=>x.days<=30).length);
+  renderReminderSummary();
+}
+
+function statusIs(item,...statuses){
+  const s=String(item.status||"").toUpperCase().replace(/[\s-]+/g,"_");
+  return statuses.some(x=>s===x.replace(/[\s-]+/g,"_"));
+}
+
+function buildReminders(){
+  const latest={};
+  state.jobs.forEach(j=>{
+    if(!statusIs(j,"COMPLETED","SELESAI"))return;
+    const cid=j.customer_id||("name:"+String(j.customer_name||"").toLowerCase());
+    const dt=j.completed_at||j.updated_at||j.scheduled_at;
+    if(!dt)return;
+    if(!latest[cid]||new Date(dt)>new Date(latest[cid].date)) latest[cid]={job:j,date:dt};
+  });
+  const now=new Date();now.setHours(0,0,0,0);
+  return Object.values(latest).map(x=>{
+    const next=new Date(x.date);next.setMonth(next.getMonth()+3);next.setHours(0,0,0,0);
+    const days=Math.ceil((next-now)/86400000);
+    return {job:x.job,date:x.date,next,days,name:x.job.customer_name||findCustomerName(x.job.customer_id)||"Customer",phone:x.job.customer_phone||findCustomerPhone(x.job.customer_id)};
+  }).filter(x=>x.days<=30).sort((a,b)=>a.days-b.days);
+}
+function findCustomerName(id){const c=state.customers.find(x=>x.id===id);return c?.name||c?.customer_name||"-"}
+function findCustomerPhone(id){const c=state.customers.find(x=>x.id===id);return c?.whatsapp||c?.phone||"-"}
+
+function renderReminderSummary(){
+  const el=document.getElementById("reminderSummary");
+  const r=state.reminders;
+  if(!r.length){el.innerHTML='<div class="alert-box greenbg"><div class="alert-title">✓ Tidak ada reminder dalam 30 hari</div><div class="alert-text">Belum ada customer yang perlu ditindaklanjuti.</div></div>';return}
+  let html="";
+  const overdue=r.filter(x=>x.days<0).length,today=r.filter(x=>x.days===0).length,soon=r.filter(x=>x.days>0).length;
+  if(overdue)html+=`<div class="alert-box redbg"><div class="alert-title">🔴 ${overdue} reminder terlambat</div><div class="alert-text">Customer sudah melewati jadwal cuci 3 bulan.</div></div>`;
+  if(today)html+=`<div class="alert-box redbg"><div class="alert-title">🔔 ${today} reminder hari ini</div><div class="alert-text">Segera hubungi customer.</div></div>`;
+  if(soon)html+=`<div class="alert-box orangebg"><div class="alert-title">🟠 ${soon} reminder dalam 30 hari</div><div class="alert-text">Siapkan follow-up customer.</div></div>`;
+  html+='<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Reminder</th><th>Status</th></tr></thead><tbody>';
+  r.slice(0,5).forEach(x=>{
+    const label=x.days<0?`Lewat ${Math.abs(x.days)} hari`:x.days===0?"Hari ini":`${x.days} hari lagi`;
+    const cls=x.days<=0?"red":"orange";
+    html+=`<tr><td><b>${escapeHtml(x.name)}</b></td><td>${formatDateObj(x.next)}</td><td><span class="badge ${cls}">${label}</span></td></tr>`;
+  });
+  html+='</tbody></table></div>';
+  el.innerHTML=html;
+}
+
+function renderActivities(){
+  const tb=document.getElementById("activityTable");
+  if(!state.audit.length){tb.innerHTML='<tr><td colspan="3" class="empty">Belum ada aktivitas audit.</td></tr>';return}
+  tb.innerHTML=state.audit.slice(0,8).map(x=>{
+    const action=String(x.action||"").toUpperCase();
+    const cls=action==="DELETE"?"red":action==="CREATE"?"green":"blue";
+    return `<tr><td>${formatDateTime(x.created_at)}</td><td><span class="badge ${cls}">${escapeHtml(action)}</span></td><td>${escapeHtml(moduleName(x.entity_type))}</td></tr>`;
+  }).join("");
+}
+
+function renderUpcomingJobs(){
+  const tb=document.getElementById("upcomingJobs");
+  const now=new Date();
+  const list=state.jobs.filter(x=>x.scheduled_at&&new Date(x.scheduled_at)>=now&&!statusIs(x,"CANCELLED","CANCELED","DIBATALKAN")).sort((a,b)=>new Date(a.scheduled_at)-new Date(b.scheduled_at)).slice(0,8);
+  if(!list.length){tb.innerHTML='<tr><td colspan="5" class="empty">Belum ada jadwal pekerjaan terdekat.</td></tr>';return}
+  tb.innerHTML=list.map(x=>{
+    const s=String(x.status||"").toUpperCase();
+    const cls=s.includes("COMPLETE")||s.includes("SELESAI")?"green":s.includes("PROGRESS")||s.includes("ONGOING")||s.includes("BERJALAN")?"orange":"blue";
+    return `<tr><td>${formatDateTime(x.scheduled_at)}</td><td><b>${escapeHtml(x.job_code||"-")}</b></td><td>${escapeHtml(x.customer_name||findCustomerName(x.customer_id)||"-")}</td><td>${escapeHtml(x.job_type||x.title||"-")}</td><td><span class="badge ${cls}">${escapeHtml(x.status||"-")}</span></td></tr>`;
+  }).join("");
+}
+
+function moduleName(v){
+  const m=String(v||"").toLowerCase();
+  const map={expenses:"Pengeluaran",jobs:"Pekerjaan",job_reports:"Laporan Job",customers:"Customer",invoices:"Invoice",invoice_payments:"Pembayaran",materials:"Material",material_usage:"Pemakaian Material",stock_movements:"Stok",technicians:"Teknisi",devices:"Device"};
+  return map[m]||v||"-";
+}
+
+function setPeriod(mode){
+  periodMode=mode;
+  document.querySelectorAll(".period button[data-period]").forEach(b=>b.classList.toggle("active",b.dataset.period===mode));
+  document.getElementById("customPeriod").classList.toggle("show",mode==="custom");
+  if(mode!=="custom")calculate();
+}
+function applyCustom(){
+  const f=document.getElementById("customFrom").value,t=document.getElementById("customTo").value;
+  if(!f||!t||f>t){showMessage("Tanggal custom tidak valid.","error");return}
+  periodFrom=f;periodTo=t;periodMode="custom";
+  document.querySelectorAll(".period button[data-period]").forEach(b=>b.classList.toggle("active",b.dataset.period==="custom"));
+  calculate();
+}
+
+function setText(id,v){document.getElementById(id).textContent=v}
+function formatRupiah(v){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v||0))}
+function formatDateObj(d){return new Intl.DateTimeFormat("id-ID",{day:"2-digit",month:"short",year:"numeric"}).format(d)}
+function formatDateTime(v){if(!v)return"-";return new Intl.DateTimeFormat("id-ID",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date(v))}
+function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function showMessage(text,type){const b=document.getElementById("message");b.textContent=text;b.className="message "+type;b.style.display="block";setTimeout(()=>b.style.display="none",5000)}
+async function logout(){await client.auth.signOut();location.href="login.html"}
+</script>
 </body>
 </html>
