@@ -6,15 +6,18 @@
 <title>Pengeluaran - WAT ERP</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
     background:#f4f7fb;
-    color:#102a43
+    color:#102a43;
 }
 
 header{
@@ -23,25 +26,25 @@ header{
     padding:16px 28px;
     display:flex;
     justify-content:space-between;
-    align-items:center
+    align-items:center;
 }
 
 .brand{
     font-size:20px;
-    font-weight:bold
+    font-weight:bold;
 }
 
 .brand small{
     display:block;
     font-size:11px;
     margin-top:3px;
-    font-weight:normal
+    font-weight:normal;
 }
 
 .header-right{
     display:flex;
     align-items:center;
-    gap:12px
+    gap:12px;
 }
 
 .role{
@@ -49,7 +52,7 @@ header{
     padding:8px 14px;
     border-radius:20px;
     font-size:12px;
-    font-weight:bold
+    font-weight:bold;
 }
 
 button{
@@ -57,52 +60,52 @@ button{
     border-radius:8px;
     padding:10px 15px;
     font-weight:bold;
-    cursor:pointer
+    cursor:pointer;
 }
 
 button:disabled{
     opacity:.6;
-    cursor:not-allowed
+    cursor:not-allowed;
 }
 
 .logout{
     background:#fff;
-    color:#1267e8
+    color:#1267e8;
 }
 
 .container{
     max-width:1050px;
     margin:28px auto;
-    padding:0 16px 50px
+    padding:0 16px 50px;
 }
 
 .top{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:20px
+    margin-bottom:20px;
 }
 
 h1{
     margin:0 0 5px;
-    font-size:27px
+    font-size:27px;
 }
 
 h2{
     margin:0 0 18px;
-    font-size:20px
+    font-size:20px;
 }
 
 p{
     margin:0;
-    color:#627d98
+    color:#627d98;
 }
 
 .cards{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:15px;
-    margin-bottom:20px
+    margin-bottom:20px;
 }
 
 .card{
@@ -110,25 +113,25 @@ p{
     border-radius:12px;
     padding:20px;
     box-shadow:0 2px 10px rgba(16,42,67,.08);
-    border-left:4px solid #1267e8
+    border-left:4px solid #1267e8;
 }
 
 .card:nth-child(2){
-    border-left-color:#f59e0b
+    border-left-color:#f59e0b;
 }
 
 .card:nth-child(3){
-    border-left-color:#16a34a
+    border-left-color:#16a34a;
 }
 
 .card small{
-    color:#627d98
+    color:#627d98;
 }
 
 .card strong{
     display:block;
     margin-top:8px;
-    font-size:24px
+    font-size:24px;
 }
 
 .box{
@@ -136,24 +139,24 @@ p{
     border-radius:12px;
     padding:20px;
     box-shadow:0 2px 10px rgba(16,42,67,.08);
-    margin-bottom:20px
+    margin-bottom:20px;
 }
 
 .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:14px
+    gap:14px;
 }
 
 .full{
-    grid-column:1/-1
+    grid-column:1/-1;
 }
 
 label{
     display:block;
     font-size:13px;
     font-weight:bold;
-    margin-bottom:6px
+    margin-bottom:6px;
 }
 
 input,
@@ -164,34 +167,41 @@ textarea{
     border:1px solid #cbd5e1;
     border-radius:8px;
     font-family:inherit;
-    background:#fff
+    background:#fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#1267e8;
 }
 
 textarea{
     min-height:85px;
-    resize:vertical
+    resize:vertical;
 }
 
 .actions{
     margin-top:18px;
     display:flex;
     justify-content:flex-end;
-    gap:8px
+    gap:8px;
 }
 
 .primary{
     background:#1267e8;
-    color:#fff
+    color:#fff;
 }
 
 .secondary{
     background:#e8eef7;
-    color:#102a43
+    color:#102a43;
 }
 
 .danger{
     background:#dc2626;
-    color:#fff
+    color:#fff;
 }
 
 .message{
@@ -199,48 +209,48 @@ textarea{
     padding:12px 14px;
     border-radius:8px;
     margin-bottom:15px;
-    font-size:13px
+    font-size:13px;
 }
 
 .message.ok{
     display:block;
     background:#dcfce7;
-    color:#166534
+    color:#166534;
 }
 
 .message.error{
     display:block;
     background:#fee2e2;
-    color:#991b1b
+    color:#991b1b;
 }
 
 .filter{
     display:grid;
     grid-template-columns:1fr 1fr 180px auto;
     gap:10px;
-    margin-bottom:15px
+    margin-bottom:15px;
 }
 
 .table-wrap{
-    overflow-x:auto
+    overflow-x:auto;
 }
 
 table{
     width:100%;
-    border-collapse:collapse
+    border-collapse:collapse;
 }
 
 th{
     background:#edf3fa;
     padding:12px;
     text-align:left;
-    font-size:12px
+    font-size:12px;
 }
 
 td{
     padding:12px;
     border-bottom:1px solid #edf2f7;
-    font-size:13px
+    font-size:13px;
 }
 
 .badge{
@@ -248,60 +258,60 @@ td{
     padding:5px 9px;
     border-radius:20px;
     font-size:11px;
-    font-weight:bold
+    font-weight:bold;
 }
 
 .belanja{
     background:#dbeafe;
-    color:#1d4ed8
+    color:#1d4ed8;
 }
 
 .operasional{
     background:#fef3c7;
-    color:#92400e
+    color:#92400e;
 }
 
 .empty{
     text-align:center;
     padding:28px;
-    color:#627d98
+    color:#627d98;
 }
 
 .total-box{
     background:#f1f6fc;
     border-radius:10px;
     padding:15px;
-    margin-top:15px
+    margin-top:15px;
 }
 
 .total-box small{
     display:block;
     color:#627d98;
-    margin-bottom:5px
+    margin-bottom:5px;
 }
 
 .total-box strong{
-    font-size:22px
+    font-size:22px;
 }
 
 @media(max-width:700px){
 
     .cards,
     .grid{
-        grid-template-columns:1fr
+        grid-template-columns:1fr;
     }
 
     .full{
-        grid-column:auto
+        grid-column:auto;
     }
 
     .filter{
-        grid-template-columns:1fr
+        grid-template-columns:1fr;
     }
 
     .top{
         align-items:flex-start;
-        gap:10px
+        gap:10px;
     }
 }
 </style>
@@ -317,13 +327,17 @@ td{
     </div>
 
     <div class="header-right">
-        <span class="role" id="userName">OWNER</span>
+
+        <span class="role" id="userName">
+            OWNER
+        </span>
 
         <button
             class="logout"
             onclick="logout()">
             LOGOUT
         </button>
+
     </div>
 
 </header>
@@ -335,6 +349,7 @@ td{
 
         <div>
             <h1>Pengeluaran</h1>
+
             <p>
                 Catat belanja dan biaya operasional harian.
             </p>
@@ -343,7 +358,9 @@ td{
         <button
             class="secondary"
             onclick="location.href='dashboard-owner.html'">
+
             ← Dashboard
+
         </button>
 
     </div>
@@ -357,24 +374,41 @@ td{
     <div class="cards">
 
         <div class="card">
-            <small>Total Belanja</small>
+
+            <small>
+                Total Belanja
+            </small>
+
             <strong id="totalBelanja">
                 Rp 0
             </strong>
+
         </div>
 
+
         <div class="card">
-            <small>Total Operasional</small>
+
+            <small>
+                Total Operasional
+            </small>
+
             <strong id="totalOperasional">
                 Rp 0
             </strong>
+
         </div>
 
+
         <div class="card">
-            <small>Total Pengeluaran</small>
+
+            <small>
+                Total Pengeluaran
+            </small>
+
             <strong id="totalPengeluaran">
                 Rp 0
             </strong>
+
         </div>
 
     </div>
@@ -384,7 +418,9 @@ td{
 
     <div class="box">
 
-        <h2>Tambah Pengeluaran</h2>
+        <h2>
+            Tambah Pengeluaran
+        </h2>
 
         <form id="expenseForm">
 
@@ -455,7 +491,7 @@ td{
                     <input
                         type="number"
                         id="amount"
-                        min="0"
+                        min="1"
                         step="1"
                         placeholder="Contoh: 500000"
                         required>
@@ -478,6 +514,8 @@ td{
             </div>
 
 
+            <!-- TOTAL INPUT -->
+
             <div class="total-box">
 
                 <small>
@@ -495,15 +533,20 @@ td{
 
                 <button
                     type="reset"
-                    class="secondary">
+                    class="secondary"
+                    id="resetButton">
+
                     Reset
+
                 </button>
 
                 <button
                     type="submit"
                     class="primary"
                     id="saveButton">
+
                     Simpan Pengeluaran
+
                 </button>
 
             </div>
@@ -513,11 +556,13 @@ td{
     </div>
 
 
-    <!-- FILTER -->
+    <!-- RIWAYAT -->
 
     <div class="box">
 
-        <h2>Riwayat Pengeluaran</h2>
+        <h2>
+            Riwayat Pengeluaran
+        </h2>
 
         <div class="filter">
 
@@ -548,7 +593,9 @@ td{
             <button
                 class="secondary"
                 onclick="resetFilter()">
+
                 Reset
+
             </button>
 
         </div>
@@ -574,11 +621,15 @@ td{
                 <tbody id="expenseTable">
 
                     <tr>
+
                         <td
                             colspan="6"
                             class="empty">
+
                             Memuat data...
+
                         </td>
+
                     </tr>
 
                 </tbody>
@@ -598,24 +649,12 @@ td{
    SUPABASE
 ===================================================== */
 
-/*
-   BRO:
-   ISI DENGAN URL DAN ANON KEY SUPABASE
-   YANG SAMA DENGAN FILE YANG SUDAH BERHASIL.
-*/
+const { createClient } = window.supabase;
 
-const SUPABASE_URL =
-    "PASTE_URL_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
-
-const SUPABASE_ANON_KEY =
-    "PASTE_ANON_KEY_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
-
-
-const client =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+const client = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
 
 let currentUser = null;
@@ -623,7 +662,7 @@ let expenses = [];
 
 
 /* =====================================================
-   START
+   INIT
 ===================================================== */
 
 document.addEventListener(
@@ -636,49 +675,44 @@ async function start(){
 
     setToday();
 
+    updateFormTotal();
+
     try{
 
         const {
             data,
             error
-        } =
-        await client.auth.getUser();
-
+        } = await client.auth.getSession();
 
         if(error){
             throw error;
         }
 
+        if(!data.session){
 
-        if(!data.user){
-
-            location.href =
-                "login.html";
-
+            location.href = "login.html";
             return;
+
         }
 
+        currentUser = data.session.user;
 
-        currentUser =
-            data.user;
-
-
-        document.getElementById(
-            "userName"
-        ).textContent =
-            currentUser.email ||
-            "OWNER";
-
+        document.getElementById("userName")
+            .textContent =
+            currentUser.email || "OWNER";
 
         await loadExpenses();
 
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "INIT ERROR:",
+            error
+        );
 
         showMessage(
-            "Gagal terhubung ke database: " +
+            "Gagal menghubungkan ke database: " +
             error.message,
             "error"
         );
@@ -689,27 +723,25 @@ async function start(){
 
 
 /* =====================================================
-   DEFAULT DATE
+   TANGGAL HARI INI
 ===================================================== */
 
 function setToday(){
 
-    const today =
-        new Date();
+    const today = new Date();
 
     const year =
         today.getFullYear();
 
     const month =
         String(
-            today.getMonth()+1
+            today.getMonth() + 1
         ).padStart(2,"0");
 
     const day =
         String(
             today.getDate()
         ).padStart(2,"0");
-
 
     document.getElementById(
         "expenseDate"
@@ -730,7 +762,6 @@ async function loadExpenses(){
             "expenseTable"
         );
 
-
     table.innerHTML = `
         <tr>
             <td colspan="6" class="empty">
@@ -739,14 +770,12 @@ async function loadExpenses(){
         </tr>
     `;
 
-
     try{
 
         const {
             data,
             error
-        } =
-        await client
+        } = await client
             .from("expenses")
             .select("*")
             .order(
@@ -762,18 +791,13 @@ async function loadExpenses(){
                 }
             );
 
-
         if(error){
             throw error;
         }
 
-
-        expenses =
-            data || [];
-
+        expenses = data || [];
 
         renderExpenses();
-
         updateSummary();
 
     }
@@ -783,7 +807,6 @@ async function loadExpenses(){
             "LOAD EXPENSE ERROR:",
             error
         );
-
 
         table.innerHTML = `
             <tr>
@@ -803,13 +826,19 @@ async function loadExpenses(){
             </tr>
         `;
 
+        showMessage(
+            "Gagal memuat data: " +
+            error.message,
+            "error"
+        );
+
     }
 
 }
 
 
 /* =====================================================
-   SAVE
+   SIMPAN PENGELUARAN
 ===================================================== */
 
 document
@@ -824,58 +853,67 @@ async function saveExpense(event){
 
     event.preventDefault();
 
-
     const date =
-        document
-            .getElementById("expenseDate")
-            .value;
-
+        document.getElementById(
+            "expenseDate"
+        ).value;
 
     const category =
-        document
-            .getElementById("category")
-            .value;
-
+        document.getElementById(
+            "category"
+        ).value;
 
     const description =
-        document
-            .getElementById("description")
-            .value
-            .trim();
-
+        document.getElementById(
+            "description"
+        ).value.trim();
 
     const amount =
         Number(
-            document
-                .getElementById("amount")
-                .value || 0
+            document.getElementById(
+                "amount"
+            ).value
         );
 
-
     const notes =
-        document
-            .getElementById("notes")
-            .value
-            .trim();
+        document.getElementById(
+            "notes"
+        ).value.trim();
 
 
-    if(
-        !date ||
-        !category ||
-        !description
-    ){
+    /* VALIDASI */
+
+    if(!date){
 
         showMessage(
-            "Tanggal, jenis dan keterangan wajib diisi.",
+            "Tanggal wajib diisi.",
             "error"
         );
 
         return;
-
     }
 
+    if(!category){
 
-    if(amount <= 0){
+        showMessage(
+            "Jenis pengeluaran wajib dipilih.",
+            "error"
+        );
+
+        return;
+    }
+
+    if(!description){
+
+        showMessage(
+            "Keterangan wajib diisi.",
+            "error"
+        );
+
+        return;
+    }
+
+    if(!amount || amount <= 0){
 
         showMessage(
             "Nominal harus lebih dari Rp 0.",
@@ -883,7 +921,6 @@ async function saveExpense(event){
         );
 
         return;
-
     }
 
 
@@ -892,9 +929,7 @@ async function saveExpense(event){
             "saveButton"
         );
 
-
-    button.disabled =
-        true;
+    button.disabled = true;
 
     button.textContent =
         "Menyimpan...";
@@ -902,52 +937,82 @@ async function saveExpense(event){
 
     try{
 
-        /*
-          HANYA MENGISI KOLOM YANG
-          KITA BUTUHKAN UNTUK KEUANGAN.
-        */
-
         const payload = {
 
-            expense_date:
-                date,
+            expense_date: date,
 
-            category:
-                category,
+            category: category,
 
-            description:
-                description,
+            description: description,
 
-            amount:
-                amount,
+            amount: amount,
 
-            notes:
-                notes || null,
+            notes: notes || null,
 
-            created_by:
-                currentUser.id
+            created_by: currentUser.id
 
         };
 
 
+        console.log(
+            "PAYLOAD EXPENSE:",
+            payload
+        );
+
+
+        /*
+           INSERT + SELECT
+
+           Kalau berhasil, Supabase
+           harus mengembalikan data.
+        */
+
         const {
+            data,
             error
-        } =
-        await client
+        } = await client
             .from("expenses")
-            .insert(payload);
+            .insert(payload)
+            .select()
+            .single();
 
 
         if(error){
+
+            console.error(
+                "SUPABASE INSERT ERROR:",
+                error
+            );
+
             throw error;
+
         }
 
 
+        if(!data){
+
+            throw new Error(
+                "Data tidak dikembalikan setelah disimpan."
+            );
+
+        }
+
+
+        console.log(
+            "EXPENSE BERHASIL:",
+            data
+        );
+
+
+        /* SUKSES */
+
         showMessage(
-            "Pengeluaran berhasil disimpan.",
+            "✅ Pengeluaran berhasil disimpan.",
             "ok"
         );
 
+
+        /* RESET FORM */
 
         document
             .getElementById(
@@ -958,14 +1023,29 @@ async function saveExpense(event){
 
         setToday();
 
+        updateFormTotal();
 
-        document.getElementById(
-            "formTotal"
-        ).textContent =
-            "Rp 0";
 
+        /*
+           LANGSUNG LOAD ULANG
+           AGAR DATA MUNCUL DI TABEL
+        */
 
         await loadExpenses();
+
+
+        /*
+           Scroll ke riwayat
+        */
+
+        document
+            .getElementById(
+                "expenseTable"
+            )
+            .scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
 
     }
     catch(error){
@@ -977,16 +1057,18 @@ async function saveExpense(event){
 
 
         showMessage(
-            "Gagal menyimpan: " +
-            error.message,
+            "❌ Gagal menyimpan: " +
+            (
+                error.message ||
+                "Unknown error"
+            ),
             "error"
         );
 
     }
     finally{
 
-        button.disabled =
-            false;
+        button.disabled = false;
 
         button.textContent =
             "Simpan Pengeluaran";
@@ -997,64 +1079,115 @@ async function saveExpense(event){
 
 
 /* =====================================================
+   TOTAL TRANSAKSI FORM
+===================================================== */
+
+document
+    .getElementById("amount")
+    .addEventListener(
+        "input",
+        updateFormTotal
+    );
+
+
+function updateFormTotal(){
+
+    const amount =
+        Number(
+            document.getElementById(
+                "amount"
+            ).value || 0
+        );
+
+    document.getElementById(
+        "formTotal"
+    ).textContent =
+        formatRupiah(amount);
+
+}
+
+
+/* =====================================================
+   RESET FORM
+===================================================== */
+
+document
+    .getElementById("expenseForm")
+    .addEventListener(
+        "reset",
+        ()=>{
+            setTimeout(
+                ()=>{
+                    setToday();
+                    updateFormTotal();
+                },
+                0
+            );
+        }
+    );
+
+
+/* =====================================================
+   FILTER DATA
+===================================================== */
+
+function getFilteredExpenses(){
+
+    const from =
+        document.getElementById(
+            "fromDate"
+        ).value;
+
+    const to =
+        document.getElementById(
+            "toDate"
+        ).value;
+
+    const category =
+        document.getElementById(
+            "filterCategory"
+        ).value;
+
+
+    return expenses.filter(item=>{
+
+        const date =
+            item.expense_date;
+
+
+        if(from && date < from){
+            return false;
+        }
+
+
+        if(to && date > to){
+            return false;
+        }
+
+
+        if(
+            category !== "ALL" &&
+            item.category !== category
+        ){
+            return false;
+        }
+
+
+        return true;
+
+    });
+
+}
+
+
+/* =====================================================
    RENDER
 ===================================================== */
 
 function renderExpenses(){
 
-    const from =
-        document
-            .getElementById("fromDate")
-            .value;
-
-
-    const to =
-        document
-            .getElementById("toDate")
-            .value;
-
-
-    const category =
-        document
-            .getElementById("filterCategory")
-            .value;
-
-
     const filtered =
-        expenses.filter(item=>{
-
-            const date =
-                item.expense_date;
-
-
-            if(
-                from &&
-                date < from
-            ){
-                return false;
-            }
-
-
-            if(
-                to &&
-                date > to
-            ){
-                return false;
-            }
-
-
-            if(
-                category !== "ALL" &&
-                item.category !== category
-            ){
-                return false;
-            }
-
-
-            return true;
-
-        });
-
+        getFilteredExpenses();
 
     const table =
         document.getElementById(
@@ -1091,74 +1224,76 @@ function renderExpenses(){
 
             return `
 
-            <tr>
+                <tr>
 
-                <td>
-                    ${formatDate(
-                        item.expense_date
-                    )}
-                </td>
+                    <td>
+                        ${formatDate(
+                            item.expense_date
+                        )}
+                    </td>
 
 
-                <td>
+                    <td>
 
-                    <span class="badge ${
-                        isBelanja
-                        ? "belanja"
-                        : "operasional"
-                    }">
-
-                        ${
+                        <span class="badge ${
                             isBelanja
-                            ? "BELANJA"
-                            : "OPERASIONAL"
-                        }
+                            ? "belanja"
+                            : "operasional"
+                        }">
 
-                    </span>
+                            ${
+                                isBelanja
+                                ? "BELANJA"
+                                : "OPERASIONAL"
+                            }
 
-                </td>
+                        </span>
+
+                    </td>
 
 
-                <td>
-                    <b>
+                    <td>
+
+                        <b>
+                            ${escapeHtml(
+                                item.description
+                            )}
+                        </b>
+
+                    </td>
+
+
+                    <td>
+
+                        <b>
+                            ${formatRupiah(
+                                item.amount
+                            )}
+                        </b>
+
+                    </td>
+
+
+                    <td>
                         ${escapeHtml(
-                            item.description
+                            item.notes || "-"
                         )}
-                    </b>
-                </td>
+                    </td>
 
 
-                <td>
-                    <b>
-                        ${formatRupiah(
-                            item.amount
-                        )}
-                    </b>
-                </td>
+                    <td>
 
+                        <button
+                            class="danger"
+                            onclick="deleteExpense('${item.id}')">
 
-                <td>
-                    ${escapeHtml(
-                        item.notes || "-"
-                    )}
-                </td>
+                            Hapus
 
+                        </button>
 
-                <td>
+                    </td>
 
-                    <button
-                        class="danger"
-                        onclick="deleteExpense(
-                            '${item.id}'
-                        )">
-
-                        Hapus
-
-                    </button>
-
-                </td>
-
-            </tr>
+                </tr>
 
             `;
 
@@ -1173,96 +1308,38 @@ function renderExpenses(){
 
 function updateSummary(){
 
-    const from =
-        document
-            .getElementById("fromDate")
-            .value;
-
-
-    const to =
-        document
-            .getElementById("toDate")
-            .value;
-
-
-    const category =
-        document
-            .getElementById("filterCategory")
-            .value;
-
-
     const filtered =
-        expenses.filter(item=>{
-
-            const date =
-                item.expense_date;
+        getFilteredExpenses();
 
 
-            if(
-                from &&
-                date < from
-            ){
-                return false;
-            }
+    let belanja = 0;
+    let operasional = 0;
 
 
-            if(
-                to &&
-                date > to
-            ){
-                return false;
-            }
+    filtered.forEach(item=>{
 
-
-            if(
-                category !== "ALL" &&
-                item.category !== category
-            ){
-                return false;
-            }
-
-
-            return true;
-
-        });
-
-
-    const belanja =
-        filtered
-            .filter(
-                x =>
-                    x.category === "BELANJA"
-            )
-            .reduce(
-                (
-                    total,
-                    x
-                ) =>
-                    total +
-                    Number(
-                        x.amount || 0
-                    ),
-                0
+        const amount =
+            Number(
+                item.amount || 0
             );
 
 
-    const operasional =
-        filtered
-            .filter(
-                x =>
-                    x.category === "OPERASIONAL"
-            )
-            .reduce(
-                (
-                    total,
-                    x
-                ) =>
-                    total +
-                    Number(
-                        x.amount || 0
-                    ),
-                0
-            );
+        if(
+            item.category === "BELANJA"
+        ){
+
+            belanja += amount;
+
+        }
+        else if(
+            item.category === "OPERASIONAL"
+        ){
+
+            operasional += amount;
+
+        }
+
+    });
 
 
     const total =
@@ -1291,7 +1368,7 @@ function updateSummary(){
 
 
 /* =====================================================
-   FILTER
+   FILTER EVENTS
 ===================================================== */
 
 document
@@ -1333,16 +1410,13 @@ function resetFilter(){
         "fromDate"
     ).value = "";
 
-
     document.getElementById(
         "toDate"
     ).value = "";
 
-
     document.getElementById(
         "filterCategory"
     ).value = "ALL";
-
 
     renderExpenses();
 
@@ -1370,8 +1444,7 @@ async function deleteExpense(id){
 
         const {
             error
-        } =
-        await client
+        } = await client
             .from("expenses")
             .delete()
             .eq(
@@ -1396,6 +1469,11 @@ async function deleteExpense(id){
     }
     catch(error){
 
+        console.error(
+            "DELETE ERROR:",
+            error
+        );
+
         showMessage(
             "Gagal menghapus: " +
             error.message,
@@ -1408,33 +1486,7 @@ async function deleteExpense(id){
 
 
 /* =====================================================
-   FORM TOTAL
-===================================================== */
-
-document
-    .getElementById("amount")
-    .addEventListener(
-        "input",
-        ()=>{
-            const amount =
-                Number(
-                    document
-                        .getElementById(
-                            "amount"
-                        )
-                        .value || 0
-                );
-
-            document.getElementById(
-                "formTotal"
-            ).textContent =
-                formatRupiah(amount);
-        }
-    );
-
-
-/* =====================================================
-   FORMAT
+   FORMAT RUPIAH
 ===================================================== */
 
 function formatRupiah(value){
@@ -1452,6 +1504,10 @@ function formatRupiah(value){
 
 }
 
+
+/* =====================================================
+   FORMAT TANGGAL
+===================================================== */
 
 function formatDate(value){
 
@@ -1481,7 +1537,7 @@ function formatDate(value){
 
 
 /* =====================================================
-   ESCAPE
+   ESCAPE HTML
 ===================================================== */
 
 function escapeHtml(value){
@@ -1489,26 +1545,11 @@ function escapeHtml(value){
     return String(
         value ?? ""
     )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -1540,13 +1581,19 @@ function showMessage(
         "block";
 
 
-    setTimeout(
-        ()=>{
-            box.style.display =
-                "none";
-        },
-        5000
+    clearTimeout(
+        window.messageTimer
     );
+
+
+    window.messageTimer =
+        setTimeout(
+            ()=>{
+                box.style.display =
+                    "none";
+            },
+            5000
+        );
 
 }
 
