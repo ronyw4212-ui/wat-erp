@@ -591,101 +591,66 @@ body{
 
 
 
-<!-- BILLING MODAL -->
-<div class="modal" id="billingModal">
+<!-- COMPLETION MODAL -->
+<div class="modal" id="completionModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h2>Tagihan Pekerjaan</h2>
-            <button class="close" onclick="closeBillingModal()">×</button>
+            <h2>🏁 Selesaikan Pekerjaan</h2>
+            <button class="close" onclick="closeCompletionModal()">×</button>
         </div>
 
         <div class="modal-body">
-
             <div class="detail-grid">
                 <div class="detail-item">
                     <span>Customer</span>
-                    <strong id="bCustomer">-</strong>
+                    <strong id="cCustomer">-</strong>
                 </div>
 
                 <div class="detail-item">
-                    <span>No. WhatsApp</span>
-                    <strong id="bPhone">-</strong>
+                    <span>Kode Job</span>
+                    <strong id="cJobCode">-</strong>
                 </div>
 
                 <div class="detail-item full">
                     <span>Pekerjaan</span>
-                    <strong id="bJobTitle">-</strong>
+                    <strong id="cJobTitle">-</strong>
                 </div>
             </div>
 
             <div class="notes">
-                <label for="billingDetail">Rincian Tagihan</label>
+                <label for="completionNotes">
+                    Catatan Hasil Pekerjaan <span style="color:#dc2626;">*</span>
+                </label>
+
                 <textarea
-                    id="billingDetail"
-                    placeholder="Contoh:
-Cuci AC 2 unit - Rp150.000
-Tambah Freon - Rp100.000"
+                    id="completionNotes"
+                    placeholder="Wajib diisi. Contoh:
+AC sudah dicuci dan dibersihkan.
+Filter sudah dibersihkan.
+Unit normal dan dingin."
                 ></textarea>
+
+                <div style="margin-top:7px;font-size:12px;color:#718096;">
+                    Catatan ini akan tersimpan sebagai laporan pekerjaan teknisi dan dapat dilihat Owner.
+                </div>
             </div>
 
-            <div class="notes">
-                <label for="billingTotal">Total Tagihan</label>
-                <input
-                    type="number"
-                    id="billingTotal"
-                    min="0"
-                    step="1"
-                    placeholder="Masukkan total tagihan"
-                    style="width:100%;padding:11px;border:1px solid #d7deea;border-radius:8px;font-size:16px;font-weight:bold;"
-                >
-            </div>
-
-            <div style="margin-top:15px;padding:13px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;">
-                <div style="font-size:11px;color:#64748b;margin-bottom:5px;">INFORMASI PEMBAYARAN</div>
-                <strong>Bank BCA</strong>
-                <div style="margin-top:4px;">No. Rekening: 2190176561</div>
-                <div style="margin-top:3px;">a.n. Roni Wijaya</div>
-            </div>
-
-            <div id="billingAlert" class="alert"></div>
-
-            <div id="billingSentInfo"
-                 style="display:none;margin-top:15px;padding:12px;background:#dcfce7;color:#166534;border-radius:8px;font-size:13px;">
-                ✅ Tagihan sudah dikirim melalui WhatsApp.
-            </div>
+            <div id="completionAlert" class="alert"></div>
         </div>
 
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeBillingModal()">
+            <button class="btn btn-secondary" onclick="closeCompletionModal()">
                 Batal
             </button>
 
-            <button class="btn btn-success"
-                    id="sendBillingButton"
-                    type="button"
-                    onclick="sendBillingWhatsApp()">
-                💬 KIRIM TAGIHAN
-            </button>
-
-            <button class="btn btn-warning"
-                    id="markBillingSentButton"
-                    onclick="markBillingSent()"
-                    disabled
-                    style="opacity:.5;cursor:not-allowed;">
-                ✅ SAYA SUDAH KIRIM
-            </button>
-
             <button class="btn btn-primary"
-                    id="finalCompleteButton"
-                    onclick="finalCompleteJob()"
-                    disabled
-                    style="opacity:.5;cursor:not-allowed;">
+                    id="confirmCompleteButton"
+                    onclick="finalCompleteJob()">
                 🏁 SELESAIKAN PEKERJAAN
             </button>
         </div>
     </div>
 </div>
-
 
 <!-- DETAIL MODAL -->
 
@@ -965,9 +930,6 @@ async function loadJobs(){
                 customer_phone,
                 customer_address,
                 work_description,
-                billing_detail,
-                billing_total,
-                billing_sent_at
             `)
             .eq("assigned_to", currentUser.id)
             .order("scheduled_at", {
@@ -1008,9 +970,6 @@ async function loadJobs(){
                 customer_phone,
                 customer_address,
                 work_description,
-                billing_detail,
-                billing_total,
-                billing_sent_at
             `)
             .eq("technician_id", currentUser.id)
             .order("scheduled_at", {
@@ -1630,105 +1589,69 @@ async function checkIn(){
 
 /* =========================
    COMPLETE JOB
-========================= */
+   ========================= */
 
 async function completeJob(){
 
     if(!selectedJob) return;
 
-    const notes =
+    const currentNotes =
         document.getElementById("technicianNotes")
             .value.trim();
 
-    if(!notes){
+    // Catatan hasil pekerjaan WAJIB diisi.
+    if(!currentNotes){
 
         showAlert(
-            "Isi Catatan Teknisi terlebih dahulu sebelum menyelesaikan pekerjaan.",
+            "Catatan hasil pekerjaan wajib diisi sebelum pekerjaan diselesaikan.",
             "error"
         );
+
+        document.getElementById("technicianNotes").focus();
 
         return;
     }
 
-    openBillingModal();
-}
-
-
-
-/* =========================
-   BILLING
-========================= */
-
-function openBillingModal(){
-
-    if(!selectedJob) return;
-
-    document.getElementById("bCustomer").textContent =
+    document.getElementById("cCustomer").textContent =
         selectedJob.customer_name || "-";
 
-    const phone =
-        selectedJob.customer_phone ||
-        selectedJob.customer_whatsapp ||
-        selectedJob.whatsapp ||
-        "";
+    document.getElementById("cJobCode").textContent =
+        selectedJob.job_code || "-";
 
-    document.getElementById("bPhone").textContent = phone || "-";
-
-    document.getElementById("bJobTitle").textContent =
+    document.getElementById("cJobTitle").textContent =
         selectedJob.title ||
         selectedJob.work_description ||
         "Pekerjaan";
 
-    document.getElementById("billingDetail").value =
-        selectedJob.billing_detail || "";
+    document.getElementById("completionNotes").value =
+        currentNotes;
 
-    document.getElementById("billingTotal").value =
-        selectedJob.billing_total ?? "";
+    clearCompletionAlert();
 
-    const sent = !!selectedJob.billing_sent_at;
-
-    document.getElementById("billingSentInfo").style.display =
-        sent ? "block" : "none";
-
-    const markButton =
-        document.getElementById("markBillingSentButton");
-
-    markButton.disabled = sent;
-    markButton.style.opacity = sent ? ".5" : "1";
-    markButton.style.cursor = sent ? "not-allowed" : "pointer";
-    markButton.textContent = sent ? "✅ SUDAH TERKIRIM" : "✅ SAYA SUDAH KIRIM";
-
-    const finalButton =
-        document.getElementById("finalCompleteButton");
-
-    finalButton.disabled = !sent;
-    finalButton.style.opacity = sent ? "1" : ".5";
-    finalButton.style.cursor =
-        sent ? "pointer" : "not-allowed";
-
-    clearBillingAlert();
-
-    document.getElementById("billingModal")
+    document.getElementById("completionModal")
         .classList.add("show");
 }
 
-function closeBillingModal(){
 
-    document.getElementById("billingModal")
+function closeCompletionModal(){
+
+    document.getElementById("completionModal")
         .classList.remove("show");
 }
 
-function clearBillingAlert(){
 
-    const el = document.getElementById("billingAlert");
+function clearCompletionAlert(){
+
+    const el = document.getElementById("completionAlert");
 
     el.textContent = "";
     el.className = "alert";
 }
 
-function showBillingAlert(message,type){
 
-    const el = document.getElementById("billingAlert");
+function showCompletionAlert(message,type){
+
+    const el = document.getElementById("completionAlert");
 
     el.textContent = message;
     el.className =
@@ -1738,270 +1661,38 @@ function showBillingAlert(message,type){
             : "alert-success");
 }
 
-function formatRupiah(value){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(Number(value || 0));
-}
-
-function getCustomerWhatsApp(job){
-
-    if(!job) return "";
-
-    return (
-        job.customer_phone ||
-        job.customer_whatsapp ||
-        job.whatsapp ||
-        ""
-    );
-}
-
-
-function normalizeWhatsAppNumber(phone){
-
-    let number = String(phone || "").replace(/\D/g,"");
-
-    if(number.startsWith("0")){
-        number = "62" + number.substring(1);
-    }
-
-    if(number.startsWith("8")){
-        number = "62" + number;
-    }
-
-    return number;
-}
-
-function buildBillingMessage(job, detail, total){
-
-    return `Halo Bapak/Ibu ${job.customer_name || "Customer"},
-
-Pekerjaan ${job.title || job.work_description || "AC"} telah selesai dikerjakan.
-
-RINCIAN TAGIHAN:
-${detail}
-
-TOTAL TAGIHAN: ${formatRupiah(total)}
-
-PEMBAYARAN:
-Bank BCA
-No. Rekening: 2190176561
-a.n. Roni Wijaya
-
-Setelah melakukan pembayaran, mohon konfirmasi pembayaran kepada Customer Service WAT.
-
-Terima kasih.
-WAT ERP
-Wijaya AC`;
-}
-
-async function sendBillingWhatsApp(){
-
-    if(!selectedJob) return;
-
-    const detail = document.getElementById("billingDetail").value.trim();
-    const total = Number(document.getElementById("billingTotal").value);
-    const phone = getCustomerWhatsApp(selectedJob);
-    const number = normalizeWhatsAppNumber(phone);
-
-    if(!detail){
-        showBillingAlert("Isi rincian tagihan terlebih dahulu.","error");
-        return;
-    }
-
-    if(!Number.isFinite(total) || total <= 0){
-        showBillingAlert("Masukkan total tagihan yang valid.","error");
-        return;
-    }
-
-    if(!number || number.length < 10){
-        showBillingAlert("Nomor WhatsApp customer tidak tersedia atau tidak valid.","error");
-        return;
-    }
-
-    const message = buildBillingMessage(selectedJob, detail, total);
-    const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
-
-    const button = document.getElementById("sendBillingButton");
-    button.disabled = true;
-    button.textContent = "⏳ MEMBUKA WHATSAPP...";
-
-    // Buka WhatsApp SEGERA saat klik masih dianggap user gesture.
-    // Ini mencegah popup blocker setelah proses async Supabase.
-    const waWindow = window.open(waUrl, "_blank");
-
-    if(!waWindow){
-        button.disabled = false;
-        button.textContent = "💬 KIRIM TAGIHAN";
-        showBillingAlert(
-            "WhatsApp diblokir browser. Izinkan pop-up untuk situs ini lalu klik KIRIM TAGIHAN lagi.",
-            "error"
-        );
-        return;
-    }
-
-    try{
-        const now = new Date().toISOString();
-        const { error } = await supabaseClient
-            .from("jobs")
-            .update({
-                billing_detail: detail,
-                billing_total: total,
-                technician_notes: document.getElementById("technicianNotes").value.trim(),
-                updated_at: now
-            })
-            .eq("id", selectedJob.id);
-
-        if(error) throw error;
-
-        selectedJob.billing_detail = detail;
-        selectedJob.billing_total = total;
-
-        const markButton = document.getElementById("markBillingSentButton");
-        markButton.disabled = false;
-        markButton.style.opacity = "1";
-        markButton.style.cursor = "pointer";
-
-        // WhatsApp sudah dibuka di tab baru.
-        // Teknisi tetap berada di ERP untuk menekan "SAYA SUDAH KIRIM".
-
-    }catch(error){
-        // WhatsApp sudah terbuka; tampilkan error penyimpanan tanpa
-        // mengganggu pesan yang sedang disiapkan.
-        console.error("BILLING SAVE ERROR:", error);
-        button.disabled = false;
-        button.textContent = "💬 KIRIM TAGIHAN";
-        showBillingAlert("Gagal menyiapkan tagihan: " + error.message,"error");
-    }
-}
-
-
-async function markBillingSent(){
-
-    if(!selectedJob) return;
-
-    const detail =
-        document.getElementById("billingDetail")
-            .value.trim();
-
-    const total =
-        Number(document.getElementById("billingTotal").value);
-
-    if(!detail || !Number.isFinite(total) || total <= 0){
-        showBillingAlert(
-            "Rincian dan total tagihan wajib diisi.",
-            "error"
-        );
-        return;
-    }
-
-    if(!confirm(
-        "Pastikan pesan tagihan sudah benar-benar dikirim di WhatsApp customer. Tandai sebagai terkirim?"
-    )){
-        return;
-    }
-
-    const button =
-        document.getElementById("markBillingSentButton");
-
-    button.disabled = true;
-    button.textContent = "⏳ MENYIMPAN...";
-
-    try{
-
-        const sentAt = new Date().toISOString();
-
-        const { error } =
-            await supabaseClient
-                .from("jobs")
-                .update({
-                    billing_detail: detail,
-                    billing_total: total,
-                    billing_sent_at: sentAt,
-                    technician_notes:
-                        document.getElementById("technicianNotes")
-                            .value.trim(),
-                    updated_at: sentAt
-                })
-                .eq("id", selectedJob.id);
-
-        if(error) throw error;
-
-        selectedJob.billing_detail = detail;
-        selectedJob.billing_total = total;
-        selectedJob.billing_sent_at = sentAt;
-
-        document.getElementById("billingSentInfo").style.display = "block";
-
-        const finalButton =
-            document.getElementById("finalCompleteButton");
-
-        finalButton.disabled = false;
-        finalButton.style.opacity = "1";
-        finalButton.style.cursor = "pointer";
-
-        button.textContent = "✅ SUDAH TERKIRIM";
-        button.style.opacity = ".65";
-
-        showBillingAlert(
-            "Tagihan berhasil ditandai terkirim. Sekarang pekerjaan bisa diselesaikan.",
-            "success"
-        );
-
-    }
-    catch(error){
-
-        console.error("MARK BILLING ERROR:", error);
-
-        button.disabled = false;
-        button.textContent = "✅ SAYA SUDAH KIRIM";
-
-        showBillingAlert(
-            "Gagal menyimpan status tagihan: " + error.message,
-            "error"
-        );
-    }
-}
 
 async function finalCompleteJob(){
 
     if(!selectedJob) return;
 
-    if(!selectedJob.billing_sent_at){
-
-        showBillingAlert(
-            "Kirim tagihan ke customer terlebih dahulu.",
-            "error"
-        );
-
-        return;
-    }
-
     const notes =
-        document.getElementById("technicianNotes")
+        document.getElementById("completionNotes")
             .value.trim();
 
     if(!notes){
 
-        showBillingAlert(
-            "Catatan teknisi wajib diisi.",
+        showCompletionAlert(
+            "Catatan hasil pekerjaan wajib diisi.",
             "error"
         );
+
+        document.getElementById("completionNotes").focus();
 
         return;
     }
 
     if(!confirm(
-        "Yakin pekerjaan ini sudah selesai dan tagihan sudah dikirim?"
+        "Yakin pekerjaan ini sudah selesai?\n\nCatatan hasil pekerjaan akan disimpan ke laporan."
     )){
         return;
     }
+
+    const button =
+        document.getElementById("confirmCompleteButton");
+
+    button.disabled = true;
+    button.textContent = "⏳ MENYIMPAN...";
 
     try{
 
@@ -2020,11 +1711,15 @@ async function finalCompleteJob(){
 
         if(error) throw error;
 
-        closeBillingModal();
+        selectedJob.status = "COMPLETED";
+        selectedJob.completed_at = now;
+        selectedJob.technician_notes = notes;
+
+        closeCompletionModal();
         closeModal();
 
         showAlert(
-            "Pekerjaan berhasil diselesaikan.",
+            "Pekerjaan berhasil diselesaikan dan catatan teknisi tersimpan.",
             "success"
         );
 
@@ -2033,9 +1728,12 @@ async function finalCompleteJob(){
     }
     catch(error){
 
-        console.error(error);
+        console.error("COMPLETE JOB ERROR:", error);
 
-        showBillingAlert(
+        button.disabled = false;
+        button.textContent = "🏁 SELESAIKAN PEKERJAAN";
+
+        showCompletionAlert(
             "Gagal menyelesaikan pekerjaan: " + error.message,
             "error"
         );
@@ -2402,6 +2100,18 @@ document
         if(e.target === this){
 
             closeModal();
+
+        }
+
+    });
+
+document
+    .getElementById("completionModal")
+    .addEventListener("click",function(e){
+
+        if(e.target === this){
+
+            closeCompletionModal();
 
         }
 
