@@ -2,33 +2,38 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Master Material - WAT ERP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Owner - WAT ERP</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
+    background:#f3f6fb;
     color:#102a43;
 }
 
+/* HEADER */
 header{
+    height:76px;
     background:linear-gradient(90deg,#1257b8,#0878f9);
-    color:#fff;
-    padding:17px 28px;
+    color:white;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
 }
 
 .brand{
-    font-size:20px;
     font-weight:bold;
+    font-size:20px;
 }
 
 .brand small{
@@ -41,250 +46,216 @@ header{
 .header-right{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:14px;
 }
 
 .role{
-    background:rgba(255,255,255,.16);
+    background:rgba(255,255,255,.15);
     padding:8px 14px;
     border-radius:20px;
     font-size:12px;
     font-weight:bold;
 }
 
-button{
+.logout{
+    background:white;
+    color:#1267d9;
     border:0;
+    padding:10px 16px;
     border-radius:8px;
-    padding:10px 15px;
     font-weight:bold;
     cursor:pointer;
 }
 
-.logout{
-    background:#fff;
-    color:#1267e8;
+.logout:hover{
+    background:#edf5ff;
 }
 
+/* CONTAINER */
 .container{
-    max-width:1050px;
-    margin:28px auto;
-    padding:0 16px 50px;
+    max-width:1160px;
+    margin:0 auto;
+    padding:26px 18px 50px;
 }
 
-.top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
+.welcome{
+    margin-bottom:22px;
 }
 
-h1{
-    margin:0 0 5px;
+.welcome h1{
+    margin:0 0 6px;
     font-size:27px;
 }
 
-h2{
-    margin:0 0 18px;
-    font-size:20px;
-}
-
-p{
+.welcome p{
     margin:0;
     color:#627d98;
 }
 
-.cards{
+/* SUMMARY */
+.summary{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-bottom:20px;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:25px;
 }
 
-.card{
-    background:#fff;
+.summary-card{
+    background:white;
     border-radius:12px;
     padding:20px;
     box-shadow:0 2px 10px rgba(16,42,67,.08);
     border-left:4px solid #1267e8;
 }
 
-.card:nth-child(2){
-    border-color:#16a34a;
+.summary-card:nth-child(2){
+    border-left-color:#16a34a;
 }
 
-.card:nth-child(3){
-    border-color:#f59e0b;
+.summary-card:nth-child(3){
+    border-left-color:#f59e0b;
 }
 
-.card small{
+.summary-card:nth-child(4){
+    border-left-color:#dc2626;
+}
+
+.summary-card span{
+    display:block;
     color:#627d98;
-}
-
-.card strong{
-    display:block;
-    margin-top:8px;
-    font-size:24px;
-}
-
-.box{
-    background:#fff;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 2px 10px rgba(16,42,67,.08);
-    margin-bottom:20px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
-}
-
-.full{
-    grid-column:1/-1;
-}
-
-label{
-    display:block;
     font-size:13px;
-    font-weight:bold;
-    margin-bottom:6px;
+    margin-bottom:8px;
 }
 
-input,
-select,
-textarea{
-    width:100%;
-    padding:11px;
-    border:1px solid #cbd5e1;
-    border-radius:8px;
-    font-family:inherit;
-    background:#fff;
+.summary-card strong{
+    font-size:25px;
 }
 
-textarea{
-    min-height:80px;
-    resize:vertical;
+/* MENU */
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
 }
 
-.actions{
-    margin-top:18px;
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
+.menu-card{
+    background:white;
+    border-radius:12px;
+    min-height:126px;
+    box-shadow:0 2px 10px rgba(16,42,67,.08);
+    transition:.2s;
+    overflow:hidden;
 }
 
-.primary{
-    background:#1267e8;
-    color:#fff;
+.menu-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 7px 18px rgba(16,42,67,.13);
 }
 
-.secondary{
-    background:#e8eef7;
+.menu-card a{
+    display:block;
+    height:100%;
+    padding:22px;
+    text-decoration:none;
     color:#102a43;
 }
 
-.success{
-    background:#16a34a;
-    color:#fff;
+.menu-icon{
+    font-size:30px;
+    margin-bottom:10px;
 }
 
-.danger{
-    background:#dc2626;
-    color:#fff;
+.menu-card h3{
+    margin:0 0 6px;
+    font-size:17px;
 }
 
-.filter{
-    display:grid;
-    grid-template-columns:1fr 180px auto;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th{
-    background:#edf3fa;
-    padding:12px;
-    text-align:left;
+.menu-card p{
+    margin:0;
     font-size:12px;
-}
-
-td{
-    padding:12px;
-    border-bottom:1px solid #edf2f7;
-    font-size:13px;
-}
-
-.badge{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.active{
-    background:#dcfce7;
-    color:#15803d;
-}
-
-.inactive{
-    background:#fee2e2;
-    color:#b91c1c;
-}
-
-.message{
-    display:none;
-    padding:12px 14px;
-    border-radius:8px;
-    margin-bottom:15px;
-    font-size:13px;
-}
-
-.message.ok{
-    display:block;
-    background:#dcfce7;
-    color:#166534;
-}
-
-.message.error{
-    display:block;
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.empty{
-    text-align:center;
-    padding:25px;
+    line-height:1.5;
     color:#627d98;
 }
 
-@media(max-width:700px){
+/* WARNA MENU */
+.customer{
+    border-left:4px solid #1267e8;
+}
 
-    .cards,
-    .grid{
+.jobs{
+    border-left:4px solid #16a34a;
+}
+
+.invoice{
+    border-left:4px solid #f59e0b;
+}
+
+.teknisi{
+    border-left:4px solid #dc2626;
+}
+
+.pengeluaran{
+    border-left:4px solid #16a34a;
+}
+
+.material{
+    border-left:4px solid #8b5cf6;
+}
+
+.laporan{
+    border-left:4px solid #2563eb;
+}
+
+.audit{
+    border-left:4px solid #eab308;
+}
+
+.pengaturan{
+    border-left:4px solid #64748b;
+}
+
+.beranda{
+    border-left:4px solid #0ea5e9;
+}
+
+/* LOADING */
+.loading{
+    color:#627d98;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .menu-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:0 15px;
+    }
+
+    .brand{
+        font-size:17px;
+    }
+
+    .summary,
+    .menu-grid{
         grid-template-columns:1fr;
     }
 
-    .full{
-        grid-column:auto;
+    .header-right{
+        gap:7px;
     }
 
-    .filter{
-        grid-template-columns:1fr;
-    }
-
-    .top{
-        align-items:flex-start;
-        gap:10px;
+    .role{
+        display:none;
     }
 }
 </style>
@@ -292,269 +263,333 @@ td{
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
 
     <div class="brand">
         WAT ERP
-        <small>Master Material</small>
+        <small>Technician Control System</small>
     </div>
 
     <div class="header-right">
-        <span class="role" id="userName">OWNER</span>
+
+        <span class="role">OWNER</span>
 
         <button class="logout" onclick="logout()">
             LOGOUT
         </button>
+
     </div>
 
 </header>
 
 
+<!-- =========================
+     CONTENT
+========================= -->
+
 <div class="container">
 
-    <div class="top">
+    <div class="welcome">
 
-        <div>
-            <h1>Master Material</h1>
-            <p>Kelola material, stok dan harga modal.</p>
-        </div>
+        <h1>Dashboard Owner</h1>
 
-        <button
-            class="secondary"
-            onclick="location.href='dashboard-owner.html'">
-            ← Dashboard
-        </button>
+        <p>
+            Selamat datang,
+            <span id="ownerName">Owner</span>.
+        </p>
 
     </div>
 
 
-    <div id="message" class="message"></div>
+    <!-- =========================
+         SUMMARY
+    ========================= -->
 
+    <div class="summary">
 
-    <!-- SUMMARY -->
+        <div class="summary-card">
 
-    <div class="cards">
+            <span>Total Customer</span>
 
-        <div class="card">
-            <small>Material Aktif</small>
-            <strong id="totalMaterial">0</strong>
+            <strong id="totalCustomer">
+                <span class="loading">...</span>
+            </strong>
+
         </div>
 
-        <div class="card">
-            <small>Total Stok</small>
-            <strong id="totalStock">0</strong>
+
+        <div class="summary-card">
+
+            <span>Total Job</span>
+
+            <strong id="totalJob">
+                <span class="loading">...</span>
+            </strong>
+
         </div>
 
-        <div class="card">
-            <small>Nilai Persediaan</small>
-            <strong id="stockValue">Rp 0</strong>
+
+        <div class="summary-card">
+
+            <span>Invoice</span>
+
+            <strong id="totalInvoice">
+                <span class="loading">...</span>
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Teknisi Aktif</span>
+
+            <strong id="totalTechnician">
+                <span class="loading">...</span>
+            </strong>
+
         </div>
 
     </div>
 
 
-    <!-- FORM -->
+    <!-- =========================
+         MENU
+    ========================= -->
 
-    <div class="box">
+    <div class="menu-grid">
 
-        <h2>Tambah Material</h2>
 
-        <form id="materialForm">
+        <!-- CUSTOMER -->
 
-            <div class="grid">
+        <div class="menu-card customer">
 
-                <div>
-                    <label>Kode Material *</label>
-                    <input
-                        id="materialCode"
-                        placeholder="MAT-001"
-                        required>
+            <a href="customer.html">
+
+                <div class="menu-icon">
+                    👥
                 </div>
 
+                <h3>
+                    Customer
+                </h3>
 
-                <div>
-                    <label>Nama Material *</label>
-                    <input
-                        id="materialName"
-                        placeholder="Freon R32"
-                        required>
-                </div>
+                <p>
+                    Kelola data customer WAT.
+                </p>
 
-
-                <div>
-                    <label>Satuan *</label>
-
-                    <select id="materialUnit" required>
-
-                        <option value="">
-                            -- Pilih Satuan --
-                        </option>
-
-                        <option value="pcs">pcs</option>
-                        <option value="unit">unit</option>
-                        <option value="set">set</option>
-                        <option value="buah">buah</option>
-                        <option value="kg">kg</option>
-                        <option value="liter">liter</option>
-                        <option value="meter">meter</option>
-                        <option value="roll">roll</option>
-                        <option value="box">box</option>
-                        <option value="pack">pack</option>
-
-                    </select>
-                </div>
-
-
-                <div>
-                    <label>Stok Awal</label>
-
-                    <input
-                        id="initialStock"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value="0">
-                </div>
-
-
-                <div>
-                    <label>Harga Modal / Satuan</label>
-
-                    <input
-                        id="averageCost"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value="0">
-                </div>
-
-
-                <div>
-                    <label>Status</label>
-
-                    <select id="materialStatus">
-
-                        <option value="ACTIVE">
-                            Aktif
-                        </option>
-
-                        <option value="INACTIVE">
-                            Nonaktif
-                        </option>
-
-                    </select>
-                </div>
-
-
-                <div class="full">
-
-                    <label>Catatan</label>
-
-                    <textarea
-                        id="materialNotes"
-                        placeholder="Catatan material..."></textarea>
-
-                </div>
-
-            </div>
-
-
-            <div class="actions">
-
-                <button
-                    type="reset"
-                    class="secondary">
-                    Reset
-                </button>
-
-                <button
-                    type="submit"
-                    class="primary"
-                    id="saveButton">
-                    Simpan Material
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-
-    <!-- LIST -->
-
-    <div class="box">
-
-        <h2>Daftar Material</h2>
-
-
-        <div class="filter">
-
-            <input
-                id="search"
-                placeholder="Cari kode atau nama...">
-
-
-            <select id="statusFilter">
-
-                <option value="ALL">
-                    Semua Status
-                </option>
-
-                <option value="ACTIVE">
-                    Aktif
-                </option>
-
-                <option value="INACTIVE">
-                    Nonaktif
-                </option>
-
-            </select>
-
-
-            <button
-                class="secondary"
-                onclick="loadMaterials()">
-                Refresh
-            </button>
+            </a>
 
         </div>
 
 
-        <div class="table-wrap">
+        <!-- JOBS -->
 
-            <table>
+        <div class="menu-card jobs">
 
-                <thead>
+            <a href="jobs.html">
 
-                    <tr>
+                <div class="menu-icon">
+                    🔧
+                </div>
 
-                        <th>Kode</th>
-                        <th>Material</th>
-                        <th>Satuan</th>
-                        <th>Stok</th>
-                        <th>Harga Modal</th>
-                        <th>Nilai Stok</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
+                <h3>
+                    Jobs
+                </h3>
 
-                    </tr>
+                <p>
+                    Pantau pekerjaan teknisi.
+                </p>
 
-                </thead>
+            </a>
 
-                <tbody id="materialTable">
+        </div>
 
-                    <tr>
-                        <td
-                            colspan="8"
-                            class="empty">
-                            Memuat data...
-                        </td>
-                    </tr>
 
-                </tbody>
+        <!-- INVOICE -->
 
-            </table>
+        <div class="menu-card invoice">
+
+            <a href="invoice.html">
+
+                <div class="menu-icon">
+                    📜
+                </div>
+
+                <h3>
+                    Invoice
+                </h3>
+
+                <p>
+                    Kelola invoice dan pembayaran.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- TEKNISI -->
+
+        <div class="menu-card teknisi">
+
+            <a href="teknisi.html">
+
+                <div class="menu-icon">
+                    🧑‍🔧
+                </div>
+
+                <h3>
+                    Teknisi
+                </h3>
+
+                <p>
+                    Kontrol teknisi dan pekerjaan.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- PENGELUARAN -->
+
+        <div class="menu-card pengeluaran">
+
+            <a href="pengeluaran.html">
+
+                <div class="menu-icon">
+                    💰
+                </div>
+
+                <h3>
+                    Pengeluaran
+                </h3>
+
+                <p>
+                    Kelola belanja material dan biaya operasional.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- MATERIAL -->
+
+        <div class="menu-card material">
+
+            <a href="materials.html">
+
+                <div class="menu-icon">
+                    📦
+                </div>
+
+                <h3>
+                    Material
+                </h3>
+
+                <p>
+                    Kelola master material, stok dan harga modal.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- LAPORAN -->
+
+        <div class="menu-card laporan">
+
+            <a href="reports.html">
+
+                <div class="menu-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Laporan
+                </h3>
+
+                <p>
+                    Lihat laporan pendapatan, HPP dan laba rugi.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- AUDIT LOG -->
+
+        <div class="menu-card audit">
+
+            <a href="audit.html">
+
+                <div class="menu-icon">
+                    🔐
+                </div>
+
+                <h3>
+                    Audit Log
+                </h3>
+
+                <p>
+                    Pantau aktivitas pengguna.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- PENGATURAN -->
+
+        <div class="menu-card pengaturan">
+
+            <a href="settings.html">
+
+                <div class="menu-icon">
+                    ⚙️
+                </div>
+
+                <h3>
+                    Pengaturan
+                </h3>
+
+                <p>
+                    Pengaturan sistem WAT ERP.
+                </p>
+
+            </a>
+
+        </div>
+
+
+        <!-- BERANDA -->
+
+        <div class="menu-card beranda">
+
+            <a href="index.html">
+
+                <div class="menu-icon">
+                    🏠
+                </div>
+
+                <h3>
+                    Beranda
+                </h3>
+
+                <p>
+                    Kembali ke halaman utama.
+                </p>
+
+            </a>
 
         </div>
 
@@ -567,973 +602,262 @@ td{
 
 /* =====================================================
    SUPABASE
-   =====================================================
-
-   BRO:
-   COPY URL DAN ANON KEY DARI PENGELUARAN.HTML
-   YANG SUDAH BERHASIL.
-
-   CONTOH FORMAT SAJA:
-   https://xxxxx.supabase.co
-   eyJhbGciOi...
 ===================================================== */
 
 const SUPABASE_URL =
-    "PASTE_URL_SUPABASE_DARI_PENGELUARAN_HTML";
+"GANTI_DENGAN_SUPABASE_URL";
 
 const SUPABASE_ANON_KEY =
-    "PASTE_ANON_KEY_DARI_PENGELUARAN_HTML";
+"GANTI_DENGAN_SUPABASE_ANON_KEY";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
 
 /* =====================================================
-   CONNECT
-===================================================== */
-
-const client =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
-
-
-let currentUser = null;
-let materials = [];
-
-
-/* =====================================================
-   START
+   INIT
 ===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
-    start
+    init
 );
 
 
-async function start(){
+async function init(){
 
-    try{
-
-        const {
-            data,
-            error
-        } =
-        await client.auth.getUser();
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
 
 
-        if(error){
-            throw error;
-        }
+    /*
+       BELUM LOGIN
+    */
 
+    if(error || !data.user){
 
-        if(!data.user){
+        window.location.href =
+            "login.html";
 
-            location.href =
-                "login.html";
-
-            return;
-        }
-
-
-        currentUser =
-            data.user;
-
-
-        document.getElementById(
-            "userName"
-        ).textContent =
-            currentUser.email ||
-            "OWNER";
-
-
-        await loadMaterials();
-
+        return;
     }
-    catch(error){
 
-        console.error(
-            "INIT ERROR:",
-            error
-        );
 
-        showMessage(
-            "Gagal menghubungkan ke database: " +
-            error.message,
-            "error"
-        );
+    /*
+       DATA USER
+    */
 
-    }
+    const user =
+        data.user;
+
+
+    /*
+       NAMA USER
+    */
+
+    let nama =
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.email ||
+        "Owner";
+
+
+    document.getElementById(
+        "ownerName"
+    ).textContent = nama;
+
+
+    /*
+       LOAD DASHBOARD
+    */
+
+    await loadDashboard();
 
 }
 
 
 /* =====================================================
-   LOAD MATERIAL
+   LOAD DASHBOARD
 ===================================================== */
 
-async function loadMaterials(){
+async function loadDashboard(){
 
-    const table =
-        document.getElementById(
-            "materialTable"
-        );
+    await Promise.all([
 
+        loadCustomer(),
 
-    table.innerHTML = `
-        <tr>
-            <td colspan="8" class="empty">
-                Memuat data...
-            </td>
-        </tr>
-    `;
+        loadJobs(),
 
+        loadInvoice(),
 
-    try{
+        loadTechnician()
 
-        const {
-            data,
-            error
-        } =
-        await client
-            .from("materials")
-            .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending:false
-                }
-            );
-
-
-        if(error){
-
-            throw error;
-
-        }
-
-
-        materials =
-            data || [];
-
-
-        renderMaterials();
-        updateSummary();
-
-    }
-    catch(error){
-
-        console.error(
-            "LOAD MATERIAL ERROR:",
-            error
-        );
-
-
-        table.innerHTML = `
-            <tr>
-                <td
-                    colspan="8"
-                    class="empty">
-                    Gagal memuat data material.
-                    <br><br>
-                    ${escapeHtml(error.message)}
-                </td>
-            </tr>
-        `;
-
-    }
+    ]);
 
 }
 
 
 /* =====================================================
-   RENDER
+   CUSTOMER
 ===================================================== */
 
-function renderMaterials(){
+async function loadCustomer(){
 
-    const search =
-        document
-            .getElementById("search")
-            .value
-            .trim()
-            .toLowerCase();
-
-
-    const status =
-        document
-            .getElementById("statusFilter")
-            .value;
-
-
-    const filtered =
-        materials.filter(item=>{
-
-            const matchSearch =
-                !search ||
-
-                String(
-                    item.material_code || ""
-                )
-                .toLowerCase()
-                .includes(search)
-
-                ||
-
-                String(
-                    item.name || ""
-                )
-                .toLowerCase()
-                .includes(search);
-
-
-            const matchStatus =
-                status === "ALL" ||
-                item.status === status;
-
-
-            return (
-                matchSearch &&
-                matchStatus
-            );
-
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("customers")
+        .select("*",{
+            count:"exact",
+            head:true
         });
 
 
-    const table =
-        document.getElementById(
-            "materialTable"
-        );
-
-
-    if(!filtered.length){
-
-        table.innerHTML = `
-            <tr>
-                <td
-                    colspan="8"
-                    class="empty">
-                    Belum ada material.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    table.innerHTML =
-        filtered.map(item=>{
-
-            const stock =
-                Number(
-                    item.current_stock || 0
-                );
-
-
-            const cost =
-                Number(
-                    item.average_cost || 0
-                );
-
-
-            const value =
-                stock * cost;
-
-
-            const active =
-                item.status === "ACTIVE";
-
-
-            return `
-
-            <tr>
-
-                <td>
-                    <b>
-                        ${escapeHtml(
-                            item.material_code
-                        )}
-                    </b>
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        item.name
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        item.unit
-                    )}
-                </td>
-
-
-                <td>
-                    ${formatNumber(stock)}
-                </td>
-
-
-                <td>
-                    ${formatRupiah(cost)}
-                </td>
-
-
-                <td>
-                    ${formatRupiah(value)}
-                </td>
-
-
-                <td>
-
-                    <span class="badge ${
-                        active
-                        ? "active"
-                        : "inactive"
-                    }">
-
-                        ${
-                            active
-                            ? "AKTIF"
-                            : "NONAKTIF"
-                        }
-
-                    </span>
-
-                </td>
-
-
-                <td>
-
-                    <button
-                        class="secondary"
-                        onclick="editMaterial('${item.id}')">
-                        Edit
-                    </button>
-
-                    <button
-                        class="${
-                            active
-                            ? "danger"
-                            : "success"
-                        }"
-                        onclick="toggleStatus(
-                            '${item.id}',
-                            '${item.status}'
-                        )">
-
-                        ${
-                            active
-                            ? "Nonaktif"
-                            : "Aktif"
-                        }
-
-                    </button>
-
-                </td>
-
-            </tr>
-
-            `;
-
-        }).join("");
-
-}
-
-
-/* =====================================================
-   SUMMARY
-===================================================== */
-
-function updateSummary(){
-
-    const active =
-        materials.filter(
-            item =>
-                item.status === "ACTIVE"
-        );
-
-
-    const totalStock =
-        active.reduce(
-            (total,item)=>
-                total +
-                Number(
-                    item.current_stock || 0
-                ),
-            0
-        );
-
-
-    const stockValue =
-        active.reduce(
-            (total,item)=>
-                total +
-
-                (
-                    Number(
-                        item.current_stock || 0
-                    )
-
-                    *
-
-                    Number(
-                        item.average_cost || 0
-                    )
-                ),
-
-            0
-        );
-
-
-    document.getElementById(
-        "totalMaterial"
-    ).textContent =
-        active.length;
-
-
-    document.getElementById(
-        "totalStock"
-    ).textContent =
-        formatNumber(totalStock);
-
-
-    document.getElementById(
-        "stockValue"
-    ).textContent =
-        formatRupiah(stockValue);
-
-}
-
-
-/* =====================================================
-   SAVE
-===================================================== */
-
-document
-    .getElementById("materialForm")
-    .addEventListener(
-        "submit",
-        saveMaterial
-    );
-
-
-async function saveMaterial(event){
-
-    event.preventDefault();
-
-
-    const code =
-        document
-            .getElementById("materialCode")
-            .value
-            .trim()
-            .toUpperCase();
-
-
-    const name =
-        document
-            .getElementById("materialName")
-            .value
-            .trim();
-
-
-    const unit =
-        document
-            .getElementById("materialUnit")
-            .value;
-
-
-    const stock =
-        Number(
-            document
-                .getElementById("initialStock")
-                .value || 0
-        );
-
-
-    const cost =
-        Number(
-            document
-                .getElementById("averageCost")
-                .value || 0
-        );
-
-
-    const status =
-        document
-            .getElementById("materialStatus")
-            .value;
-
-
-    const notes =
-        document
-            .getElementById("materialNotes")
-            .value
-            .trim();
-
-
-    if(!code || !name || !unit){
-
-        showMessage(
-            "Kode, nama dan satuan wajib diisi.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if(stock < 0 || cost < 0){
-
-        showMessage(
-            "Stok dan harga tidak boleh negatif.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const duplicate =
-        materials.some(
-            item =>
-                String(
-                    item.material_code || ""
-                ).toUpperCase() === code
-        );
-
-
-    if(duplicate){
-
-        showMessage(
-            "Kode material sudah digunakan.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "saveButton"
-        );
-
-
-    button.disabled = true;
-    button.textContent =
-        "Menyimpan...";
-
-
-    try{
-
-        const {
-            error
-        } =
-        await client
-            .from("materials")
-            .insert({
-
-                material_code:code,
-
-                name:name,
-
-                unit:unit,
-
-                current_stock:stock,
-
-                average_cost:cost,
-
-                status:status,
-
-                notes:
-                    notes || null,
-
-                created_by:
-                    currentUser.id
-
-            });
-
-
-        if(error){
-
-            throw error;
-
-        }
-
-
-        showMessage(
-            "Material berhasil disimpan.",
-            "ok"
-        );
-
-
-        document
-            .getElementById(
-                "materialForm"
-            )
-            .reset();
-
-
-        document
-            .getElementById(
-                "initialStock"
-            )
-            .value = 0;
-
-
-        document
-            .getElementById(
-                "averageCost"
-            )
-            .value = 0;
-
-
-        await loadMaterials();
-
-    }
-    catch(error){
+    if(error){
 
         console.error(
-            "SAVE ERROR:",
+            "Customer:",
             error
         );
 
-
-        showMessage(
-            "Gagal menyimpan: " +
-            error.message,
-            "error"
-        );
-
-    }
-    finally{
-
-        button.disabled = false;
-
-        button.textContent =
-            "Simpan Material";
-
-    }
-
-}
-
-
-/* =====================================================
-   EDIT
-===================================================== */
-
-async function editMaterial(id){
-
-    const item =
-        materials.find(
-            x => x.id === id
-        );
-
-
-    if(!item){
-        return;
-    }
-
-
-    const name =
-        prompt(
-            "Nama material:",
-            item.name
-        );
-
-
-    if(name === null){
-        return;
-    }
-
-
-    const unit =
-        prompt(
-            "Satuan:",
-            item.unit
-        );
-
-
-    if(unit === null){
-        return;
-    }
-
-
-    const cost =
-        prompt(
-            "Harga modal / satuan:",
-            item.average_cost || 0
-        );
-
-
-    if(cost === null){
-        return;
-    }
-
-
-    try{
-
-        const {
-            error
-        } =
-        await client
-            .from("materials")
-            .update({
-
-                name:name.trim(),
-
-                unit:unit.trim(),
-
-                average_cost:
-                    Number(cost),
-
-                updated_at:
-                    new Date()
-                    .toISOString()
-
-            })
-            .eq(
-                "id",
-                id
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        showMessage(
-            "Material berhasil diperbarui.",
-            "ok"
-        );
-
-
-        await loadMaterials();
-
-    }
-    catch(error){
-
-        showMessage(
-            "Gagal update: " +
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
-
-async function toggleStatus(
-    id,
-    currentStatus
-){
-
-    const nextStatus =
-        currentStatus === "ACTIVE"
-        ? "INACTIVE"
-        : "ACTIVE";
-
-
-    const action =
-        nextStatus === "ACTIVE"
-        ? "mengaktifkan"
-        : "menonaktifkan";
-
-
-    if(
-        !confirm(
-            `Yakin ingin ${action} material ini?`
-        )
-    ){
-
-        return;
-
-    }
-
-
-    try{
-
-        const {
-            error
-        } =
-        await client
-            .from("materials")
-            .update({
-
-                status:
-                    nextStatus,
-
-                updated_at:
-                    new Date()
-                    .toISOString()
-
-            })
-            .eq(
-                "id",
-                id
-            );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        showMessage(
-            "Status material berhasil diperbarui.",
-            "ok"
-        );
-
-
-        await loadMaterials();
-
-    }
-    catch(error){
-
-        showMessage(
-            "Gagal mengubah status: " +
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-document
-    .getElementById("search")
-    .addEventListener(
-        "input",
-        renderMaterials
-    );
-
-
-document
-    .getElementById("statusFilter")
-    .addEventListener(
-        "change",
-        renderMaterials
-    );
-
-
-/* =====================================================
-   FORMAT
-===================================================== */
-
-function formatRupiah(value){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(
-        Number(value || 0)
-    );
-
-}
-
-
-function formatNumber(value){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            maximumFractionDigits:2
-        }
-    ).format(
-        Number(value || 0)
-    );
-
-}
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(value){
-
-    return String(value ?? "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-/* =====================================================
-   MESSAGE
-===================================================== */
-
-function showMessage(
-    text,
-    type
-){
-
-    const box =
         document.getElementById(
-            "message"
+            "totalCustomer"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalCustomer"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   JOBS
+===================================================== */
+
+async function loadJobs(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("jobs")
+        .select("*",{
+            count:"exact",
+            head:true
+        });
+
+
+    if(error){
+
+        console.error(
+            "Jobs:",
+            error
+        );
+
+        document.getElementById(
+            "totalJob"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalJob"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   INVOICE
+===================================================== */
+
+async function loadInvoice(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("invoices")
+        .select("*",{
+            count:"exact",
+            head:true
+        });
+
+
+    if(error){
+
+        console.error(
+            "Invoice:",
+            error
+        );
+
+        document.getElementById(
+            "totalInvoice"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalInvoice"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   TEKNISI AKTIF
+===================================================== */
+
+async function loadTechnician(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("technicians")
+        .select("*",{
+            count:"exact",
+            head:true
+        })
+        .eq(
+            "status",
+            "ACTIVE"
         );
 
 
-    box.textContent =
-        text;
+    if(error){
+
+        console.error(
+            "Technician:",
+            error
+        );
+
+        document.getElementById(
+            "totalTechnician"
+        ).textContent = "0";
+
+        return;
+    }
 
 
-    box.className =
-        "message " + type;
-
-
-    box.style.display =
-        "block";
-
-
-    setTimeout(
-        ()=>{
-            box.style.display =
-                "none";
-        },
-        5000
-    );
+    document.getElementById(
+        "totalTechnician"
+    ).textContent = count || 0;
 
 }
 
@@ -1544,9 +868,9 @@ function showMessage(
 
 async function logout(){
 
-    await client.auth.signOut();
+    await supabaseClient.auth.signOut();
 
-    location.href =
+    window.location.href =
         "login.html";
 
 }
