@@ -532,6 +532,10 @@ body{
             <h1>Jadwal Saya</h1>
             <p>Daftar pekerjaan yang ditugaskan kepada Anda.</p>
         </div>
+
+        <button class="btn btn-primary" onclick="loadJobs()">
+            ↻ Refresh
+        </button>
     </div>
 
     <div id="alert" class="alert"></div>
@@ -588,69 +592,6 @@ body{
     </section>
 
 </main>
-
-
-
-<!-- COMPLETION MODAL -->
-<div class="modal" id="completionModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2>🏁 Selesaikan Pekerjaan</h2>
-            <button class="close" onclick="closeCompletionModal()">×</button>
-        </div>
-
-        <div class="modal-body">
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span>Customer</span>
-                    <strong id="cCustomer">-</strong>
-                </div>
-
-                <div class="detail-item">
-                    <span>Kode Job</span>
-                    <strong id="cJobCode">-</strong>
-                </div>
-
-                <div class="detail-item full">
-                    <span>Pekerjaan</span>
-                    <strong id="cJobTitle">-</strong>
-                </div>
-            </div>
-
-            <div class="notes">
-                <label for="completionNotes">
-                    Catatan Hasil Pekerjaan <span style="color:#dc2626;">*</span>
-                </label>
-
-                <textarea
-                    id="completionNotes"
-                    placeholder="Wajib diisi. Contoh:
-AC sudah dicuci dan dibersihkan.
-Filter sudah dibersihkan.
-Unit normal dan dingin."
-                ></textarea>
-
-                <div style="margin-top:7px;font-size:12px;color:#718096;">
-                    Catatan ini akan tersimpan sebagai laporan pekerjaan teknisi dan dapat dilihat Owner.
-                </div>
-            </div>
-
-            <div id="completionAlert" class="alert"></div>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeCompletionModal()">
-                Batal
-            </button>
-
-            <button class="btn btn-primary"
-                    id="confirmCompleteButton"
-                    onclick="finalCompleteJob()">
-                🏁 SELESAIKAN PEKERJAAN
-            </button>
-        </div>
-    </div>
-</div>
 
 <!-- DETAIL MODAL -->
 
@@ -729,7 +670,20 @@ Unit normal dan dingin."
             </div>
 
 
+            <div style="margin-top:16px;padding:12px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;font-size:12px;color:#1e40af;">
+                <strong>Alur:</strong> isi laporan/rincian pekerjaan → klik <b>✅ Selesaikan Pekerjaan</b>.
+                Setelah status <b>COMPLETED</b>, job otomatis tersedia untuk diproses menjadi Invoice oleh Owner/CS.
+            </div>
+
             <div class="progress-buttons">
+
+                <button
+                    class="btn btn-success"
+                    onclick="sendAttendanceWhatsApp()"
+                    style="color:white;background:#16a34a;"
+                >
+                    💬 Konfirmasi Kehadiran
+                </button>
 
                 <button onclick="updateStatus('ON_THE_WAY')">
                     🚗 Menuju Lokasi
@@ -743,8 +697,12 @@ Unit normal dan dingin."
                     🔧 Mulai Pekerjaan
                 </button>
 
-                <button onclick="completeJob()">
-                    ✅ Selesai
+                <button
+                    class="btn-success"
+                    onclick="completeJob()"
+                    style="color:white;background:#16a34a;"
+                >
+                    ✅ Selesaikan Pekerjaan
                 </button>
 
             </div>
@@ -886,171 +844,59 @@ async function loadJobs(){
     document.getElementById("jobsContainer").innerHTML =
         '<div class="loading">Memuat jadwal...</div>';
 
-
-    /*
-       Kita pakai assigned_to sebagai ID teknisi.
-       technician_id juga dicek sebagai fallback.
-    */
-
-    const [
-        assignedResult,
-        technicianResult
-    ] = await Promise.all([
-
-        supabaseClient
+    try{
+        // Ambil seluruh kolom agar query tidak gagal hanya karena
+        // ada satu nama kolom yang berbeda di schema Supabase.
+        const { data, error } = await supabaseClient
             .from("jobs")
-            .select(`
-                id,
-                job_code,
-                customer_id,
-                technician_id,
-                created_by,
-                title,
-                description,
-                scheduled_at,
-                status,
-                started_at,
-                completed_at,
-                checkin_at,
-                checkout_at,
-                checkin_lat,
-                checkin_lng,
-                checkout_lat,
-                checkout_lng,
-                technician_notes,
-                created_at,
-                updated_at,
-                assigned_to,
-                job_type,
-                priority,
-                estimated_cost,
-                actual_cost,
-                service_price,
-                customer_name,
-                customer_phone,
-                customer_address,
-                work_description
-            `)
-            .eq("assigned_to", currentUser.id)
+            .select("*")
             .order("scheduled_at", {
                 ascending:true,
                 nullsFirst:false
-            }),
+            });
 
-        supabaseClient
-            .from("jobs")
-            .select(`
-                id,
-                job_code,
-                customer_id,
-                technician_id,
-                created_by,
-                title,
-                description,
-                scheduled_at,
-                status,
-                started_at,
-                completed_at,
-                checkin_at,
-                checkout_at,
-                checkin_lat,
-                checkin_lng,
-                checkout_lat,
-                checkout_lng,
-                technician_notes,
-                created_at,
-                updated_at,
-                assigned_to,
-                job_type,
-                priority,
-                estimated_cost,
-                actual_cost,
-                service_price,
-                customer_name,
-                customer_phone,
-                customer_address,
-                work_description
-            `)
-            .eq("technician_id", currentUser.id)
-            .order("scheduled_at", {
-                ascending:true,
-                nullsFirst:false
-            })
+        if(error) throw error;
 
-    ]);
-
-
-    if(assignedResult.error){
-
-        console.error(
-            "assigned_to error:",
-            assignedResult.error
+        // Job teknisi = assigned_to ATAU technician_id sesuai user login.
+        jobs = (data || []).filter(job =>
+            job.assigned_to === currentUser.id ||
+            job.technician_id === currentUser.id
         );
 
-    }
+        jobs.sort((a,b) => {
+            const da = a.scheduled_at
+                ? new Date(a.scheduled_at)
+                : new Date(9999,0,1);
+            const db = b.scheduled_at
+                ? new Date(b.scheduled_at)
+                : new Date(9999,0,1);
+            return da - db;
+        });
 
+        updateSummary();
+        renderJobs();
 
-    if(technicianResult.error){
+    }catch(error){
 
-        console.error(
-            "technician_id error:",
-            technicianResult.error
+        console.error("LOAD JOBS ERROR:", error);
+        jobs = [];
+        updateSummary();
+
+        document.getElementById("jobsContainer").innerHTML = `
+            <div class="empty" style="color:#b91c1c;">
+                <strong>Gagal memuat jadwal teknisi.</strong>
+                <div style="margin-top:8px;font-size:12px;">
+                    ${escapeHtml(error.message || "Terjadi kesalahan saat mengambil data jobs.")}
+                </div>
+            </div>
+        `;
+
+        showAlert(
+            "Gagal memuat job: " + (error.message || "Unknown error"),
+            "error"
         );
-
     }
-
-
-    const combined = [
-        ...(assignedResult.data || []),
-        ...(technicianResult.data || [])
-    ];
-
-
-    /*
-       Hilangkan job duplikat.
-    */
-
-    const unique = [];
-
-    const seen = new Set();
-
-
-    combined.forEach(job => {
-
-        if(!seen.has(job.id)){
-
-            seen.add(job.id);
-            unique.push(job);
-
-        }
-
-    });
-
-
-    jobs = unique;
-
-
-    jobs.sort((a,b) => {
-
-        const da = a.scheduled_at
-            ? new Date(a.scheduled_at)
-            : new Date(9999,0,1);
-
-        const db = b.scheduled_at
-            ? new Date(b.scheduled_at)
-            : new Date(9999,0,1);
-
-        return da - db;
-
-    });
-
-
-    updateSummary();
-
-    renderJobs();
-
 }
-
 
 /* =========================
    SUMMARY
@@ -1262,16 +1108,15 @@ function renderJobCard(job){
                     Detail
                 </button>
 
-
                 ${
                     job.customer_phone
                     ?
                     `
                     <button
                         class="btn btn-success"
-                        onclick="openWhatsApp('${escapeJs(job.customer_phone)}')"
+                        onclick="sendAttendanceWhatsApp('${job.id}')"
                     >
-                        WhatsApp
+                        💬 Konfirmasi WhatsApp
                     </button>
                     `
                     :
@@ -1387,6 +1232,87 @@ function closeModal(){
 
     selectedJob = null;
 
+}
+
+
+/* =========================
+   WHATSAPP KONFIRMASI KEHADIRAN
+========================= */
+
+function normalizeWhatsAppNumber(phone){
+
+    let value = String(phone || "")
+        .replace(/[^0-9+]/g, "")
+        .replace(/^\+/, "");
+
+    // Indonesia: 08xxxx -> 628xxxx
+    if(value.startsWith("0")){
+        value = "62" + value.substring(1);
+    }
+
+    // Jika user memasukkan 8xxxx tanpa 0/62.
+    if(value.startsWith("8")){
+        value = "62" + value;
+    }
+
+    return value;
+}
+
+
+function sendAttendanceWhatsApp(jobId = null){
+
+    const job = jobId
+        ? jobs.find(x => x.id === jobId)
+        : selectedJob;
+
+    if(!job){
+        showAlert("Job belum dipilih.", "error");
+        return;
+    }
+
+    if(!job.customer_phone){
+        showAlert("Nomor WhatsApp customer belum tersedia.", "error");
+        return;
+    }
+
+    const phone = normalizeWhatsAppNumber(job.customer_phone);
+
+    if(!phone || phone.length < 10){
+        showAlert("Nomor WhatsApp customer tidak valid.", "error");
+        return;
+    }
+
+    const customer = job.customer_name || "Bapak/Ibu";
+    const date = formatDate(job.scheduled_at);
+    const time = formatTime(job.scheduled_at);
+    const pekerjaan =
+        job.work_description ||
+        job.description ||
+        job.title ||
+        "pekerjaan teknisi";
+
+    const message =
+`Halo ${customer},
+
+Kami dari WAT / Wijaya AC menginformasikan bahwa teknisi kami akan datang untuk pekerjaan berikut:
+
+📋 Job: ${job.job_code || "-"}
+🔧 Pekerjaan: ${pekerjaan}
+📅 Tanggal: ${date}
+🕐 Jam: ${time}
+
+Mohon konfirmasi apakah Bapak/Ibu dapat menerima kedatangan teknisi pada jadwal tersebut.
+
+Terima kasih.
+WAT / Wijaya AC`;
+
+    const url =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message);
+
+    window.open(url, "_blank");
 }
 
 
@@ -1589,116 +1515,43 @@ async function checkIn(){
 
 /* =========================
    COMPLETE JOB
-   ========================= */
+========================= */
 
 async function completeJob(){
 
     if(!selectedJob) return;
 
-    const currentNotes =
+    const notes =
         document.getElementById("technicianNotes")
             .value.trim();
 
-    // Catatan hasil pekerjaan WAJIB diisi.
-    if(!currentNotes){
-
+    if(!notes){
         showAlert(
-            "Catatan hasil pekerjaan wajib diisi sebelum pekerjaan diselesaikan.",
+            "Isi laporan/rincian pekerjaan terlebih dahulu sebelum menyelesaikan pekerjaan.",
             "error"
         );
-
-        document.getElementById("technicianNotes").focus();
-
         return;
     }
 
-    document.getElementById("cCustomer").textContent =
-        selectedJob.customer_name || "-";
-
-    document.getElementById("cJobCode").textContent =
-        selectedJob.job_code || "-";
-
-    document.getElementById("cJobTitle").textContent =
-        selectedJob.title ||
-        selectedJob.work_description ||
-        "Pekerjaan";
-
-    document.getElementById("completionNotes").value =
-        currentNotes;
-
-    clearCompletionAlert();
-
-    document.getElementById("completionModal")
-        .classList.add("show");
-}
-
-
-function closeCompletionModal(){
-
-    document.getElementById("completionModal")
-        .classList.remove("show");
-}
-
-
-function clearCompletionAlert(){
-
-    const el = document.getElementById("completionAlert");
-
-    el.textContent = "";
-    el.className = "alert";
-}
-
-
-function showCompletionAlert(message,type){
-
-    const el = document.getElementById("completionAlert");
-
-    el.textContent = message;
-    el.className =
-        "alert show " +
-        (type === "error"
-            ? "alert-error"
-            : "alert-success");
-}
-
-
-async function finalCompleteJob(){
-
-    if(!selectedJob) return;
-
-    const notes =
-        document.getElementById("completionNotes")
-            .value.trim();
-
-    if(!notes){
-
-        showCompletionAlert(
-            "Catatan hasil pekerjaan wajib diisi.",
+    if(!["IN_PROGRESS","CHECKED_IN"].includes(selectedJob.status)){
+        showAlert(
+            "Pekerjaan belum dalam proses. Klik Check In atau Mulai Pekerjaan terlebih dahulu.",
             "error"
         );
-
-        document.getElementById("completionNotes").focus();
-
         return;
     }
 
     if(!confirm(
-        "Yakin pekerjaan ini sudah selesai?\n\nCatatan hasil pekerjaan akan disimpan ke laporan."
+        "Yakin pekerjaan ini sudah selesai?\\n\\nSetelah selesai, status Job menjadi COMPLETED dan Job akan tersedia di halaman Invoice Owner/CS."
     )){
         return;
     }
-
-    const button =
-        document.getElementById("confirmCompleteButton");
-
-    button.disabled = true;
-    button.textContent = "⏳ MENYIMPAN...";
 
     try{
 
         const now = new Date().toISOString();
 
-        const { error } =
+        const { data, error } =
             await supabaseClient
                 .from("jobs")
                 .update({
@@ -1707,39 +1560,36 @@ async function finalCompleteJob(){
                     technician_notes:notes,
                     updated_at:now
                 })
-                .eq("id", selectedJob.id);
+                .eq("id", selectedJob.id)
+                .select("*")
+                .single();
 
         if(error) throw error;
 
-        selectedJob.status = "COMPLETED";
-        selectedJob.completed_at = now;
-        selectedJob.technician_notes = notes;
+        if(!data || data.status !== "COMPLETED"){
+            throw new Error("Job tidak berhasil berubah menjadi COMPLETED.");
+        }
 
-        closeCompletionModal();
         closeModal();
 
         showAlert(
-            "Pekerjaan berhasil diselesaikan dan catatan teknisi tersimpan.",
+            "✅ Pekerjaan selesai. Laporan tersimpan dan Job siap diproses menjadi Invoice.",
             "success"
         );
 
         await loadJobs();
 
-    }
-    catch(error){
+    }catch(error){
 
         console.error("COMPLETE JOB ERROR:", error);
 
-        button.disabled = false;
-        button.textContent = "🏁 SELESAIKAN PEKERJAAN";
-
-        showCompletionAlert(
-            "Gagal menyelesaikan pekerjaan: " + error.message,
+        showAlert(
+            "Gagal menyelesaikan pekerjaan: " +
+            (error.message || "Unknown error"),
             "error"
         );
     }
 }
-
 
 /* =========================
    SAVE NOTES
@@ -1804,86 +1654,11 @@ async function saveNotes(){
 
 /* =========================
    WHATSAPP
-========================= */
-
-function quickWhatsApp(jobId){
-
-    const job = jobs.find(x => x.id === jobId);
-
-    if(!job) return;
-
-    selectedJob = job;
-
-    openWhatsApp(job.customer_phone);
-}
-
-function openWhatsApp(phone){
-
-    let number =
-        String(
-            (selectedJob && selectedJob.customer_phone) ||
-            phone ||
-            ""
-        )
-        .replace(/\D/g,"");
-
-    if(!number) return;
-
-    if(number.startsWith("0")){
-        number = "62" + number.substring(1);
-    }
-
-    /*
-       Jika ada job terpilih, gunakan pesan otomatis.
-       Jika tidak, buka WhatsApp biasa.
-    */
-
-    if(selectedJob){
-
-        const technicianName =
-            currentProfile &&
-            (
-                currentProfile.full_name ||
-                currentProfile.email
-            )
-            ?
-            (
-                currentProfile.full_name ||
-                currentProfile.email
-            )
-            :
-            "teknisi WAT";
-
-        const message =
-`Halo Bapak/Ibu ${selectedJob.customer_name || "Customer"},
-
-Perkenalkan, saya ${technicianName} dari WAT.
-
-Saya teknisi yang ditugaskan untuk pekerjaan:
-
-${selectedJob.title || selectedJob.work_description || "Pekerjaan AC"}
-
-Saya akan menuju lokasi sesuai jadwal yang telah ditentukan.
-
-Terima kasih.`;
-
-        window.open(
-            "https://wa.me/" +
-            number +
-            "?text=" +
-            encodeURIComponent(message),
-            "_blank"
-        );
-
-        return;
-    }
-
-    window.open(
-        "https://wa.me/" + number,
-        "_blank"
-    );
-}
-
+   =========================
+   Pengiriman tagihan/customer message tidak lagi dilakukan
+   dari halaman teknisi. Setelah Job COMPLETED, Owner/CS
+   memprosesnya di halaman Invoice.
+*/
 
 /* =========================
    GOOGLE MAPS
@@ -2082,6 +1857,7 @@ function showAlert(message,type){
    CLOSE MODAL CLICK OUTSIDE
 ========================= */
 
+
 document
     .getElementById("detailModal")
     .addEventListener("click",function(e){
@@ -2089,18 +1865,6 @@ document
         if(e.target === this){
 
             closeModal();
-
-        }
-
-    });
-
-document
-    .getElementById("completionModal")
-    .addEventListener("click",function(e){
-
-        if(e.target === this){
-
-            closeCompletionModal();
 
         }
 
