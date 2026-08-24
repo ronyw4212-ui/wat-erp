@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pengeluaran - WAT ERP</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f6fb;
+    color:#172033;
+}
+
+.header{
+    height:68px;
+    background:linear-gradient(90deg,#0d47a1,#1268d8);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+}
+
+.brand h2{
+    font-size:20px;
+}
+
+.brand span{
+    display:block;
+    font-size:12px;
+    opacity:.85;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.user-name{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.logout{
+    border:0;
+    background:#fff;
+    color:#0d47a1;
+    padding:9px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1150px;
+    margin:28px auto;
+    padding:0 18px;
+}
+
+.page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.page-head h1{
+    font-size:28px;
+}
+
+.page-head p{
+    color:#718096;
+    margin-top:6px;
+    font-size:14px;
+}
+
+/* BUTTON */
+
+.btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#0d5dcc;
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:#084da9;
+}
+
+.btn-secondary{
+    background:#e7edf6;
+    color:#24344d;
+}
+
+.btn-danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+/* SUMMARY */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.card{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+}
+
+.summary .card{
+    border-left:4px solid #0d5dcc;
+}
+
+.card-label{
+    display:block;
+    color:#718096;
+    font-size:13px;
+}
+
+.card-value{
+    display:block;
+    font-size:25px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+/* ALERT */
+
+.alert{
+    display:none;
+    padding:12px 14px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:13px;
+}
+
+.alert.show{
+    display:block;
+}
+
+.alert-error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.alert-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* FORM */
+
+.form-card{
+    margin-bottom:18px;
+}
+
+.form-title{
+    font-size:18px;
+    margin-bottom:17px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    border:1px solid #d7dfeb;
+    border-radius:8px;
+    padding:10px 12px;
+    outline:none;
+    background:#fff;
+}
+
+.form-group input,
+.form-group select{
+    height:43px;
+}
+
+.form-group textarea{
+    min-height:80px;
+    resize:vertical;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+/* MATERIAL */
+
+.material-section{
+    display:none;
+    grid-column:1/-1;
+    background:#f7faff;
+    border:1px solid #dbe7f5;
+    border-radius:10px;
+    padding:15px;
+}
+
+.material-section.show{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.material-info{
+    grid-column:1/-1;
+    background:#edf5ff;
+    padding:11px 13px;
+    border-radius:8px;
+    font-size:12px;
+    color:#315276;
+}
+
+.total-box{
+    grid-column:1/-1;
+    background:#f3f7fc;
+    border-radius:9px;
+    padding:14px;
+}
+
+.total-box span{
+    font-size:12px;
+    color:#718096;
+}
+
+.total-box strong{
+    display:block;
+    font-size:22px;
+    margin-top:5px;
+}
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:16px;
+}
+
+/* FILTER */
+
+.toolbar{
+    background:#fff;
+    padding:15px;
+    border-radius:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+    align-items:end;
+    margin-bottom:15px;
+    box-shadow:0 4px 16px rgba(20,40,80,.06);
+}
+
+.filter label{
+    display:block;
+    font-size:11px;
+    font-weight:bold;
+    color:#64748b;
+    margin-bottom:5px;
+}
+
+.filter input,
+.filter select{
+    width:100%;
+    height:42px;
+    border:1px solid #d7dfeb;
+    border-radius:8px;
+    padding:0 10px;
+}
+
+/* TABLE */
+
+.table-box{
+    background:#fff;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 4px 16px rgba(20,40,80,.06);
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#edf3fa;
+    color:#40516a;
+    font-size:12px;
+    text-align:left;
+    padding:13px;
+    white-space:nowrap;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #edf0f5;
+    font-size:13px;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.badge-material{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge-operational{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.loading,
+.empty{
+    text-align:center;
+    padding:40px 20px;
+    color:#718096;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+
+    .header{
+        padding:0 15px;
+    }
+
+    .user-name{
+        display:none;
+    }
+
+    .container{
+        margin:20px auto;
+        padding:0 12px;
+    }
+
+    .page-head{
+        display:block;
+    }
+
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .material-section.show{
+        grid-template-columns:1fr;
+    }
+
+    .material-info{
+        grid-column:auto;
+    }
+
+    .total-box{
+        grid-column:auto;
+    }
+
+    .toolbar{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar .btn{
+        width:100%;
+    }
+
+    th,
+    td{
+        white-space:nowrap;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand">
+        <h2>WAT ERP</h2>
+        <span>Pengeluaran & Material</span>
+    </div>
+
+    <div class="header-right">
+
+        <span
+            class="user-name"
+            id="userName"
+        >
+            OWNER
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            LOGOUT
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-head">
+
+        <div>
+
+            <h1>Pengeluaran</h1>
+
+            <p>
+                Catat belanja material dan biaya operasional harian.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUMMARY
+    ========================== -->
+
+    <section class="summary">
+
+        <div class="card">
+
+            <span class="card-label">
+                Total Belanja Material
+            </span>
+
+            <strong
+                class="card-value"
+                id="totalMaterial"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-label">
+                Total Operasional
+            </span>
+
+            <strong
+                class="card-value"
+                id="totalOperational"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-label">
+                Total Pengeluaran
+            </span>
+
+            <strong
+                class="card-value"
+                id="totalExpense"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <div
+        id="alert"
+        class="alert"
+    ></div>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <section class="card form-card">
+
+        <h2 class="form-title">
+            Tambah Pengeluaran
+        </h2>
+
+
+        <div class="form-grid">
+
+
+            <!-- TANGGAL -->
+
+            <div class="form-group">
+
+                <label>
+                    Tanggal *
+                </label>
+
+                <input
+                    type="date"
+                    id="expenseDate"
+                >
+
+            </div>
+
+
+            <!-- KATEGORI -->
+
+            <div class="form-group">
+
+                <label>
+                    Jenis Pengeluaran *
+                </label>
+
+                <select
+                    id="category"
+                    onchange="toggleMaterialFields()"
+                >
+
+                    <option value="OPERATIONAL">
+                        OPERASIONAL
+                    </option>
+
+                    <option value="MATERIAL">
+                        MATERIAL
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =====================
+                 MATERIAL
+            ====================== -->
+
+            <div
+                class="material-section"
+                id="materialSection"
+            >
+
+                <div class="material-info">
+
+                    <strong>
+                        Belanja Material
+                    </strong>
+
+                    <br>
+
+                    Pilih material dari master.
+                    Setelah disimpan, stok otomatis bertambah.
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Material *
+                    </label>
+
+                    <select
+                        id="materialId"
+                        onchange="materialChanged()"
+                    >
+
+                        <option value="">
+                            -- Pilih Material --
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Jumlah *
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        min="0.001"
+                        step="0.001"
+                        placeholder="Contoh: 1"
+                        oninput="calculateMaterialTotal()"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Satuan
+                    </label>
+
+                    <input
+                        type="text"
+                        id="unit"
+                        readonly
+                        placeholder="Otomatis"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Harga Satuan *
+                    </label>
+
+                    <input
+                        type="number"
+                        id="unitCost"
+                        min="0"
+                        step="0.01"
+                        placeholder="Contoh: 300000"
+                        oninput="calculateMaterialTotal()"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- KETERANGAN -->
+
+            <div class="form-group">
+
+                <label>
+                    Keterangan *
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="Contoh: Pembelian Freon R32"
+                >
+
+            </div>
+
+
+            <!-- NOMINAL -->
+
+            <div class="form-group">
+
+                <label>
+                    Nominal *
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    min="1"
+                    step="0.01"
+                    placeholder="0"
+                    oninput="updateTotalPreview()"
+                >
+
+            </div>
+
+
+            <!-- CATATAN -->
+
+            <div class="form-group full">
+
+                <label>
+                    Catatan
+                </label>
+
+                <textarea
+                    id="notes"
+                    placeholder="Catatan tambahan..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- TOTAL -->
+
+            <div class="total-box">
+
+                <span>
+                    Total transaksi
+                </span>
+
+                <strong id="totalPreview">
+                    Rp 0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn btn-secondary"
+                onclick="resetForm()"
+            >
+                Reset
+            </button>
+
+            <button
+                class="btn btn-primary"
+                id="saveButton"
+                onclick="saveExpense()"
+            >
+                Simpan Pengeluaran
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FILTER
+    ========================== -->
+
+    <section class="toolbar">
+
+        <div class="filter">
+
+            <label>
+                Dari Tanggal
+            </label>
+
+            <input
+                type="date"
+                id="filterFrom"
+                onchange="loadExpenses()"
+            >
+
+        </div>
+
+
+        <div class="filter">
+
+            <label>
+                Sampai Tanggal
+            </label>
+
+            <input
+                type="date"
+                id="filterTo"
+                onchange="loadExpenses()"
+            >
+
+        </div>
+
+
+        <div class="filter">
+
+            <label>
+                Jenis
+            </label>
+
+            <select
+                id="filterCategory"
+                onchange="loadExpenses()"
+            >
+
+                <option value="">
+                    Semua
+                </option>
+
+                <option value="MATERIAL">
+                    Material
+                </option>
+
+                <option value="OPERATIONAL">
+                    Operasional
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="btn btn-secondary"
+            onclick="resetFilter()"
+        >
+            Reset Filter
+        </button>
+
+    </section>
+
+
+    <!-- =========================
+         TABLE
+    ========================== -->
+
+    <section class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Tanggal
+                    </th>
+
+                    <th>
+                        Jenis
+                    </th>
+
+                    <th>
+                        Keterangan
+                    </th>
+
+                    <th>
+                        Material
+                    </th>
+
+                    <th>
+                        Jumlah
+                    </th>
+
+                    <th>
+                        Nominal
+                    </th>
+
+                    <th>
+                        Aksi
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="expenseTable">
+
+                <tr>
+
+                    <td colspan="7">
+
+                        <div class="loading">
+                            Memuat data...
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* =====================================
+   SUPABASE
+===================================== */
+
+const {
+    createClient
+} = window.supabase;
+
+
+const supabaseClient =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =====================================
+   STATE
+===================================== */
+
+let currentUser = null;
+
+let materials = [];
+
+let expenses = [];
+
+
+/* =====================================
+   INIT
+===================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+
+async function init(){
+
+    try{
+
+        const {
+            data:{
+                session
+            }
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if(!session){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser =
+            session.user;
+
+
+        await checkOwner();
+
+        setToday();
+
+        await loadMaterials();
+
+        toggleMaterialFields();
+
+        await loadExpenses();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal memuat halaman: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   OWNER CHECK
+===================================== */
+
+async function checkOwner(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("profiles")
+        .select(`
+            id,
+            full_name,
+            email,
+            role,
+            status
+        `)
+        .eq(
+            "id",
+            currentUser.id
+        )
+        .single();
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    if(
+        data.role !== "OWNER"
+    ){
+
+        alert(
+            "Akses ditolak. Halaman ini hanya untuk OWNER."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    if(
+        data.status !== "ACTIVE"
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "userName"
+    ).textContent =
+        data.full_name ||
+        data.email ||
+        "OWNER";
+
+}
+
+
+/* =====================================
+   TODAY
+===================================== */
+
+function setToday(){
+
+    const today =
+        new Date()
+            .toISOString()
+            .slice(
+                0,
+                10
+            );
+
+
+    document.getElementById(
+        "expenseDate"
+    ).value =
+        today;
+
+}
+
+
+/* =====================================
+   LOAD MATERIALS
+===================================== */
+
+async function loadMaterials(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("materials")
+        .select(`
+            id,
+            material_code,
+            name,
+            unit,
+            current_stock,
+            average_cost,
+            status
+        `)
+        .eq(
+            "status",
+            "ACTIVE"
+        )
+        .order(
+            "name",
+            {
+                ascending:true
+            }
+        );
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    materials =
+        data || [];
+
+
+    const select =
+        document.getElementById(
+            "materialId"
+        );
+
+
+    select.innerHTML = `
+        <option value="">
+            -- Pilih Material --
+        </option>
+    `;
+
+
+    materials.forEach(
+        material => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                material.id;
+
+
+            option.textContent =
+                `${material.name} — stok ${formatNumber(material.current_stock)} ${material.unit}`;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================
+   MATERIAL UI
+===================================== */
+
+function toggleMaterialFields(){
+
+    const category =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const section =
+        document.getElementById(
+            "materialSection"
+        );
+
+
+    const amount =
+        document.getElementById(
+            "amount"
+        );
+
+
+    if(
+        category === "MATERIAL"
+    ){
+
+        section.classList.add(
+            "show"
+        );
+
+
+        amount.readOnly =
+            true;
+
+
+        amount.style.background =
+            "#f1f5f9";
+
+
+        calculateMaterialTotal();
+
+    }
+    else{
+
+        section.classList.remove(
+            "show"
+        );
+
+
+        amount.readOnly =
+            false;
+
+
+        amount.style.background =
+            "#fff";
+
+
+        updateTotalPreview();
+
+    }
+
+}
+
+
+/* =====================================
+   MATERIAL CHANGED
+===================================== */
+
+function materialChanged(){
+
+    const material =
+        getSelectedMaterial();
+
+
+    const unit =
+        document.getElementById(
+            "unit"
+        );
+
+
+    if(material){
+
+        unit.value =
+            material.unit || "";
+
+    }
+    else{
+
+        unit.value =
+            "";
+
+    }
+
+
+    calculateMaterialTotal();
+
+}
+
+
+/* =====================================
+   GET MATERIAL
+===================================== */
+
+function getSelectedMaterial(){
+
+    const id =
+        document.getElementById(
+            "materialId"
+        ).value;
+
+
+    return materials.find(
+        item =>
+            item.id === id
+    );
+
+}
+
+
+/* =====================================
+   MATERIAL TOTAL
+===================================== */
+
+function calculateMaterialTotal(){
+
+    const quantity =
+        Number(
+            document.getElementById(
+                "quantity"
+            ).value || 0
+        );
+
+
+    const unitCost =
+        Number(
+            document.getElementById(
+                "unitCost"
+            ).value || 0
+        );
+
+
+    const total =
+        quantity *
+        unitCost;
+
+
+    document.getElementById(
+        "amount"
+    ).value =
+        total > 0
+            ? total
+            : "";
+
+
+    document.getElementById(
+        "totalPreview"
+    ).textContent =
+        formatRupiah(
+            total
+        );
+
+}
+
+
+/* =====================================
+   TOTAL PREVIEW
+===================================== */
+
+function updateTotalPreview(){
+
+    const amount =
+        Number(
+            document.getElementById(
+                "amount"
+            ).value || 0
+        );
+
+
+    document.getElementById(
+        "totalPreview"
+    ).textContent =
+        formatRupiah(
+            amount
+        );
+
+}
+
+
+/* =====================================
+   SAVE EXPENSE
+===================================== */
+
+async function saveExpense(){
+
+    const date =
+        document.getElementById(
+            "expenseDate"
+        ).value;
+
+
+    const category =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const description =
+        document.getElementById(
+            "description"
+        ).value
+        .trim();
+
+
+    const notes =
+        document.getElementById(
+            "notes"
+        ).value
+        .trim();
+
+
+    if(!date){
+
+        alert(
+            "Tanggal wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    if(!description){
+
+        alert(
+            "Keterangan wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    const payload = {
+
+        expense_date:
+            date,
+
+        category:
+            category,
+
+        description:
+            description,
+
+        notes:
+            notes || null,
+
+        created_by:
+            currentUser.id
+
+    };
+
+
+    /* =========================
+       MATERIAL
+    ========================== */
+
+    if(
+        category === "MATERIAL"
+    ){
+
+        const materialId =
+            document.getElementById(
+                "materialId"
+            ).value;
+
+
+        const quantity =
+            Number(
+                document.getElementById(
+                    "quantity"
+                ).value || 0
+            );
+
+
+        const unitCost =
+            Number(
+                document.getElementById(
+                    "unitCost"
+                ).value || 0
+            );
+
+
+        const material =
+            getSelectedMaterial();
+
+
+        if(
+            !materialId ||
+            !material
+        ){
+
+            alert(
+                "Pilih material terlebih dahulu."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            quantity <= 0
+        ){
+
+            alert(
+                "Jumlah material harus lebih dari 0."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            unitCost < 0
+        ){
+
+            alert(
+                "Harga satuan tidak valid."
+            );
+
+            return;
+
+        }
+
+
+        payload.material_id =
+            materialId;
+
+
+        payload.quantity =
+            quantity;
+
+
+        payload.unit =
+            material.unit;
+
+
+        payload.unit_cost =
+            unitCost;
+
+
+        payload.amount =
+            quantity *
+            unitCost;
+
+    }
+
+
+    /* =========================
+       OPERATIONAL
+    ========================== */
+
+    else{
+
+        const amount =
+            Number(
+                document.getElementById(
+                    "amount"
+                ).value || 0
+            );
+
+
+        if(
+            amount <= 0
+        ){
+
+            alert(
+                "Nominal harus lebih dari 0."
+            );
+
+            return;
+
+        }
+
+
+        payload.amount =
+            amount;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "saveButton"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "⏳ MENYIMPAN...";
+
+
+    try{
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("expenses")
+            .insert(
+                payload
+            );
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        showAlert(
+            category === "MATERIAL"
+                ? "Belanja material berhasil disimpan. Stok otomatis bertambah."
+                : "Biaya operasional berhasil disimpan.",
+            "success"
+        );
+
+
+        resetForm();
+
+        await loadMaterials();
+
+        await loadExpenses();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal menyimpan pengeluaran: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+    finally{
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "Simpan Pengeluaran";
+
+    }
+
+}
+
+
+/* =====================================
+   LOAD EXPENSES
+===================================== */
+
+async function loadExpenses(){
+
+    const from =
+        document.getElementById(
+            "filterFrom"
+        ).value;
+
+
+    const to =
+        document.getElementById(
+            "filterTo"
+        ).value;
+
+
+    const category =
+        document.getElementById(
+            "filterCategory"
+        ).value;
+
+
+    let query =
+        supabaseClient
+            .from("expenses")
+            .select(`
+                id,
+                expense_date,
+                category,
+                description,
+                amount,
+                material_id,
+                quantity,
+                unit,
+                unit_cost,
+                notes,
+                created_at
+            `)
+            .order(
+                "expense_date",
+                {
+                    ascending:false
+                }
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+    if(from){
+
+        query =
+            query.gte(
+                "expense_date",
+                from
+            );
+
+    }
+
+
+    if(to){
+
+        query =
+            query.lte(
+                "expense_date",
+                to
+            );
+
+    }
+
+
+    if(category){
+
+        query =
+            query.eq(
+                "category",
+                category
+            );
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await query;
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    expenses =
+        data || [];
+
+
+    renderExpenses();
+
+    updateSummary();
+
+}
+
+
+/* =====================================
+   RENDER EXPENSES
+===================================== */
+
+function renderExpenses(){
+
+    const tbody =
+        document.getElementById(
+            "expenseTable"
+        );
+
+
+    if(
+        expenses.length === 0
+    ){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7">
+                    <div class="empty">
+                        Belum ada pengeluaran pada periode ini.
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+        expenses
+            .map(
+                expense => {
+
+                    const material =
+                        materials.find(
+                            item =>
+                                item.id ===
+                                expense.material_id
+                        );
+
+
+                    const materialName =
+                        material?.name ||
+                        (
+                            expense.category ===
+                            "MATERIAL"
+                                ? "-"
+                                : "—"
+                        );
+
+
+                    const quantity =
+                        expense.quantity
+                            ? `${formatNumber(expense.quantity)} ${expense.unit || ""}`
+                            : "—";
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${formatDate(
+                                    expense.expense_date
+                                )}
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="badge ${
+                                        expense.category ===
+                                        "MATERIAL"
+                                            ? "badge-material"
+                                            : "badge-operational"
+                                    }"
+                                >
+
+                                    ${
+                                        expense.category ===
+                                        "MATERIAL"
+                                            ? "MATERIAL"
+                                            : "OPERASIONAL"
+                                    }
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+                                    ${escapeHtml(
+                                        expense.description
+                                    )}
+                                </strong>
+
+                                ${
+                                    expense.notes
+                                        ? `
+                                            <div
+                                                style="
+                                                    font-size:11px;
+                                                    color:#718096;
+                                                    margin-top:3px
+                                                "
+                                            >
+                                                ${escapeHtml(
+                                                    expense.notes
+                                                )}
+                                            </div>
+                                        `
+                                        : ""
+                                }
+
+                            </td>
+
+
+                            <td>
+                                ${escapeHtml(
+                                    materialName
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${quantity}
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+                                    ${formatRupiah(
+                                        expense.amount
+                                    )}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="btn btn-danger"
+                                    onclick="deleteExpense(
+                                        '${expense.id}'
+                                    )"
+                                >
+                                    Hapus
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =====================================
+   SUMMARY
+===================================== */
+
+function updateSummary(){
+
+    const materialTotal =
+        expenses
+            .filter(
+                item =>
+                    item.category ===
+                    "MATERIAL"
+            )
+            .reduce(
+                (
+                    sum,
+                    item
+                ) =>
+                    sum +
+                    Number(
+                        item.amount ||
+                        0
+                    ),
+                0
+            );
+
+
+    const operationalTotal =
+        expenses
+            .filter(
+                item =>
+                    item.category ===
+                    "OPERATIONAL"
+            )
+            .reduce(
+                (
+                    sum,
+                    item
+                ) =>
+                    sum +
+                    Number(
+                        item.amount ||
+                        0
+                    ),
+                0
+            );
+
+
+    document.getElementById(
+        "totalMaterial"
+    ).textContent =
+        formatRupiah(
+            materialTotal
+        );
+
+
+    document.getElementById(
+        "totalOperational"
+    ).textContent =
+        formatRupiah(
+            operationalTotal
+        );
+
+
+    document.getElementById(
+        "totalExpense"
+    ).textContent =
+        formatRupiah(
+            materialTotal +
+            operationalTotal
+        );
+
+}
+
+
+/* =====================================
+   DELETE EXPENSE
+===================================== */
+
+async function deleteExpense(
+    id
+){
+
+    const expense =
+        expenses.find(
+            item =>
+                item.id === id
+        );
+
+
+    if(!expense){
+
+        return;
+
+    }
+
+
+    /*
+       MATERIAL TIDAK BOLEH DIHAPUS
+       SEMBARANGAN karena trigger sudah
+       membuat stock_movements IN.
+    */
+
+    if(
+        expense.category ===
+        "MATERIAL"
+    ){
+
+        alert(
+            "Transaksi material tidak bisa dihapus langsung karena sudah menambah stok. Untuk koreksi, nanti kita buat fitur retur/koreksi stok agar stok tetap akurat."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "Yakin ingin menghapus pengeluaran operasional ini?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("expenses")
+            .delete()
+            .eq(
+                "id",
+                id
+            );
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        showAlert(
+            "Pengeluaran berhasil dihapus.",
+            "success"
+        );
+
+
+        await loadExpenses();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal menghapus pengeluaran: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   RESET FORM
+===================================== */
+
+function resetForm(){
+
+    setToday();
+
+
+    document.getElementById(
+        "category"
+    ).value =
+        "OPERATIONAL";
+
+
+    document.getElementById(
+        "materialId"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "quantity"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "unit"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "unitCost"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "amount"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "notes"
+    ).value =
+        "";
+
+
+    toggleMaterialFields();
+
+}
+
+
+/* =====================================
+   RESET FILTER
+===================================== */
+
+function resetFilter(){
+
+    document.getElementById(
+        "filterFrom"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "filterTo"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "filterCategory"
+    ).value =
+        "";
+
+
+    loadExpenses();
+
+}
+
+
+/* =====================================
+   LOGOUT
+===================================== */
+
+async function logout(){
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================
+   FORMAT RUPIAH
+===================================== */
+
+function formatRupiah(
+    value
+){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(
+        Number(
+            value ||
+            0
+        )
+    );
+
+}
+
+
+/* =====================================
+   FORMAT NUMBER
+===================================== */
+
+function formatNumber(
+    value
+){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            maximumFractionDigits:3
+        }
+    ).format(
+        Number(
+            value ||
+            0
+        )
+    );
+
+}
+
+
+/* =====================================
+   FORMAT DATE
+===================================== */
+
+function formatDate(
+    value
+){
+
+    if(!value){
+
+        return "-";
+
+    }
+
+
+    return new Intl.DateTimeFormat(
+        "id-ID",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        }
+    ).format(
+        new Date(
+            value +
+            "T00:00:00"
+        )
+    );
+
+}
+
+
+/* =====================================
+   ESCAPE HTML
+===================================== */
+
+function escapeHtml(
+    value
+){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================
+   ALERT
+===================================== */
+
+function showAlert(
+    message,
+    type
+){
+
+    const alert =
+        document.getElementById(
+            "alert"
+        );
+
+
+    alert.textContent =
+        message;
+
+
+    alert.className =
+        "alert show " +
+        (
+            type === "error"
+                ? "alert-error"
+                : "alert-success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            alert.classList.remove(
+                "show"
+            );
+
+        },
+        5000
+    );
+
+}
+
+</script>
+
+</body>
+</html>
