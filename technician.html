@@ -124,6 +124,10 @@ body{
     box-shadow:0 3px 12px rgba(0,0,0,.05);
 }
 
+.toolbar{
+    flex-wrap:wrap;
+}
+
 .toolbar input,
 .toolbar select{
     width:100%;
@@ -132,6 +136,31 @@ body{
     border-radius:8px;
     outline:none;
     font-size:14px;
+}
+
+.filter-date,
+.filter-month,
+.filter-year{
+    flex:1 1 150px;
+}
+
+.filter-search{
+    flex:2 1 280px;
+}
+
+.filter-status{
+    flex:1 1 180px;
+}
+
+.btn-reset-filter{
+    flex:0 0 auto;
+    background:#edf2f7;
+    color:#334155;
+    border:0;
+    padding:11px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
 .toolbar input:focus,
@@ -485,6 +514,16 @@ body{
         flex-direction:column;
     }
 
+    .filter-search,
+    .filter-date,
+    .filter-month,
+    .filter-year,
+    .filter-status,
+    .btn-reset-filter{
+        width:100%;
+        flex:1 1 auto;
+    }
+
     .job-top{
         display:block;
     }
@@ -563,24 +602,59 @@ body{
     <section class="toolbar">
 
         <input
+            class="filter-search"
             type="text"
             id="searchInput"
             placeholder="Cari customer, alamat, pekerjaan..."
             oninput="renderJobs()"
         >
 
-        <select id="statusFilter" onchange="renderJobs()">
-            <option value="">Semua Status</option>
+        <input
+            class="filter-date"
+            type="date"
+            id="dateFilter"
+            title="Filter tanggal"
+            onchange="renderJobs()"
+        >
+
+        <select class="filter-month" id="monthFilter" onchange="renderJobs()">
+            <option value="">Semua Bulan</option>
+            <option value="01">Januari</option>
+            <option value="02">Februari</option>
+            <option value="03">Maret</option>
+            <option value="04">April</option>
+            <option value="05">Mei</option>
+            <option value="06">Juni</option>
+            <option value="07">Juli</option>
+            <option value="08">Agustus</option>
+            <option value="09">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+        </select>
+
+        <select class="filter-year" id="yearFilter" onchange="renderJobs()">
+            <option value="">Semua Tahun</option>
+        </select>
+
+        <select class="filter-status" id="statusFilter" onchange="renderJobs()">
+            <option value="">Semua Status Belum Selesai</option>
             <option value="NEW">Baru</option>
             <option value="ASSIGNED">Ditugaskan</option>
             <option value="ON_THE_WAY">Menuju Lokasi</option>
             <option value="CHECKED_IN">Check In</option>
             <option value="IN_PROGRESS">Dalam Pengerjaan</option>
-            <option value="COMPLETED">Selesai</option>
-            <option value="CANCELLED">Dibatalkan</option>
         </select>
 
+        <button class="btn-reset-filter" onclick="resetFilters()">
+            ↺ Reset Filter
+        </button>
+
     </section>
+
+    <div style="margin:-8px 0 18px;padding:10px 13px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;color:#1e40af;font-size:12px;">
+        📌 Daftar ini hanya menampilkan jadwal yang <b>belum selesai</b>. Gunakan filter tanggal, bulan, atau tahun untuk mencari jadwal tertentu.
+    </div>
 
 
     <section id="jobsContainer" class="jobs">
@@ -858,10 +932,18 @@ async function loadJobs(){
         if(error) throw error;
 
         // Job teknisi = assigned_to ATAU technician_id sesuai user login.
+        // Halaman teknisi hanya menampilkan pekerjaan yang BELUM SELESAI.
+        // COMPLETED dan CANCELLED tetap tersimpan di database, tetapi
+        // tidak ditampilkan lagi di daftar jadwal teknisi.
         jobs = (data || []).filter(job =>
-            job.assigned_to === currentUser.id ||
-            job.technician_id === currentUser.id
+            (
+                job.assigned_to === currentUser.id ||
+                job.technician_id === currentUser.id
+            ) &&
+            !["COMPLETED", "CANCELLED"].includes(job.status)
         );
+
+        populateYearFilter();
 
         jobs.sort((a,b) => {
             const da = a.scheduled_at
@@ -899,24 +981,91 @@ async function loadJobs(){
 }
 
 /* =========================
+   FILTER TAHUN
+========================= */
+
+function populateYearFilter(){
+
+    const select =
+        document.getElementById("yearFilter");
+
+    if(!select) return;
+
+    const currentValue = select.value;
+
+    const years = [...new Set(
+        jobs
+            .map(job => getLocalDateKey(job.scheduled_at).slice(0,4))
+            .filter(year => year && year !== "0000")
+    )].sort((a,b) => Number(b) - Number(a));
+
+    select.innerHTML =
+        '<option value="">Semua Tahun</option>' +
+        years.map(year =>
+            `<option value="${year}">${year}</option>`
+        ).join("");
+
+    if(years.includes(currentValue)){
+        select.value = currentValue;
+    }
+}
+
+
+/* =========================
+   RESET FILTER
+========================= */
+
+function resetFilters(){
+
+    document.getElementById("searchInput").value = "";
+    document.getElementById("dateFilter").value = "";
+    document.getElementById("monthFilter").value = "";
+    document.getElementById("yearFilter").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    renderJobs();
+}
+
+
+/* =========================
+   LOCAL DATE KEY
+========================= */
+
+function getLocalDateKey(value){
+
+    if(!value) return "";
+
+    const date = new Date(value);
+
+    if(Number.isNaN(date.getTime())) return "";
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth()+1).padStart(2,"0");
+    const day = String(date.getDate()).padStart(2,"0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+/* =========================
    SUMMARY
 ========================= */
+
+
 
 function updateSummary(){
 
     const today = new Date();
 
     const todayString =
-        today.toISOString().slice(0,10);
+        getLocalDateKey(today);
 
 
     const todayJobs = jobs.filter(job => {
 
         if(!job.scheduled_at) return false;
 
-        return new Date(job.scheduled_at)
-            .toISOString()
-            .slice(0,10) === todayString;
+        return getLocalDateKey(job.scheduled_at) === todayString;
 
     });
 
@@ -966,6 +1115,18 @@ function renderJobs(){
         document.getElementById("statusFilter")
             .value;
 
+    const dateFilter =
+        document.getElementById("dateFilter")
+            .value;
+
+    const monthFilter =
+        document.getElementById("monthFilter")
+            .value;
+
+    const yearFilter =
+        document.getElementById("yearFilter")
+            .value;
+
 
     const filtered = jobs.filter(job => {
 
@@ -993,7 +1154,28 @@ function renderJobs(){
             !status || job.status === status;
 
 
-        return matchSearch && matchStatus;
+        const jobDate =
+            getLocalDateKey(job.scheduled_at);
+
+        const matchDate =
+            !dateFilter || jobDate === dateFilter;
+
+        const matchMonth =
+            !monthFilter ||
+            jobDate.substring(5,7) === monthFilter;
+
+        const matchYear =
+            !yearFilter ||
+            jobDate.substring(0,4) === yearFilter;
+
+
+        return (
+            matchSearch &&
+            matchStatus &&
+            matchDate &&
+            matchMonth &&
+            matchYear
+        );
 
     });
 
