@@ -1,427 +1,462 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Kelola Teknisi - WAT ERP</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/config.js"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f3f6fb;
-            color: #172033;
-        }
-
-        header {
-            height: 68px;
-            background: linear-gradient(90deg, #0d47a1, #1268d8);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-        }
-
-        .brand h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .brand small {
-            display: block;
-            margin-top: 3px;
-            opacity: .9;
-            font-size: 12px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .role {
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .logout {
-            border: 0;
-            background: white;
-            color: #0d47a1;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 28px auto;
-            padding: 0 18px;
-        }
-
-        .page-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .page-head h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        .page-head p {
-            margin: 6px 0 0;
-            color: #6c7b91;
-        }
-
-        .btn-primary {
-            border: 0;
-            background: #0d5dcc;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: #084da9;
-        }
-
-        .btn-secondary {
-            border: 0;
-            background: #e7edf6;
-            color: #24344d;
-            padding: 11px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-
-        .stat {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 4px solid #0d5dcc;
-            box-shadow: 0 5px 18px rgba(20, 40, 80, .07);
-        }
-
-        .stat span {
-            display: block;
-            color: #6c7b91;
-            font-size: 13px;
-            margin-bottom: 9px;
-        }
-
-        .stat strong {
-            font-size: 24px;
-        }
-
-        .filter-box {
-            background: white;
-            padding: 14px;
-            border-radius: 12px;
-            display: flex;
-            gap: 10px;
-            margin-bottom: 18px;
-            box-shadow: 0 5px 18px rgba(20, 40, 80, .06);
-        }
-
-        .filter-box input,
-        .filter-box select {
-            height: 42px;
-            border: 1px solid #d7dfeb;
-            border-radius: 8px;
-            padding: 0 12px;
-            outline: none;
-            background: white;
-        }
-
-        .filter-box input {
-            flex: 1;
-        }
-
-        .filter-box select {
-            width: 220px;
-        }
-
-        .table-box {
-            background: white;
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 5px 18px rgba(20, 40, 80, .06);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #edf3fa;
-            color: #40516a;
-            font-size: 13px;
-            text-align: left;
-            padding: 13px;
-        }
-
-        td {
-            padding: 14px 13px;
-            border-bottom: 1px solid #edf0f5;
-            font-size: 14px;
-        }
-
-        tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .tech-name {
-            font-weight: bold;
-        }
-
-        .tech-email {
-            color: #718096;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .badge-active {
-            background: #dff8e9;
-            color: #168447;
-        }
-
-        .badge-inactive {
-            background: #fbe1e1;
-            color: #bd3030;
-        }
-
-        .btn-danger {
-            border: 0;
-            background: #ffe6e6;
-            color: #c73535;
-            padding: 7px 10px;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-activate {
-            border: 0;
-            background: #e2f7eb;
-            color: #168447;
-            padding: 7px 10px;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .empty {
-            padding: 50px 20px;
-            text-align: center;
-            color: #718096;
-        }
-
-        .loading {
-            padding: 40px;
-            text-align: center;
-            color: #718096;
-        }
-
-        .error {
-            background: #fff0f0;
-            border: 1px solid #ffcaca;
-            color: #c62828;
-            padding: 14px;
-            border-radius: 9px;
-            margin-bottom: 15px;
-        }
-
-        /* MODAL */
-
-        .modal-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 25, 50, .60);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-backdrop.show {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 14px;
-            box-shadow: 0 20px 50px rgba(0,0,0,.25);
-        }
-
-        .modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e9edf3;
-        }
-
-        .modal-head h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .close {
-            border: 0;
-            background: transparent;
-            font-size: 25px;
-            cursor: pointer;
-            color: #718096;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 7px;
-            color: #34445d;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            height: 43px;
-            border: 1px solid #d7dfeb;
-            border-radius: 8px;
-            padding: 0 12px;
-            outline: none;
-            background: white;
-        }
-
-        .form-help {
-            font-size: 11px;
-            color: #718096;
-            margin-top: 6px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            padding: 15px 20px 20px;
-            border-top: 1px solid #e9edf3;
-        }
-
-        .selected-account {
-            background: #f3f7fc;
-            border-radius: 9px;
-            padding: 12px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .selected-account strong {
-            display: block;
-        }
-
-        .selected-account small {
-            color: #6c7b91;
-        }
-
-        @media (max-width: 700px) {
-
-            header {
-                padding: 0 15px;
-            }
-
-            .container {
-                margin-top: 20px;
-            }
-
-            .page-head {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .filter-box {
-                flex-direction: column;
-            }
-
-            .filter-box select {
-                width: 100%;
-            }
-
-            th,
-            td {
-                white-space: nowrap;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kelola Teknisi - WAT ERP</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f6fb;
+    color:#172033;
+}
+
+.header{
+    height:68px;
+    background:linear-gradient(90deg,#0d47a1,#1268d8);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+}
+
+.brand h2{
+    font-size:20px;
+}
+
+.brand span{
+    display:block;
+    font-size:12px;
+    opacity:.85;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.user-name{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.logout{
+    border:0;
+    background:white;
+    color:#0d47a1;
+    padding:9px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1100px;
+    margin:28px auto;
+    padding:0 18px;
+}
+
+.page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.page-head h1{
+    font-size:28px;
+}
+
+.page-head p{
+    color:#718096;
+    margin-top:6px;
+    font-size:14px;
+}
+
+.btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#0d5dcc;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#084da9;
+}
+
+.btn-secondary{
+    background:#e7edf6;
+    color:#24344d;
+}
+
+.btn-danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.btn-success{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.summary-card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+    border-left:4px solid #0d5dcc;
+}
+
+.summary-card span{
+    display:block;
+    color:#718096;
+    font-size:13px;
+}
+
+.summary-card strong{
+    display:block;
+    font-size:27px;
+    margin-top:7px;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.toolbar{
+    background:white;
+    padding:14px;
+    border-radius:12px;
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+    box-shadow:0 4px 16px rgba(20,40,80,.06);
+}
+
+.toolbar input,
+.toolbar select{
+    height:42px;
+    border:1px solid #d7dfeb;
+    border-radius:8px;
+    padding:0 12px;
+    outline:none;
+    background:white;
+}
+
+.toolbar input{
+    flex:1;
+}
+
+.toolbar select{
+    width:190px;
+}
+
+/* =========================
+   ALERT
+========================= */
+
+.alert{
+    display:none;
+    padding:12px 14px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:13px;
+}
+
+.alert.show{
+    display:block;
+}
+
+.alert-error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.alert-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-box{
+    background:white;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 4px 16px rgba(20,40,80,.06);
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#edf3fa;
+    color:#40516a;
+    font-size:12px;
+    text-align:left;
+    padding:13px;
+    white-space:nowrap;
+}
+
+td{
+    padding:14px 13px;
+    border-bottom:1px solid #edf0f5;
+    font-size:13px;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+.tech-name{
+    font-weight:bold;
+    font-size:14px;
+}
+
+.tech-email{
+    color:#718096;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.badge-active{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.badge-inactive{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.loading,
+.empty{
+    text-align:center;
+    padding:45px 20px;
+    color:#718096;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    z-index:1000;
+    padding:20px;
+    overflow:auto;
+}
+
+.modal.show{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-box{
+    width:100%;
+    max-width:520px;
+    background:white;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.modal-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:19px;
+}
+
+.close{
+    border:0;
+    background:transparent;
+    font-size:25px;
+    cursor:pointer;
+    color:#64748b;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    height:43px;
+    border:1px solid #d7deea;
+    border-radius:8px;
+    padding:0 12px;
+    outline:none;
+}
+
+.form-help{
+    color:#718096;
+    font-size:11px;
+    margin-top:6px;
+}
+
+.account-preview{
+    display:none;
+    background:#f3f7fc;
+    border-radius:9px;
+    padding:12px;
+    margin-bottom:15px;
+}
+
+.account-preview strong{
+    display:block;
+}
+
+.account-preview span{
+    display:block;
+    color:#718096;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.modal-footer{
+    padding:15px 20px 20px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+}
+
+@media(max-width:700px){
+
+    .header{
+        padding:0 15px;
+    }
+
+    .user-name{
+        display:none;
+    }
+
+    .container{
+        margin:20px auto;
+        padding:0 12px;
+    }
+
+    .page-head{
+        display:block;
+    }
+
+    .page-head .btn{
+        margin-top:15px;
+    }
+
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .toolbar select{
+        width:100%;
+    }
+
+    th,
+    td{
+        white-space:nowrap;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<header>
+<header class="header">
 
     <div class="brand">
         <h2>WAT ERP</h2>
-        <small>Kelola Teknisi</small>
+        <span>Kelola Teknisi</span>
     </div>
 
     <div class="header-right">
-        <span class="role" id="userRole">OWNER</span>
-        <button class="logout" id="logoutBtn">
+
+        <span
+            class="user-name"
+            id="userName"
+        >
+            OWNER
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
             LOGOUT
         </button>
+
     </div>
 
 </header>
@@ -432,52 +467,85 @@
     <div class="page-head">
 
         <div>
+
             <h1>Kelola Teknisi</h1>
+
             <p>
-                Kelola daftar karyawan dan hasil pekerjaan teknisi.
+                Kelola akun dan data karyawan teknisi.
             </p>
+
         </div>
 
-        <button class="btn-primary" id="addTechnicianBtn">
+        <button
+            class="btn btn-primary"
+            onclick="openAddModal()"
+        >
             + Tambah Teknisi
         </button>
 
     </div>
 
 
-    <!-- STATISTIK -->
+    <!-- SUMMARY -->
 
-    <section class="stats">
+    <section class="summary">
 
-        <div class="stat">
-            <span>Total Teknisi Aktif</span>
-            <strong id="totalTechnicians">0</strong>
+        <div class="summary-card">
+
+            <span>
+                Total Teknisi Aktif
+            </span>
+
+            <strong id="totalTechnicians">
+                0
+            </strong>
+
         </div>
 
-        <div class="stat">
-            <span>Total Pekerjaan Selesai</span>
-            <strong id="totalCompletedJobs">0</strong>
+
+        <div class="summary-card">
+
+            <span>
+                Total Pekerjaan Selesai
+            </span>
+
+            <strong id="totalJobs">
+                0
+            </strong>
+
         </div>
 
-        <div class="stat">
-            <span>Total Nilai Pekerjaan</span>
-            <strong id="totalWorkValue">Rp 0</strong>
+
+        <div class="summary-card">
+
+            <span>
+                Total Nilai Pekerjaan
+            </span>
+
+            <strong id="totalValue">
+                Rp 0
+            </strong>
+
         </div>
 
     </section>
 
 
-    <!-- FILTER -->
+    <!-- TOOLBAR -->
 
-    <section class="filter-box">
+    <section class="toolbar">
 
         <input
             type="text"
             id="searchInput"
-            placeholder="Cari nama teknisi..."
+            placeholder="Cari nama / email / kode teknisi..."
+            oninput="renderTechnicians()"
         >
 
-        <select id="statusFilter">
+        <select
+            id="statusFilter"
+            onchange="renderTechnicians()"
+        >
 
             <option value="">
                 Semua Status
@@ -493,9 +561,10 @@
 
         </select>
 
+
         <button
-            class="btn-secondary"
-            id="refreshBtn"
+            class="btn btn-secondary"
+            onclick="loadData()"
         >
             ↻ Refresh
         </button>
@@ -503,10 +572,13 @@
     </section>
 
 
-    <div id="message"></div>
+    <div
+        id="alert"
+        class="alert"
+    ></div>
 
 
-    <!-- DATA -->
+    <!-- TABLE -->
 
     <section class="table-box">
 
@@ -516,17 +588,29 @@
 
                 <tr>
 
-                    <th>Teknisi</th>
+                    <th>
+                        Teknisi
+                    </th>
 
-                    <th>Kode</th>
+                    <th>
+                        Kode
+                    </th>
 
-                    <th>Pekerjaan Selesai</th>
+                    <th>
+                        Pekerjaan
+                    </th>
 
-                    <th>Total Rupiah</th>
+                    <th>
+                        Total Rupiah
+                    </th>
 
-                    <th>Status</th>
+                    <th>
+                        Status
+                    </th>
 
-                    <th>Aksi</th>
+                    <th>
+                        Aksi
+                    </th>
 
                 </tr>
 
@@ -535,11 +619,15 @@
             <tbody id="technicianTable">
 
                 <tr>
+
                     <td colspan="6">
+
                         <div class="loading">
                             Memuat data...
                         </div>
+
                     </td>
+
                 </tr>
 
             </tbody>
@@ -551,22 +639,26 @@
 </main>
 
 
-<!-- MODAL TAMBAH -->
+<!-- =========================
+     TAMBAH TEKNISI
+========================= -->
 
 <div
-    class="modal-backdrop"
+    class="modal"
     id="addModal"
 >
 
-    <div class="modal">
+    <div class="modal-box">
 
-        <div class="modal-head">
+        <div class="modal-header">
 
-            <h2>Tambah Teknisi</h2>
+            <h2>
+                Tambah Teknisi
+            </h2>
 
             <button
                 class="close"
-                id="closeModal"
+                onclick="closeAddModal()"
             >
                 ×
             </button>
@@ -579,10 +671,13 @@
             <div class="form-group">
 
                 <label>
-                    Pilih Akun Teknisi *
+                    Akun Teknisi *
                 </label>
 
-                <select id="accountSelect">
+                <select
+                    id="accountSelect"
+                    onchange="previewAccount()"
+                >
 
                     <option value="">
                         -- Pilih Akun Teknisi --
@@ -591,25 +686,25 @@
                 </select>
 
                 <div class="form-help">
-                    Hanya akun dengan role TEKNISI yang belum
-                    terdaftar yang ditampilkan.
+                    Hanya akun dengan role TEKNISI
+                    yang belum terdaftar.
                 </div>
 
             </div>
 
 
             <div
-                class="selected-account"
-                id="selectedAccount"
+                class="account-preview"
+                id="accountPreview"
             >
 
-                <strong id="selectedName">
+                <strong id="previewName">
                     -
                 </strong>
 
-                <small id="selectedEmail">
+                <span id="previewEmail">
                     -
-                </small>
+                </span>
 
             </div>
 
@@ -649,15 +744,15 @@
         <div class="modal-footer">
 
             <button
-                class="btn-secondary"
-                id="cancelModal"
+                class="btn btn-secondary"
+                onclick="closeAddModal()"
             >
                 Batal
             </button>
 
             <button
-                class="btn-primary"
-                id="saveTechnicianBtn"
+                class="btn btn-primary"
+                onclick="saveTechnician()"
             >
                 Simpan
             </button>
@@ -671,162 +766,200 @@
 
 <script>
 
-const supabaseClient = window.supabase.createClient(
+/* =====================================
+   SUPABASE
+===================================== */
+
+const { createClient } = window.supabase;
+
+const supabaseClient = createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
 );
 
 
+/* =====================================
+   STATE
+===================================== */
+
 let currentUser = null;
+
+let currentProfile = null;
+
 let technicians = [];
+
 let profiles = [];
+
 let jobs = [];
 
 
-/* =========================================
-   FORMAT RUPIAH
-========================================= */
+/* =====================================
+   INIT
+===================================== */
 
-function rupiah(value) {
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
 
-    const number = Number(value || 0);
 
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style: "currency",
-            currency: "IDR",
-            maximumFractionDigits: 0
+async function init(){
+
+    try{
+
+        const {
+            data:{
+                session
+            }
+        } =
+        await supabaseClient.auth.getSession();
+
+
+        if(!session){
+
+            window.location.href =
+                "login.html";
+
+            return;
         }
-    ).format(number);
-}
 
 
-/* =========================================
-   ESCAPE HTML
-========================================= */
+        currentUser =
+            session.user;
 
-function escapeHtml(value) {
 
-    if (value === null || value === undefined) {
-        return "";
+        await checkOwner();
+
+        await loadData();
+
     }
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal memuat halaman: " +
+            error.message,
+            "error"
+        );
+
+    }
+
 }
 
 
-/* =========================================
+/* =====================================
    CHECK OWNER
-========================================= */
+===================================== */
 
-async function checkOwner() {
+async function checkOwner(){
 
     const {
-        data: {
-            user
-        },
+        data,
         error
-    } = await supabaseClient.auth.getUser();
-
-
-    if (error || !user) {
-
-        window.location.href = "login.html";
-
-        return false;
-    }
-
-
-    currentUser = user;
-
-
-    const {
-        data: profile,
-        error: profileError
-    } = await supabaseClient
+    } =
+    await supabaseClient
         .from("profiles")
-        .select("id,full_name,email,role,status")
-        .eq("id", user.id)
+        .select(`
+            id,
+            full_name,
+            email,
+            role,
+            status
+        `)
+        .eq(
+            "id",
+            currentUser.id
+        )
         .single();
 
 
-    if (profileError || !profile) {
+    if(error){
 
-        alert("Profile user tidak ditemukan.");
+        throw error;
 
-        await supabaseClient.auth.signOut();
-
-        window.location.href = "login.html";
-
-        return false;
     }
 
 
-    if (profile.role !== "OWNER") {
+    currentProfile =
+        data;
+
+
+    if(
+        data.role !== "OWNER"
+    ){
 
         alert(
             "Akses ditolak. Halaman ini hanya untuk OWNER."
         );
 
-        window.location.href = "login.html";
+        window.location.href =
+            "login.html";
 
-        return false;
+        return;
+
     }
 
 
-    if (profile.status !== "ACTIVE") {
-
-        alert("Akun Anda tidak aktif.");
+    if(
+        data.status !== "ACTIVE"
+    ){
 
         await supabaseClient.auth.signOut();
 
-        window.location.href = "login.html";
+        window.location.href =
+            "login.html";
 
-        return false;
+        return;
+
     }
 
 
-    document.getElementById("userRole").textContent =
-        profile.full_name || "OWNER";
+    document.getElementById(
+        "userName"
+    ).textContent =
+        data.full_name ||
+        data.email ||
+        "OWNER";
 
-
-    return true;
 }
 
 
-/* =========================================
-   LOAD DATA
-========================================= */
+/* =====================================
+   LOAD ALL DATA
+===================================== */
 
-async function loadData() {
+async function loadData(){
 
-    showMessage("");
+    showAlert(
+        "",
+        "success"
+    );
 
-    document.getElementById("technicianTable").innerHTML = `
+
+    document.getElementById(
+        "technicianTable"
+    ).innerHTML = `
         <tr>
             <td colspan="6">
                 <div class="loading">
-                    Memuat data...
+                    Memuat data teknisi...
                 </div>
             </td>
         </tr>
     `;
 
 
-    /*
-        1. DATA TEKNISI
-    */
+    /* ================================
+       TECHNICIANS
+    ================================= */
 
     const {
-        data: technicianData,
-        error: technicianError
-    } = await supabaseClient
+        data:technicianData,
+        error:technicianError
+    } =
+    await supabaseClient
         .from("technicians")
         .select(`
             id,
@@ -837,35 +970,38 @@ async function loadData() {
             user_id,
             status,
             notes,
-            created_at
+            created_by,
+            created_at,
+            updated_at
         `)
-        .order("full_name", {
-            ascending: true
-        });
-
-
-    if (technicianError) {
-
-        showError(
-            "Gagal mengambil data teknisi: " +
-            technicianError.message
+        .order(
+            "full_name",
+            {
+                ascending:true
+            }
         );
 
-        return;
+
+    if(technicianError){
+
+        throw technicianError;
+
     }
 
 
-    technicians = technicianData || [];
+    technicians =
+        technicianData || [];
 
 
-    /*
-        2. AKUN TEKNISI
-    */
+    /* ================================
+       PROFILES TEKNISI
+    ================================= */
 
     const {
-        data: profileData,
-        error: profileError
-    } = await supabaseClient
+        data:profileData,
+        error:profileError
+    } =
+    await supabaseClient
         .from("profiles")
         .select(`
             id,
@@ -874,157 +1010,181 @@ async function loadData() {
             role,
             status
         `)
-        .eq("role", "TEKNISI")
-        .order("full_name", {
-            ascending: true
-        });
-
-
-    if (profileError) {
-
-        showError(
-            "Gagal mengambil akun teknisi: " +
-            profileError.message
+        .eq(
+            "role",
+            "TEKNISI"
+        )
+        .order(
+            "full_name",
+            {
+                ascending:true
+            }
         );
 
-        return;
+
+    if(profileError){
+
+        throw profileError;
+
     }
 
 
-    profiles = profileData || [];
+    profiles =
+        profileData || [];
 
 
-    /*
-        3. JOB SELESAI
-    */
+    /* ================================
+       JOB SELESAI
+    ================================= */
 
     const {
-        data: jobData,
-        error: jobError
-    } = await supabaseClient
+        data:jobData,
+        error:jobError
+    } =
+    await supabaseClient
         .from("jobs")
         .select(`
             id,
             job_code,
             technician_id,
+            assigned_to,
             status,
             service_price,
             actual_cost,
             completed_at
         `)
-        .eq("status", "COMPLETED");
-
-
-    if (jobError) {
-
-        showError(
-            "Gagal mengambil data pekerjaan: " +
-            jobError.message
+        .eq(
+            "status",
+            "COMPLETED"
         );
 
-        return;
+
+    if(jobError){
+
+        throw jobError;
+
     }
 
 
-    jobs = jobData || [];
+    jobs =
+        jobData || [];
 
 
-    updateStatistics();
+    updateSummary();
 
     renderTechnicians();
 
 }
 
 
-/* =========================================
-   STATISTIK
-========================================= */
+/* =====================================
+   SUMMARY
+===================================== */
 
-function updateStatistics() {
+function updateSummary(){
 
-    const activeTechnicians =
+    const active =
         technicians.filter(
             technician =>
-                technician.status === "ACTIVE"
+                technician.status ===
+                "ACTIVE"
         );
-
-
-    let totalCompleted = 0;
-
-    let totalValue = 0;
-
-
-    jobs.forEach(job => {
-
-        totalCompleted++;
-
-        totalValue += Number(
-            job.service_price || 0
-        );
-
-    });
 
 
     document.getElementById(
         "totalTechnicians"
     ).textContent =
-        activeTechnicians.length;
+        active.length;
 
 
     document.getElementById(
-        "totalCompletedJobs"
+        "totalJobs"
     ).textContent =
-        totalCompleted;
+        jobs.length;
+
+
+    const total =
+        jobs.reduce(
+            (
+                sum,
+                job
+            ) => {
+
+                return sum +
+                    Number(
+                        job.service_price ||
+                        0
+                    );
+
+            },
+            0
+        );
 
 
     document.getElementById(
-        "totalWorkValue"
+        "totalValue"
     ).textContent =
-        rupiah(totalValue);
+        formatRupiah(total);
+
 }
 
 
-/* =========================================
-   HITUNG DATA TEKNISI
-========================================= */
+/* =====================================
+   STATISTIK TEKNISI
+===================================== */
 
-function getTechnicianStats(technician) {
+function getTechnicianStats(
+    technician
+){
 
     /*
-        jobs.technician_id berisi
+        Link:
+
+        jobs.technician_id
+              ↓
         profiles.id
 
-        technicians.user_id juga
-        berisi profiles.id
+        technicians.user_id
+              ↓
+        profiles.id
 
         Jadi:
+
         jobs.technician_id
         ===
         technicians.user_id
     */
 
+
     const technicianJobs =
-        jobs.filter(job => {
+        jobs.filter(
+            job => {
 
-            return (
-                job.technician_id ===
-                technician.user_id
-            );
+                return (
+                    job.technician_id ===
+                    technician.user_id
+                )
+                ||
+                (
+                    job.assigned_to ===
+                    technician.user_id
+                );
 
-        });
-
-
-    const totalJobs =
-        technicianJobs.length;
+            }
+        );
 
 
     const totalValue =
         technicianJobs.reduce(
-            (sum, job) => {
+            (
+                sum,
+                job
+            ) => {
 
                 return sum +
                     Number(
-                        job.service_price || 0
+                        job.service_price ||
+                        0
                     );
 
             },
@@ -1033,17 +1193,22 @@ function getTechnicianStats(technician) {
 
 
     return {
-        totalJobs,
+
+        totalJobs:
+            technicianJobs.length,
+
         totalValue
+
     };
+
 }
 
 
-/* =========================================
-   RENDER TEKNISI
-========================================= */
+/* =====================================
+   RENDER
+===================================== */
 
-function renderTechnicians() {
+function renderTechnicians(){
 
     const tbody =
         document.getElementById(
@@ -1054,7 +1219,8 @@ function renderTechnicians() {
     const search =
         document.getElementById(
             "searchInput"
-        ).value
+        )
+        .value
         .toLowerCase()
         .trim();
 
@@ -1070,10 +1236,15 @@ function renderTechnicians() {
             technician => {
 
                 const text = [
+
                     technician.full_name,
+
                     technician.email,
+
                     technician.technician_code,
+
                     technician.phone
+
                 ]
                 .join(" ")
                 .toLowerCase();
@@ -1081,52 +1252,62 @@ function renderTechnicians() {
 
                 const matchSearch =
                     !search ||
-                    text.includes(search);
+                    text.includes(
+                        search
+                    );
 
 
                 const matchStatus =
                     !status ||
-                    technician.status === status;
+                    technician.status ===
+                    status;
 
 
                 return (
                     matchSearch &&
                     matchStatus
                 );
+
             }
         );
 
 
-    if (filtered.length === 0) {
+    if(
+        filtered.length === 0
+    ){
 
         tbody.innerHTML = `
             <tr>
                 <td colspan="6">
                     <div class="empty">
-                        Belum ada teknisi.
+                        Tidak ada teknisi.
                     </div>
                 </td>
             </tr>
         `;
 
         return;
+
     }
 
 
     tbody.innerHTML =
-        filtered.map(
-            renderTechnicianRow
-        ).join("");
+        filtered
+            .map(
+                renderTechnicianRow
+            )
+            .join("");
+
 }
 
 
-/* =========================================
-   ROW TEKNISI
-========================================= */
+/* =====================================
+   ROW
+===================================== */
 
 function renderTechnicianRow(
     technician
-) {
+){
 
     const stats =
         getTechnicianStats(
@@ -1135,49 +1316,63 @@ function renderTechnicianRow(
 
 
     const active =
-        technician.status === "ACTIVE";
+        technician.status ===
+        "ACTIVE";
 
 
     return `
+
         <tr>
 
             <td>
 
                 <div class="tech-name">
+
                     ${escapeHtml(
                         technician.full_name
                     )}
+
                 </div>
 
                 <div class="tech-email">
+
                     ${escapeHtml(
-                        technician.email || "-"
+                        technician.email ||
+                        "-"
                     )}
+
                 </div>
 
             </td>
 
 
             <td>
+
                 ${escapeHtml(
-                    technician.technician_code || "-"
+                    technician.technician_code ||
+                    "-"
                 )}
+
             </td>
 
 
             <td>
+
                 <strong>
                     ${stats.totalJobs}
                 </strong>
+
             </td>
 
 
             <td>
+
                 <strong>
-                    ${rupiah(
+                    ${formatRupiah(
                         stats.totalValue
                     )}
                 </strong>
+
             </td>
 
 
@@ -1186,16 +1381,24 @@ function renderTechnicianRow(
                 ${
                     active
 
-                    ? `
-                        <span class="badge badge-active">
-                            AKTIF
-                        </span>
+                    ?
+
+                    `
+                    <span
+                        class="badge badge-active"
+                    >
+                        AKTIF
+                    </span>
                     `
 
-                    : `
-                        <span class="badge badge-inactive">
-                            TIDAK AKTIF
-                        </span>
+                    :
+
+                    `
+                    <span
+                        class="badge badge-inactive"
+                    >
+                        TIDAK AKTIF
+                    </span>
                     `
                 }
 
@@ -1207,107 +1410,186 @@ function renderTechnicianRow(
                 ${
                     active
 
-                    ? `
-                        <button
-                            class="btn-danger"
-                            onclick="changeTechnicianStatus(
-                                '${technician.id}',
-                                'INACTIVE'
-                            )"
-                        >
-                            Nonaktifkan
-                        </button>
+                    ?
+
+                    `
+                    <button
+                        class="btn btn-danger"
+                        onclick="changeStatus(
+                            '${technician.id}',
+                            'INACTIVE'
+                        )"
+                    >
+                        Nonaktifkan
+                    </button>
                     `
 
-                    : `
-                        <button
-                            class="btn-activate"
-                            onclick="changeTechnicianStatus(
-                                '${technician.id}',
-                                'ACTIVE'
-                            )"
-                        >
-                            Aktifkan
-                        </button>
+                    :
+
+                    `
+                    <button
+                        class="btn btn-success"
+                        onclick="changeStatus(
+                            '${technician.id}',
+                            'ACTIVE'
+                        )"
+                    >
+                        Aktifkan
+                    </button>
                     `
                 }
 
             </td>
 
         </tr>
+
     `;
+
 }
 
 
-/* =========================================
+/* =====================================
    CHANGE STATUS
-========================================= */
+===================================== */
 
-async function changeTechnicianStatus(
+async function changeStatus(
     technicianId,
     newStatus
-) {
+){
 
     const technician =
         technicians.find(
             item =>
-                item.id === technicianId
+                item.id ===
+                technicianId
         );
 
 
-    if (!technician) {
+    if(!technician){
+
         return;
+
     }
 
 
     const action =
-        newStatus === "ACTIVE"
-            ? "mengaktifkan"
-            : "menonaktifkan";
+        newStatus ===
+        "ACTIVE"
+        ? "mengaktifkan"
+        : "menonaktifkan";
 
 
-    const confirmAction =
-        confirm(
+    if(
+        !confirm(
             `Yakin ingin ${action} teknisi ${technician.full_name}?`
-        );
+        )
+    ){
 
-
-    if (!confirmAction) {
         return;
+
     }
 
 
-    const {
-        error
-    } = await supabaseClient
-        .from("technicians")
-        .update({
-            status: newStatus,
-            updated_at: new Date().toISOString()
-        })
-        .eq("id", technicianId);
+    try{
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("technicians")
+            .update({
+
+                status:
+                    newStatus,
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+            .eq(
+                "id",
+                technicianId
+            );
 
 
-    if (error) {
+        if(error){
 
-        showError(
-            "Gagal mengubah status teknisi: " +
-            error.message
+            throw error;
+
+        }
+
+
+        showAlert(
+            "Status teknisi berhasil diperbarui.",
+            "success"
         );
 
-        return;
+
+        await loadData();
+
     }
 
+    catch(error){
 
-    await loadData();
+        console.error(error);
+
+        showAlert(
+            "Gagal mengubah status: " +
+            error.message,
+            "error"
+        );
+
+    }
+
 }
 
 
-/* =========================================
-   LOAD AKUN YANG BELUM TERDAFTAR
-========================================= */
+/* =====================================
+   MODAL
+===================================== */
 
-function loadAvailableAccounts() {
+async function openAddModal(){
+
+    document.getElementById(
+        "addModal"
+    ).classList.add("show");
+
+
+    document.getElementById(
+        "phoneInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "notesInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "accountPreview"
+    ).style.display =
+        "none";
+
+
+    await loadAvailableAccounts();
+
+}
+
+
+function closeAddModal(){
+
+    document.getElementById(
+        "addModal"
+    ).classList.remove("show");
+
+}
+
+
+/* =====================================
+   AKUN YANG BELUM TERDAFTAR
+===================================== */
+
+async function loadAvailableAccounts(){
 
     const select =
         document.getElementById(
@@ -1315,20 +1597,42 @@ function loadAvailableAccounts() {
         );
 
 
-    const registeredUserIds =
-        technicians.map(
-            technician =>
-                technician.user_id
-        );
+    select.innerHTML = `
+        <option value="">
+            Memuat akun...
+        </option>
+    `;
+
+
+    /*
+        user_id di technicians
+        harus cocok dengan profiles.id
+    */
+
+
+    const registered =
+        technicians
+            .map(
+                technician =>
+                    technician.user_id
+            )
+            .filter(Boolean);
 
 
     const available =
         profiles.filter(
-            profile =>
-                profile.status === "ACTIVE" &&
-                !registeredUserIds.includes(
-                    profile.id
+            profile => {
+
+                return (
+                    profile.status ===
+                    "ACTIVE"
                 )
+                &&
+                !registered.includes(
+                    profile.id
+                );
+
+            }
         );
 
 
@@ -1339,99 +1643,105 @@ function loadAvailableAccounts() {
     `;
 
 
-    available.forEach(profile => {
+    available.forEach(
+        profile => {
 
-        const option =
-            document.createElement(
-                "option"
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                profile.id;
+
+
+            option.textContent =
+                `${profile.full_name} — ${profile.email}`;
+
+
+            select.appendChild(
+                option
             );
 
-
-        option.value = profile.id;
-
-        option.textContent =
-            `${profile.full_name} — ${profile.email}`;
+        }
+    );
 
 
-        select.appendChild(option);
-
-    });
-
-
-    if (available.length === 0) {
+    if(
+        available.length === 0
+    ){
 
         select.innerHTML = `
             <option value="">
                 Semua akun teknisi sudah terdaftar
             </option>
         `;
+
     }
+
 }
 
 
-/* =========================================
-   ACCOUNT SELECT
-========================================= */
+/* =====================================
+   PREVIEW ACCOUNT
+===================================== */
 
-document.getElementById(
-    "accountSelect"
-).addEventListener(
-    "change",
-    function () {
+function previewAccount(){
 
-        const profile =
-            profiles.find(
-                item =>
-                    item.id === this.value
-            );
-
-
-        const box =
-            document.getElementById(
-                "selectedAccount"
-            );
-
-
-        if (!profile) {
-
-            box.style.display = "none";
-
-            return;
-        }
-
-
-        box.style.display = "block";
-
-
+    const userId =
         document.getElementById(
-            "selectedName"
-        ).textContent =
-            profile.full_name;
+            "accountSelect"
+        ).value;
 
 
+    const profile =
+        profiles.find(
+            item =>
+                item.id ===
+                userId
+        );
+
+
+    const preview =
         document.getElementById(
-            "selectedEmail"
-        ).textContent =
-            profile.email;
+            "accountPreview"
+        );
 
 
-        /*
-            No HP tidak tersedia
-            di profiles pada struktur
-            yang kita punya.
+    if(!profile){
 
-            Jadi tetap manual.
-        */
+        preview.style.display =
+            "none";
+
+        return;
 
     }
-);
 
 
-/* =========================================
-   GENERATE KODE TEKNISI
-========================================= */
+    preview.style.display =
+        "block";
 
-function generateTechnicianCode() {
+
+    document.getElementById(
+        "previewName"
+    ).textContent =
+        profile.full_name;
+
+
+    document.getElementById(
+        "previewEmail"
+    ).textContent =
+        profile.email;
+
+}
+
+
+/* =====================================
+   GENERATE CODE
+===================================== */
+
+function generateTechnicianCode(){
 
     let maxNumber = 0;
 
@@ -1450,16 +1760,22 @@ function generateTechnicianCode() {
                 );
 
 
-            if (match) {
+            if(match){
 
                 const number =
-                    Number(match[1]);
+                    Number(
+                        match[1]
+                    );
 
 
-                if (
-                    number > maxNumber
-                ) {
-                    maxNumber = number;
+                if(
+                    number >
+                    maxNumber
+                ){
+
+                    maxNumber =
+                        number;
+
                 }
 
             }
@@ -1468,80 +1784,106 @@ function generateTechnicianCode() {
     );
 
 
-    const next =
-        maxNumber + 1;
-
-
     return (
         "TEK-" +
-        String(next)
-            .padStart(3, "0")
+        String(
+            maxNumber + 1
+        ).padStart(
+            3,
+            "0"
+        )
     );
+
 }
 
 
-/* =========================================
-   SAVE TEKNISI
-========================================= */
+/* =====================================
+   SAVE TECHNICIAN
+===================================== */
 
-document.getElementById(
-    "saveTechnicianBtn"
-).addEventListener(
-    "click",
-    async function () {
+async function saveTechnician(){
 
-        const userId =
-            document.getElementById(
-                "accountSelect"
-            ).value;
+    const userId =
+        document.getElementById(
+            "accountSelect"
+        ).value;
 
 
-        const phone =
-            document.getElementById(
-                "phoneInput"
-            ).value.trim();
+    const phone =
+        document.getElementById(
+            "phoneInput"
+        ).value.trim();
 
 
-        const notes =
-            document.getElementById(
-                "notesInput"
-            ).value.trim();
+    const notes =
+        document.getElementById(
+            "notesInput"
+        ).value.trim();
 
 
-        if (!userId) {
+    if(!userId){
 
-            alert(
-                "Pilih akun teknisi terlebih dahulu."
-            );
+        alert(
+            "Pilih akun teknisi terlebih dahulu."
+        );
 
-            return;
-        }
+        return;
 
-
-        const profile =
-            profiles.find(
-                item =>
-                    item.id === userId
-            );
+    }
 
 
-        if (!profile) {
-
-            alert(
-                "Data akun teknisi tidak ditemukan."
-            );
-
-            return;
-        }
+    const profile =
+        profiles.find(
+            item =>
+                item.id ===
+                userId
+        );
 
 
-        const technicianCode =
-            generateTechnicianCode();
+    if(!profile){
 
+        alert(
+            "Akun teknisi tidak ditemukan."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Cegah duplicate user_id
+    */
+
+    const duplicate =
+        technicians.some(
+            technician =>
+                technician.user_id ===
+                profile.id
+        );
+
+
+    if(duplicate){
+
+        alert(
+            "Akun teknisi tersebut sudah terdaftar."
+        );
+
+        return;
+
+    }
+
+
+    const technicianCode =
+        generateTechnicianCode();
+
+
+    try{
 
         const {
             error
-        } = await supabaseClient
+        } =
+        await supabaseClient
             .from("technicians")
             .insert({
 
@@ -1555,7 +1897,8 @@ document.getElementById(
                     profile.email,
 
                 phone:
-                    phone || null,
+                    phone ||
+                    null,
 
                 user_id:
                     profile.id,
@@ -1564,7 +1907,8 @@ document.getElementById(
                     "ACTIVE",
 
                 notes:
-                    notes || null,
+                    notes ||
+                    null,
 
                 created_by:
                     currentUser.id
@@ -1572,216 +1916,195 @@ document.getElementById(
             });
 
 
-        if (error) {
+        if(error){
 
-            alert(
-                "Gagal menambah teknisi:\n\n" +
-                error.message
-            );
+            throw error;
 
-            console.error(error);
-
-            return;
         }
 
 
-        alert(
-            `Teknisi ${profile.full_name} berhasil ditambahkan.`
+        closeAddModal();
+
+
+        showAlert(
+            `Teknisi ${profile.full_name} berhasil ditambahkan.`,
+            "success"
         );
-
-
-        closeModal();
 
 
         await loadData();
 
     }
-);
 
+    catch(error){
 
-/* =========================================
-   MODAL
-========================================= */
+        console.error(error);
 
-function openModal() {
-
-    loadAvailableAccounts();
-
-
-    document.getElementById(
-        "phoneInput"
-    ).value = "";
-
-
-    document.getElementById(
-        "notesInput"
-    ).value = "";
-
-
-    document.getElementById(
-        "selectedAccount"
-    ).style.display = "none";
-
-
-    document.getElementById(
-        "addModal"
-    ).classList.add("show");
-}
-
-
-function closeModal() {
-
-    document.getElementById(
-        "addModal"
-    ).classList.remove("show");
-}
-
-
-document.getElementById(
-    "addTechnicianBtn"
-).addEventListener(
-    "click",
-    openModal
-);
-
-
-document.getElementById(
-    "closeModal"
-).addEventListener(
-    "click",
-    closeModal
-);
-
-
-document.getElementById(
-    "cancelModal"
-).addEventListener(
-    "click",
-    closeModal
-);
-
-
-document.getElementById(
-    "addModal"
-).addEventListener(
-    "click",
-    function(event) {
-
-        if (
-            event.target === this
-        ) {
-            closeModal();
-        }
+        alert(
+            "Gagal menambah teknisi:\n\n" +
+            error.message
+        );
 
     }
-);
+
+}
 
 
-/* =========================================
-   SEARCH
-========================================= */
-
-document.getElementById(
-    "searchInput"
-).addEventListener(
-    "input",
-    renderTechnicians
-);
-
-
-/* =========================================
-   FILTER
-========================================= */
-
-document.getElementById(
-    "statusFilter"
-).addEventListener(
-    "change",
-    renderTechnicians
-);
-
-
-/* =========================================
-   REFRESH
-========================================= */
-
-document.getElementById(
-    "refreshBtn"
-).addEventListener(
-    "click",
-    loadData
-);
-
-
-/* =========================================
+/* =====================================
    LOGOUT
-========================================= */
+===================================== */
 
-document.getElementById(
-    "logoutBtn"
-).addEventListener(
-    "click",
-    async function () {
+async function logout(){
 
-        await supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut();
 
-        window.location.href =
-            "login.html";
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================
+   FORMAT RUPIAH
+===================================== */
+
+function formatRupiah(
+    value
+){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(
+        Number(value || 0)
+    );
+
+}
+
+
+/* =====================================
+   ESCAPE HTML
+===================================== */
+
+function escapeHtml(
+    value
+){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
 
     }
-);
 
 
-/* =========================================
-   MESSAGE
-========================================= */
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
-function showMessage(text) {
-
-    document.getElementById(
-        "message"
-    ).innerHTML = text
-        ? `<div class="error">${escapeHtml(text)}</div>`
-        : "";
 }
 
 
-function showError(text) {
+/* =====================================
+   ALERT
+===================================== */
 
-    showMessage(text);
+function showAlert(
+    message,
+    type
+){
 
-    document.getElementById(
-        "technicianTable"
-    ).innerHTML = `
-        <tr>
-            <td colspan="6">
-                <div class="empty">
-                    Data tidak dapat dimuat.
-                </div>
-            </td>
-        </tr>
-    `;
-}
+    const alert =
+        document.getElementById(
+            "alert"
+        );
 
 
-/* =========================================
-   START
-========================================= */
+    if(!message){
 
-(async function init() {
+        alert.className =
+            "alert";
 
-    const allowed =
-        await checkOwner();
+        alert.textContent =
+            "";
 
-
-    if (!allowed) {
         return;
+
     }
 
 
-    await loadData();
+    alert.textContent =
+        message;
 
-})();
+
+    alert.className =
+        "alert show " +
+        (
+            type === "error"
+            ? "alert-error"
+            : "alert-success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            alert.classList.remove(
+                "show"
+            );
+
+        },
+        5000
+    );
+
+}
+
+
+/* =====================================
+   CLOSE MODAL OUTSIDE
+===================================== */
+
+document
+    .getElementById("addModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeAddModal();
+
+            }
+
+        }
+    );
 
 </script>
 
