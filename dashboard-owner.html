@@ -7,6 +7,7 @@
 <title>Dashboard Owner - WAT ERP</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
 
 <style>
 *{
@@ -16,269 +17,387 @@
 body{
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
-    background:#f3f6fb;
-    color:#102a43;
+    background:#f4f7fb;
+    color:#172033;
 }
 
-/* HEADER */
-header{
-    height:76px;
-    background:linear-gradient(90deg,#1257b8,#0878f9);
-    color:white;
+.header{
+    min-height:72px;
+    background:linear-gradient(135deg,#0b4ea2,#0876ff);
+    color:#fff;
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:0 28px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
 }
 
-.brand{
-    font-weight:bold;
-    font-size:20px;
+.brand h2{
+    margin:0;
+    font-size:21px;
 }
 
-.brand small{
+.brand span{
     display:block;
-    font-size:11px;
-    font-weight:normal;
-    margin-top:3px;
+    font-size:12px;
+    opacity:.85;
+    margin-top:4px;
 }
 
 .header-right{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:12px;
 }
 
-.role{
-    background:rgba(255,255,255,.15);
-    padding:8px 14px;
-    border-radius:20px;
-    font-size:12px;
+.user-name{
+    font-size:13px;
     font-weight:bold;
 }
 
 .logout{
-    background:white;
-    color:#1267d9;
     border:0;
-    padding:10px 16px;
+    background:#fff;
+    color:#075dcc;
+    padding:9px 16px;
     border-radius:8px;
-    font-weight:bold;
     cursor:pointer;
+    font-weight:bold;
 }
 
-.logout:hover{
-    background:#edf5ff;
-}
-
-/* CONTAINER */
 .container{
-    max-width:1160px;
-    margin:0 auto;
-    padding:26px 18px 50px;
+    max-width:1200px;
+    margin:28px auto;
+    padding:0 18px 50px;
 }
 
-.welcome{
+.page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
     margin-bottom:22px;
 }
 
-.welcome h1{
-    margin:0 0 6px;
-    font-size:27px;
-}
-
-.welcome p{
+.page-head h1{
     margin:0;
-    color:#627d98;
+    font-size:28px;
 }
 
-/* SUMMARY */
-.summary{
+.page-head p{
+    margin:6px 0 0;
+    color:#718096;
+    font-size:14px;
+}
+
+.refresh-btn{
+    border:0;
+    background:#0876ff;
+    color:#fff;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* =========================
+   ALERT
+========================= */
+
+.alert{
+    display:none;
+    margin-bottom:18px;
+    padding:12px 15px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.alert.show{
+    display:block;
+}
+
+.alert-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert-error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* =========================
+   STATISTIK
+========================= */
+
+.stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:16px;
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
-.summary-card{
-    background:white;
-    border-radius:12px;
+.stat-card{
+    background:#fff;
+    border-radius:13px;
     padding:20px;
-    box-shadow:0 2px 10px rgba(16,42,67,.08);
-    border-left:4px solid #1267e8;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+    border-left:4px solid #0876ff;
 }
 
-.summary-card:nth-child(2){
+.stat-card:nth-child(2){
     border-left-color:#16a34a;
 }
 
-.summary-card:nth-child(3){
+.stat-card:nth-child(3){
     border-left-color:#f59e0b;
 }
 
-.summary-card:nth-child(4){
-    border-left-color:#dc2626;
+.stat-card:nth-child(4){
+    border-left-color:#7c3aed;
 }
 
-.summary-card span{
-    display:block;
-    color:#627d98;
+.stat-label{
+    color:#718096;
     font-size:13px;
-    margin-bottom:8px;
 }
 
-.summary-card strong{
-    font-size:25px;
+.stat-value{
+    display:block;
+    margin-top:8px;
+    font-size:27px;
+    font-weight:bold;
 }
 
-/* MENU */
-.menu-grid{
+.stat-loading{
+    color:#94a3b8;
+}
+
+/* =========================
+   KEUANGAN
+========================= */
+
+.finance{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:16px;
+    margin-bottom:20px;
 }
 
-.menu-card{
-    background:white;
-    border-radius:12px;
-    min-height:126px;
-    box-shadow:0 2px 10px rgba(16,42,67,.08);
-    transition:.2s;
-    overflow:hidden;
+.finance-card{
+    background:#fff;
+    border-radius:13px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
 }
 
-.menu-card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 7px 18px rgba(16,42,67,.13);
+.finance-card small{
+    color:#718096;
+    font-size:13px;
 }
 
-.menu-card a{
+.finance-card strong{
     display:block;
-    height:100%;
-    padding:22px;
-    text-decoration:none;
-    color:#102a43;
+    margin-top:8px;
+    font-size:22px;
 }
 
-.menu-icon{
-    font-size:30px;
-    margin-bottom:10px;
-}
-
-.menu-card h3{
-    margin:0 0 6px;
-    font-size:17px;
-}
-
-.menu-card p{
-    margin:0;
-    font-size:12px;
-    line-height:1.5;
-    color:#627d98;
-}
-
-/* WARNA MENU */
-.customer{
-    border-left:4px solid #1267e8;
-}
-
-.jobs{
+.income{
     border-left:4px solid #16a34a;
 }
 
-.invoice{
-    border-left:4px solid #f59e0b;
-}
-
-.teknisi{
+.expense{
     border-left:4px solid #dc2626;
 }
 
-.pengeluaran{
-    border-left:4px solid #16a34a;
+.profit{
+    border-left:4px solid #0876ff;
 }
 
-.material{
-    border-left:4px solid #8b5cf6;
+.loss{
+    border-left-color:#dc2626;
 }
 
-.laporan{
-    border-left:4px solid #2563eb;
+/* =========================
+   MENU
+========================= */
+
+.section{
+    background:#fff;
+    border-radius:13px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+    margin-bottom:20px;
 }
 
-.audit{
-    border-left:4px solid #eab308;
+.section h2{
+    margin:0 0 15px;
+    font-size:19px;
 }
 
-.pengaturan{
-    border-left:4px solid #64748b;
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
 }
 
-.beranda{
-    border-left:4px solid #0ea5e9;
+.menu-btn{
+    min-height:90px;
+    border:1px solid #e2e8f0;
+    background:#fff;
+    border-radius:10px;
+    padding:15px;
+    cursor:pointer;
+    text-align:left;
+    transition:.15s;
 }
 
-/* LOADING */
-.loading{
+.menu-btn:hover{
+    border-color:#0876ff;
+    background:#f5f9ff;
+    transform:translateY(-1px);
+}
+
+.menu-icon{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.menu-title{
+    display:block;
+    font-weight:bold;
+    font-size:14px;
+    color:#172033;
+}
+
+.menu-desc{
+    display:block;
+    color:#718096;
+    font-size:11px;
+    margin-top:4px;
+}
+
+/* =========================
+   RINGKASAN
+========================= */
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.summary-box{
+    background:#fff;
+    border-radius:13px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.summary-box h3{
+    margin:0 0 15px;
+    font-size:17px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #edf2f7;
+    font-size:13px;
+}
+
+.summary-row:last-child{
+    border-bottom:0;
+}
+
+.summary-row span{
     color:#627d98;
 }
 
-/* RESPONSIVE */
+.summary-row strong{
+    color:#172033;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+    color:#94a3b8;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
 @media(max-width:900px){
 
-    .summary{
+    .stats,
+    .finance{
         grid-template-columns:repeat(2,1fr);
     }
 
     .menu-grid{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
 
-@media(max-width:600px){
+@media(max-width:650px){
 
-    header{
-        padding:0 15px;
+    .header{
+        padding:12px 15px;
     }
 
-    .brand{
-        font-size:17px;
+    .user-name{
+        display:none;
     }
 
-    .summary,
+    .container{
+        margin:20px auto;
+        padding:0 12px 40px;
+    }
+
+    .page-head{
+        display:block;
+    }
+
+    .refresh-btn{
+        margin-top:12px;
+    }
+
+    .stats,
+    .finance,
+    .summary-grid,
     .menu-grid{
         grid-template-columns:1fr;
     }
 
-    .header-right{
-        gap:7px;
-    }
-
-    .role{
-        display:none;
-    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
-
-<header>
+<header class="header">
 
     <div class="brand">
-        WAT ERP
-        <small>Technician Control System</small>
+        <h2>WAT ERP</h2>
+        <span>Dashboard Owner</span>
     </div>
 
     <div class="header-right">
 
-        <span class="role">OWNER</span>
+        <span
+            class="user-name"
+            id="userName">
+            OWNER
+        </span>
 
-        <button class="logout" onclick="logout()">
+        <button
+            class="logout"
+            onclick="logout()">
             LOGOUT
         </button>
 
@@ -287,315 +406,465 @@ header{
 </header>
 
 
-<!-- =========================
-     CONTENT
-========================= -->
+<main class="container">
 
-<div class="container">
+    <div class="page-head">
 
-    <div class="welcome">
+        <div>
 
-        <h1>Dashboard Owner</h1>
+            <h1>Dashboard Owner</h1>
 
-        <p>
-            Selamat datang,
-            <span id="ownerName">Owner</span>.
-        </p>
+            <p>
+                Ringkasan operasional dan keuangan WAT ERP.
+            </p>
 
+        </div>
+
+        <button
+            class="refresh-btn"
+            onclick="loadDashboard()">
+            ↻ Refresh Data
+        </button>
+
+    </div>
+
+
+    <div
+        id="alert"
+        class="alert">
     </div>
 
 
     <!-- =========================
-         SUMMARY
-    ========================= -->
+         STATISTIK OPERASIONAL
+    ========================== -->
 
-    <div class="summary">
+    <section class="stats">
 
-        <div class="summary-card">
+        <div class="stat-card">
 
-            <span>Total Customer</span>
+            <span class="stat-label">
+                Total Customer
+            </span>
 
-            <strong id="totalCustomer">
-                <span class="loading">...</span>
+            <strong
+                class="stat-value"
+                id="totalCustomers">
+                ...
             </strong>
 
         </div>
 
 
-        <div class="summary-card">
+        <div class="stat-card">
 
-            <span>Total Job</span>
+            <span class="stat-label">
+                Total Pekerjaan
+            </span>
 
-            <strong id="totalJob">
-                <span class="loading">...</span>
+            <strong
+                class="stat-value"
+                id="totalJobs">
+                ...
             </strong>
 
         </div>
 
 
-        <div class="summary-card">
+        <div class="stat-card">
 
-            <span>Invoice</span>
+            <span class="stat-label">
+                Total Invoice
+            </span>
 
-            <strong id="totalInvoice">
-                <span class="loading">...</span>
+            <strong
+                class="stat-value"
+                id="totalInvoices">
+                ...
             </strong>
 
         </div>
 
 
-        <div class="summary-card">
+        <div class="stat-card">
 
-            <span>Teknisi Aktif</span>
+            <span class="stat-label">
+                Teknisi Aktif
+            </span>
 
-            <strong id="totalTechnician">
-                <span class="loading">...</span>
+            <strong
+                class="stat-value"
+                id="activeTechnicians">
+                ...
             </strong>
 
         </div>
 
-    </div>
+    </section>
+
+
+    <!-- =========================
+         KEUANGAN
+    ========================== -->
+
+    <section class="finance">
+
+        <div class="finance-card income">
+
+            <small>
+                Pendapatan
+            </small>
+
+            <strong id="income">
+                ...
+            </strong>
+
+        </div>
+
+
+        <div class="finance-card expense">
+
+            <small>
+                Total Belanja
+            </small>
+
+            <strong id="shoppingExpense">
+                ...
+            </strong>
+
+        </div>
+
+
+        <div class="finance-card expense">
+
+            <small>
+                Operasional
+            </small>
+
+            <strong id="operationalExpense">
+                ...
+            </strong>
+
+        </div>
+
+
+        <div
+            class="finance-card profit"
+            id="profitCard">
+
+            <small>
+                Laba Bersih
+            </small>
+
+            <strong id="netProfit">
+                ...
+            </strong>
+
+        </div>
+
+    </section>
 
 
     <!-- =========================
          MENU
-    ========================= -->
+    ========================== -->
 
-    <div class="menu-grid">
+    <section class="section">
 
+        <h2>
+            Menu Utama
+        </h2>
 
-        <!-- CUSTOMER -->
 
-        <div class="menu-card customer">
+        <div class="menu-grid">
 
-            <a href="customer.html">
-
-                <div class="menu-icon">
-                    👥
-                </div>
-
-                <h3>
-                    Customer
-                </h3>
-
-                <p>
-                    Kelola data customer WAT.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- JOBS -->
-
-        <div class="menu-card jobs">
-
-            <a href="jobs.html">
-
-                <div class="menu-icon">
-                    🔧
-                </div>
-
-                <h3>
-                    Jobs
-                </h3>
-
-                <p>
-                    Pantau pekerjaan teknisi.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- INVOICE -->
-
-        <div class="menu-card invoice">
-
-            <a href="invoice.html">
-
-                <div class="menu-icon">
-                    📜
-                </div>
-
-                <h3>
-                    Invoice
-                </h3>
-
-                <p>
-                    Kelola invoice dan pembayaran.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- TEKNISI -->
-
-        <div class="menu-card teknisi">
-
-            <a href="teknisi.html">
-
-                <div class="menu-icon">
-                    🧑‍🔧
-                </div>
-
-                <h3>
-                    Teknisi
-                </h3>
-
-                <p>
-                    Kontrol teknisi dan pekerjaan.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- PENGELUARAN -->
-
-        <div class="menu-card pengeluaran">
-
-            <a href="pengeluaran.html">
-
-                <div class="menu-icon">
-                    💰
-                </div>
-
-                <h3>
-                    Pengeluaran
-                </h3>
-
-                <p>
-                    Kelola belanja material dan biaya operasional.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- MATERIAL -->
-
-        <div class="menu-card material">
-
-            <a href="materials.html">
-
-                <div class="menu-icon">
-                    📦
-                </div>
-
-                <h3>
-                    Material
-                </h3>
-
-                <p>
-                    Kelola master material, stok dan harga modal.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- LAPORAN -->
-
-        <div class="menu-card laporan">
-
-            <a href="reports.html">
-
-                <div class="menu-icon">
-                    📊
-                </div>
-
-                <h3>
-                    Laporan
-                </h3>
-
-                <p>
-                    Lihat laporan pendapatan, HPP dan laba rugi.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- AUDIT LOG -->
-
-        <div class="menu-card audit">
-
-            <a href="audit.html">
-
-                <div class="menu-icon">
-                    🔐
-                </div>
-
-                <h3>
-                    Audit Log
-                </h3>
-
-                <p>
-                    Pantau aktivitas pengguna.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- PENGATURAN -->
-
-        <div class="menu-card pengaturan">
-
-            <a href="settings.html">
-
-                <div class="menu-icon">
-                    ⚙️
-                </div>
-
-                <h3>
-                    Pengaturan
-                </h3>
-
-                <p>
-                    Pengaturan sistem WAT ERP.
-                </p>
-
-            </a>
-
-        </div>
-
-
-        <!-- BERANDA -->
-
-        <div class="menu-card beranda">
-
-            <a href="index.html">
+            <button
+                class="menu-btn"
+                onclick="goTo('index.html')">
 
                 <div class="menu-icon">
                     🏠
                 </div>
 
-                <h3>
+                <span class="menu-title">
                     Beranda
-                </h3>
+                </span>
 
-                <p>
-                    Kembali ke halaman utama.
-                </p>
+                <span class="menu-desc">
+                    Kembali ke halaman utama
+                </span>
 
-            </a>
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('customers.html')">
+
+                <div class="menu-icon">
+                    👥
+                </div>
+
+                <span class="menu-title">
+                    Customer
+                </span>
+
+                <span class="menu-desc">
+                    Kelola data customer
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('jobs.html')">
+
+                <div class="menu-icon">
+                    🔧
+                </div>
+
+                <span class="menu-title">
+                    Pekerjaan
+                </span>
+
+                <span class="menu-desc">
+                    Kelola jadwal dan pekerjaan
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('invoice.html')">
+
+                <div class="menu-icon">
+                    🧾
+                </div>
+
+                <span class="menu-title">
+                    Invoice
+                </span>
+
+                <span class="menu-desc">
+                    Kelola invoice dan pembayaran
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('technicians.html')">
+
+                <div class="menu-icon">
+                    👨‍🔧
+                </div>
+
+                <span class="menu-title">
+                    Teknisi
+                </span>
+
+                <span class="menu-desc">
+                    Kelola teknisi
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('pengeluaran.html')">
+
+                <div class="menu-icon">
+                    💸
+                </div>
+
+                <span class="menu-title">
+                    Pengeluaran
+                </span>
+
+                <span class="menu-desc">
+                    Input belanja dan operasional
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('reports.html')">
+
+                <div class="menu-icon">
+                    📊
+                </div>
+
+                <span class="menu-title">
+                    Laporan
+                </span>
+
+                <span class="menu-desc">
+                    Laporan laba rugi
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-btn"
+                onclick="goTo('audit.html')">
+
+                <div class="menu-icon">
+                    🛡️
+                </div>
+
+                <span class="menu-title">
+                    Audit Log
+                </span>
+
+                <span class="menu-desc">
+                    Riwayat aktivitas sistem
+                </span>
+
+            </button>
 
         </div>
 
-    </div>
+    </section>
 
-</div>
+
+    <!-- =========================
+         RINGKASAN
+    ========================== -->
+
+    <section class="summary-grid">
+
+
+        <div class="summary-box">
+
+            <h3>
+                Ringkasan Pekerjaan
+            </h3>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Total Pekerjaan
+                </span>
+
+                <strong id="summaryJobs">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Pekerjaan Selesai
+                </span>
+
+                <strong id="completedJobs">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Pekerjaan Berjalan
+                </span>
+
+                <strong id="activeJobs">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Pekerjaan Dibatalkan
+                </span>
+
+                <strong id="cancelledJobs">
+                    ...
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>
+                Ringkasan Invoice
+            </h3>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Total Invoice
+                </span>
+
+                <strong id="summaryInvoices">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Invoice PAID
+                </span>
+
+                <strong id="paidInvoices">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Invoice ISSUED
+                </span>
+
+                <strong id="issuedInvoices">
+                    ...
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Invoice DRAFT
+                </span>
+
+                <strong id="draftInvoices">
+                    ...
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
 
 
 <script>
@@ -604,17 +873,14 @@ header{
    SUPABASE
 ===================================================== */
 
-const SUPABASE_URL =
-"GANTI_DENGAN_SUPABASE_URL";
-
-const SUPABASE_ANON_KEY =
-"GANTI_DENGAN_SUPABASE_ANON_KEY";
-
 const supabaseClient =
-supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+let currentUser = null;
 
 
 /* =====================================================
@@ -629,54 +895,108 @@ document.addEventListener(
 
 async function init(){
 
-    const {
-        data,
-        error
-    } = await supabaseClient.auth.getUser();
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.getSession();
 
 
-    /*
-       BELUM LOGIN
-    */
+        if(error){
+            throw error;
+        }
 
-    if(error || !data.user){
 
-        window.location.href =
-            "login.html";
+        if(!data.session){
 
-        return;
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        currentUser =
+            data.session.user;
+
+
+        await loadProfile();
+
+        await loadDashboard();
+
+    }
+    catch(error){
+
+        console.error(
+            "INIT ERROR:",
+            error
+        );
+
+
+        showAlert(
+            "Gagal memuat dashboard: " +
+            error.message,
+            "error"
+        );
+
     }
 
-
-    /*
-       DATA USER
-    */
-
-    const user =
-        data.user;
+}
 
 
-    /*
-       NAMA USER
-    */
+/* =====================================================
+   PROFILE
+===================================================== */
 
-    let nama =
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.email ||
-        "Owner";
+async function loadProfile(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("profiles")
+            .select("full_name,email,role")
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .maybeSingle();
 
 
-    document.getElementById(
-        "ownerName"
-    ).textContent = nama;
+        if(error){
+            throw error;
+        }
 
 
-    /*
-       LOAD DASHBOARD
-    */
+        document.getElementById(
+            "userName"
+        ).textContent =
+            data?.full_name ||
+            data?.email ||
+            currentUser.email ||
+            "OWNER";
 
-    await loadDashboard();
+    }
+    catch(error){
+
+        console.warn(
+            "PROFILE ERROR:",
+            error
+        );
+
+
+        document.getElementById(
+            "userName"
+        ).textContent =
+            currentUser.email ||
+            "OWNER";
+
+    }
 
 }
 
@@ -687,153 +1007,475 @@ async function init(){
 
 async function loadDashboard(){
 
-    await Promise.all([
+    setLoading();
 
-        loadCustomer(),
 
-        loadJobs(),
+    try{
 
-        loadInvoice(),
+        /*
+         * Query dijalankan satu per satu.
+         * Jadi kalau satu tabel bermasalah,
+         * kita lebih mudah tahu sumber error-nya.
+         */
 
-        loadTechnician()
+        const customers =
+            await countRows(
+                "customers"
+            );
 
-    ]);
+
+        const jobs =
+            await getJobs();
+
+
+        const invoices =
+            await getInvoices();
+
+
+        const technicians =
+            await getActiveTechnicians();
+
+
+        const expenses =
+            await getExpenses();
+
+
+        /*
+         * Statistik utama
+         */
+
+        setText(
+            "totalCustomers",
+            customers
+        );
+
+
+        setText(
+            "totalJobs",
+            jobs.length
+        );
+
+
+        setText(
+            "totalInvoices",
+            invoices.length
+        );
+
+
+        setText(
+            "activeTechnicians",
+            technicians
+        );
+
+
+        /*
+         * PENDAPATAN
+         *
+         * Pendapatan diambil dari invoice
+         * yang statusnya PAID.
+         */
+
+        const income =
+            invoices
+                .filter(
+                    invoice =>
+                        String(
+                            invoice.status || ""
+                        ).toUpperCase() === "PAID"
+                )
+                .reduce(
+                    (
+                        total,
+                        invoice
+                    ) =>
+                        total +
+                        Number(
+                            invoice.total || 0
+                        ),
+                    0
+                );
+
+
+        /*
+         * PENGELUARAN
+         */
+
+        const shopping =
+            expenses
+                .filter(
+                    item =>
+                        normalizeCategory(
+                            item.category
+                        ) === "BELANJA"
+                )
+                .reduce(
+                    (
+                        total,
+                        item
+                    ) =>
+                        total +
+                        Number(
+                            item.amount || 0
+                        ),
+                    0
+                );
+
+
+        const operational =
+            expenses
+                .filter(
+                    item =>
+                        normalizeCategory(
+                            item.category
+                        ) === "OPERASIONAL"
+                )
+                .reduce(
+                    (
+                        total,
+                        item
+                    ) =>
+                        total +
+                        Number(
+                            item.amount || 0
+                        ),
+                    0
+                );
+
+
+        const totalExpense =
+            shopping +
+            operational;
+
+
+        const profit =
+            income -
+            totalExpense;
+
+
+        /*
+         * Keuangan
+         */
+
+        setText(
+            "income",
+            formatRupiah(income)
+        );
+
+
+        setText(
+            "shoppingExpense",
+            formatRupiah(shopping)
+        );
+
+
+        setText(
+            "operationalExpense",
+            formatRupiah(operational)
+        );
+
+
+        setText(
+            "netProfit",
+            formatRupiah(profit)
+        );
+
+
+        const profitCard =
+            document.getElementById(
+                "profitCard"
+            );
+
+
+        profitCard.classList.remove(
+            "loss"
+        );
+
+
+        if(profit < 0){
+
+            profitCard.classList.add(
+                "loss"
+            );
+
+        }
+
+
+        /*
+         * Ringkasan Jobs
+         */
+
+        const completedJobs =
+            jobs.filter(
+                job =>
+                    normalizeStatus(
+                        job.status
+                    ) === "COMPLETED"
+            ).length;
+
+
+        const cancelledJobs =
+            jobs.filter(
+                job =>
+                    normalizeStatus(
+                        job.status
+                    ) === "CANCELLED"
+            ).length;
+
+
+        const activeJobs =
+            jobs.filter(
+                job => {
+
+                    const status =
+                        normalizeStatus(
+                            job.status
+                        );
+
+                    return (
+                        status !== "COMPLETED" &&
+                        status !== "CANCELLED"
+                    );
+
+                }
+            ).length;
+
+
+        setText(
+            "summaryJobs",
+            jobs.length
+        );
+
+
+        setText(
+            "completedJobs",
+            completedJobs
+        );
+
+
+        setText(
+            "activeJobs",
+            activeJobs
+        );
+
+
+        setText(
+            "cancelledJobs",
+            cancelledJobs
+        );
+
+
+        /*
+         * Ringkasan Invoice
+         */
+
+        const paidInvoices =
+            invoices.filter(
+                invoice =>
+                    normalizeStatus(
+                        invoice.status
+                    ) === "PAID"
+            ).length;
+
+
+        const issuedInvoices =
+            invoices.filter(
+                invoice =>
+                    normalizeStatus(
+                        invoice.status
+                    ) === "ISSUED"
+            ).length;
+
+
+        const draftInvoices =
+            invoices.filter(
+                invoice =>
+                    normalizeStatus(
+                        invoice.status
+                    ) === "DRAFT"
+            ).length;
+
+
+        setText(
+            "summaryInvoices",
+            invoices.length
+        );
+
+
+        setText(
+            "paidInvoices",
+            paidInvoices
+        );
+
+
+        setText(
+            "issuedInvoices",
+            issuedInvoices
+        );
+
+
+        setText(
+            "draftInvoices",
+            draftInvoices
+        );
+
+
+        showAlert(
+            "Dashboard berhasil diperbarui.",
+            "success"
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "DASHBOARD ERROR:",
+            error
+        );
+
+
+        setErrorValues();
+
+
+        showAlert(
+            "Gagal mengambil data dashboard: " +
+            error.message,
+            "error"
+        );
+
+    }
 
 }
 
 
 /* =====================================================
-   CUSTOMER
+   COUNT CUSTOMERS
 ===================================================== */
 
-async function loadCustomer(){
+async function countRows(table){
 
     const {
         count,
         error
-    } = await supabaseClient
-        .from("customers")
-        .select("*",{
-            count:"exact",
-            head:true
-        });
+    } =
+    await supabaseClient
+        .from(table)
+        .select(
+            "id",
+            {
+                count:"exact",
+                head:true
+            }
+        );
 
 
     if(error){
 
-        console.error(
-            "Customer:",
-            error
+        throw new Error(
+            table +
+            ": " +
+            error.message
         );
 
-        document.getElementById(
-            "totalCustomer"
-        ).textContent = "0";
-
-        return;
     }
 
 
-    document.getElementById(
-        "totalCustomer"
-    ).textContent = count || 0;
+    return count || 0;
 
 }
 
 
 /* =====================================================
-   JOBS
+   GET JOBS
 ===================================================== */
 
-async function loadJobs(){
+async function getJobs(){
 
     const {
-        count,
+        data,
         error
-    } = await supabaseClient
+    } =
+    await supabaseClient
         .from("jobs")
-        .select("*",{
-            count:"exact",
-            head:true
-        });
+        .select(
+            "id,status"
+        );
 
 
     if(error){
 
-        console.error(
-            "Jobs:",
-            error
+        throw new Error(
+            "jobs: " +
+            error.message
         );
 
-        document.getElementById(
-            "totalJob"
-        ).textContent = "0";
-
-        return;
     }
 
 
-    document.getElementById(
-        "totalJob"
-    ).textContent = count || 0;
+    return data || [];
 
 }
 
 
 /* =====================================================
-   INVOICE
+   GET INVOICES
 ===================================================== */
 
-async function loadInvoice(){
+async function getInvoices(){
 
     const {
-        count,
+        data,
         error
-    } = await supabaseClient
+    } =
+    await supabaseClient
         .from("invoices")
-        .select("*",{
-            count:"exact",
-            head:true
-        });
+        .select(
+            "id,status,total"
+        );
 
 
     if(error){
 
-        console.error(
-            "Invoice:",
-            error
+        throw new Error(
+            "invoices: " +
+            error.message
         );
 
-        document.getElementById(
-            "totalInvoice"
-        ).textContent = "0";
-
-        return;
     }
 
 
-    document.getElementById(
-        "totalInvoice"
-    ).textContent = count || 0;
+    return data || [];
 
 }
 
 
 /* =====================================================
-   TEKNISI AKTIF
+   GET ACTIVE TECHNICIANS
 ===================================================== */
 
-async function loadTechnician(){
+async function getActiveTechnicians(){
+
+    /*
+     * Kita gunakan profiles karena role/status
+     * sudah tersedia di sana.
+     */
 
     const {
         count,
         error
-    } = await supabaseClient
-        .from("technicians")
-        .select("*",{
-            count:"exact",
-            head:true
-        })
+    } =
+    await supabaseClient
+        .from("profiles")
+        .select(
+            "id",
+            {
+                count:"exact",
+                head:true
+            }
+        )
+        .eq(
+            "role",
+            "TEKNISI"
+        )
         .eq(
             "status",
             "ACTIVE"
@@ -842,22 +1484,288 @@ async function loadTechnician(){
 
     if(error){
 
-        console.error(
-            "Technician:",
-            error
+        throw new Error(
+            "technicians: " +
+            error.message
         );
 
-        document.getElementById(
-            "totalTechnician"
-        ).textContent = "0";
+    }
 
+
+    return count || 0;
+
+}
+
+
+/* =====================================================
+   GET EXPENSES
+===================================================== */
+
+async function getExpenses(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("expenses")
+        .select(
+            "id,category,amount"
+        );
+
+
+    if(error){
+
+        throw new Error(
+            "expenses: " +
+            error.message
+        );
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+function normalizeCategory(value){
+
+    return String(
+        value || ""
+    )
+    .trim()
+    .toUpperCase()
+    .replace(
+        /\s+/g,
+        "_"
+    );
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function normalizeStatus(value){
+
+    return String(
+        value || ""
+    )
+    .trim()
+    .toUpperCase();
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function setLoading(){
+
+    const ids = [
+
+        "totalCustomers",
+        "totalJobs",
+        "totalInvoices",
+        "activeTechnicians",
+        "income",
+        "shoppingExpense",
+        "operationalExpense",
+        "netProfit",
+        "summaryJobs",
+        "completedJobs",
+        "activeJobs",
+        "cancelledJobs",
+        "summaryInvoices",
+        "paidInvoices",
+        "issuedInvoices",
+        "draftInvoices"
+
+    ];
+
+
+    ids.forEach(
+        id => {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+            if(element){
+
+                element.textContent =
+                    "...";
+
+                element.classList.add(
+                    "stat-loading"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ERROR VALUES
+===================================================== */
+
+function setErrorValues(){
+
+    const ids = [
+
+        "totalCustomers",
+        "totalJobs",
+        "totalInvoices",
+        "activeTechnicians",
+        "income",
+        "shoppingExpense",
+        "operationalExpense",
+        "netProfit",
+        "summaryJobs",
+        "completedJobs",
+        "activeJobs",
+        "cancelledJobs",
+        "summaryInvoices",
+        "paidInvoices",
+        "issuedInvoices",
+        "draftInvoices"
+
+    ];
+
+
+    ids.forEach(
+        id => {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+            if(element){
+
+                element.textContent =
+                    "0";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SET TEXT
+===================================================== */
+
+function setText(
+    id,
+    value
+){
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if(!element){
         return;
     }
 
 
-    document.getElementById(
-        "totalTechnician"
-    ).textContent = count || 0;
+    element.textContent =
+        value;
+
+
+    element.classList.remove(
+        "stat-loading"
+    );
+
+}
+
+
+/* =====================================================
+   FORMAT RUPIAH
+===================================================== */
+
+function formatRupiah(value){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(
+        Number(value || 0)
+    );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function goTo(page){
+
+    window.location.href =
+        page;
+
+}
+
+
+/* =====================================================
+   ALERT
+===================================================== */
+
+function showAlert(
+    message,
+    type
+){
+
+    const alert =
+        document.getElementById(
+            "alert"
+        );
+
+
+    alert.textContent =
+        message;
+
+
+    alert.className =
+        "alert show " +
+        (
+            type === "error"
+            ? "alert-error"
+            : "alert-success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            alert.classList.remove(
+                "show"
+            );
+
+        },
+        4000
+    );
 
 }
 
@@ -868,7 +1776,20 @@ async function loadTechnician(){
 
 async function logout(){
 
-    await supabaseClient.auth.signOut();
+    try{
+
+        await supabaseClient.auth.signOut();
+
+    }
+    catch(error){
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+    }
+
 
     window.location.href =
         "login.html";
