@@ -1,1033 +1,881 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>Dashboard Owner - WAT ERP</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <title>WAT ERP - Dashboard Owner</title>
+<style>
+*{
+    box-sizing:border-box;
+}
 
-    <link
-        rel="stylesheet"
-        href="assets/css/style.css"
-    >
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f6fb;
+    color:#102a43;
+}
 
-    <style>
+/* HEADER */
+header{
+    height:76px;
+    background:linear-gradient(90deg,#1257b8,#0878f9);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+}
 
-        *{
-            box-sizing:border-box;
-            margin:0;
-            padding:0;
-        }
+.brand{
+    font-weight:bold;
+    font-size:20px;
+}
 
-        body{
-            font-family:Arial,sans-serif;
-            background:#f4f7fb;
-            color:#1f2937;
-        }
+.brand small{
+    display:block;
+    font-size:11px;
+    font-weight:normal;
+    margin-top:3px;
+}
 
-        .topbar{
-            height:70px;
-            background:#0d6efd;
-            color:white;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding:0 30px;
-            box-shadow:0 2px 10px rgba(0,0,0,.1);
-        }
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
 
-        .brand{
-            font-size:22px;
-            font-weight:bold;
-        }
+.role{
+    background:rgba(255,255,255,.15);
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
 
-        .brand span{
-            display:block;
-            font-size:12px;
-            font-weight:normal;
-            opacity:.85;
-        }
+.logout{
+    background:white;
+    color:#1267d9;
+    border:0;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        .user-area{
-            display:flex;
-            align-items:center;
-            gap:15px;
-        }
+.logout:hover{
+    background:#edf5ff;
+}
 
-        .role{
-            background:rgba(255,255,255,.18);
-            padding:7px 12px;
-            border-radius:20px;
-            font-size:12px;
-        }
+/* CONTAINER */
+.container{
+    max-width:1160px;
+    margin:0 auto;
+    padding:26px 18px 50px;
+}
 
-        .logout{
-            border:none;
-            background:white;
-            color:#0d6efd;
-            padding:9px 15px;
-            border-radius:7px;
-            cursor:pointer;
-            font-weight:bold;
-        }
+.welcome{
+    margin-bottom:22px;
+}
 
-        .logout:hover{
-            opacity:.9;
-        }
+.welcome h1{
+    margin:0 0 6px;
+    font-size:27px;
+}
 
-        .container{
-            padding:30px;
-            max-width:1400px;
-            margin:auto;
-        }
+.welcome p{
+    margin:0;
+    color:#627d98;
+}
 
-        .welcome{
-            margin-bottom:25px;
-        }
+/* SUMMARY */
+.summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:25px;
+}
 
-        .welcome h1{
-            font-size:28px;
-            margin-bottom:5px;
-        }
+.summary-card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 10px rgba(16,42,67,.08);
+    border-left:4px solid #1267e8;
+}
 
-        .welcome p{
-            color:#6b7280;
-        }
+.summary-card:nth-child(2){
+    border-left-color:#16a34a;
+}
 
-        /* =========================
-           SUMMARY CARDS
-        ========================== */
+.summary-card:nth-child(3){
+    border-left-color:#f59e0b;
+}
 
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:20px;
-            margin-bottom:30px;
-        }
+.summary-card:nth-child(4){
+    border-left-color:#dc2626;
+}
 
-        .card{
-            background:white;
-            border-radius:12px;
-            padding:22px;
-            box-shadow:0 3px 12px rgba(0,0,0,.06);
-        }
+.summary-card span{
+    display:block;
+    color:#627d98;
+    font-size:13px;
+    margin-bottom:8px;
+}
 
-        .card-title{
-            color:#6b7280;
-            font-size:14px;
-            margin-bottom:10px;
-        }
+.summary-card strong{
+    font-size:25px;
+}
 
-        .card-value{
-            font-size:27px;
-            font-weight:bold;
-        }
+/* MENU */
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
 
-        .blue{
-            border-left:5px solid #0d6efd;
-        }
+.menu-card{
+    background:white;
+    border-radius:12px;
+    min-height:126px;
+    box-shadow:0 2px 10px rgba(16,42,67,.08);
+    transition:.2s;
+    overflow:hidden;
+}
 
-        .green{
-            border-left:5px solid #16a34a;
-        }
+.menu-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 7px 18px rgba(16,42,67,.13);
+}
 
-        .orange{
-            border-left:5px solid #f59e0b;
-        }
+.menu-card a{
+    display:block;
+    height:100%;
+    padding:22px;
+    text-decoration:none;
+    color:#102a43;
+}
 
-        .red{
-            border-left:5px solid #dc2626;
-        }
+.menu-icon{
+    font-size:30px;
+    margin-bottom:10px;
+}
 
-        /* =========================
-           MENU
-        ========================== */
+.menu-card h3{
+    margin:0 0 6px;
+    font-size:17px;
+}
 
-        .menu-grid{
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:20px;
-        }
+.menu-card p{
+    margin:0;
+    font-size:12px;
+    line-height:1.5;
+    color:#627d98;
+}
 
-        .menu{
-            background:white;
-            padding:25px;
-            border-radius:12px;
-            cursor:pointer;
-            box-shadow:0 3px 12px rgba(0,0,0,.06);
-            transition:.2s;
-        }
+/* WARNA MENU */
+.customer{
+    border-left:4px solid #1267e8;
+}
 
-        .menu:hover{
-            transform:translateY(-3px);
-            box-shadow:0 6px 18px rgba(0,0,0,.1);
-        }
+.jobs{
+    border-left:4px solid #16a34a;
+}
 
-        .menu-icon{
-            font-size:30px;
-            margin-bottom:12px;
-        }
+.invoice{
+    border-left:4px solid #f59e0b;
+}
 
-        .menu h3{
-            margin-bottom:7px;
-        }
+.teknisi{
+    border-left:4px solid #dc2626;
+}
 
-        .menu p{
-            font-size:13px;
-            color:#6b7280;
-        }
+.pengeluaran{
+    border-left:4px solid #16a34a;
+}
 
-        /* =========================
-           PENGELUARAN HIGHLIGHT
-        ========================== */
+.material{
+    border-left:4px solid #8b5cf6;
+}
 
-        .menu.pengeluaran{
-            border-left:5px solid #16a34a;
-        }
+.laporan{
+    border-left:4px solid #2563eb;
+}
 
-        .menu.pengeluaran .menu-icon{
-            color:#16a34a;
-        }
+.audit{
+    border-left:4px solid #eab308;
+}
 
-        /* =========================
-           LOADING
-        ========================== */
+.pengaturan{
+    border-left:4px solid #64748b;
+}
 
-        #loading{
-            text-align:center;
-            padding:40px;
-            color:#6b7280;
-        }
+.beranda{
+    border-left:4px solid #0ea5e9;
+}
 
-        #dashboard{
-            display:none;
-        }
+/* LOADING */
+.loading{
+    color:#627d98;
+}
 
-        /* =========================
-           RESPONSIVE
-        ========================== */
+/* RESPONSIVE */
+@media(max-width:900px){
 
-        @media(max-width:1000px){
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-            .cards,
-            .menu-grid{
-                grid-template-columns:repeat(2,1fr);
-            }
+    .menu-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
 
-        }
+@media(max-width:600px){
 
-        @media(max-width:600px){
+    header{
+        padding:0 15px;
+    }
 
-            .topbar{
-                padding:0 15px;
-            }
+    .brand{
+        font-size:17px;
+    }
 
-            .container{
-                padding:20px 15px;
-            }
+    .summary,
+    .menu-grid{
+        grid-template-columns:1fr;
+    }
 
-            .cards,
-            .menu-grid{
-                grid-template-columns:1fr;
-            }
+    .header-right{
+        gap:7px;
+    }
 
-            .brand{
-                font-size:18px;
-            }
-
-            .role{
-                display:none;
-            }
-
-        }
-
-    </style>
-
+    .role{
+        display:none;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="brand">
+        WAT ERP
+        <small>Technician Control System</small>
+    </div>
+
+    <div class="header-right">
+
+        <span class="role">OWNER</span>
+
+        <button class="logout" onclick="logout()">
+            LOGOUT
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     CONTENT
+========================= -->
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>Dashboard Owner</h1>
+
+        <p>
+            Selamat datang,
+            <span id="ownerName">Owner</span>.
+        </p>
+
+    </div>
+
 
     <!-- =========================
-         TOPBAR
-    ========================== -->
+         SUMMARY
+    ========================= -->
 
-    <header class="topbar">
+    <div class="summary">
 
-        <div class="brand">
+        <div class="summary-card">
 
-            WAT ERP
+            <span>Total Customer</span>
 
-            <span>
-                Technician Control System
-            </span>
+            <strong id="totalCustomer">
+                <span class="loading">...</span>
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Total Job</span>
+
+            <strong id="totalJob">
+                <span class="loading">...</span>
+            </strong>
 
         </div>
 
 
-        <div class="user-area">
+        <div class="summary-card">
 
-            <div class="role">
-                OWNER
-            </div>
+            <span>Invoice</span>
 
-            <button
-                class="logout"
-                id="logoutButton"
-            >
-                LOGOUT
-            </button>
+            <strong id="totalInvoice">
+                <span class="loading">...</span>
+            </strong>
 
         </div>
 
-    </header>
 
+        <div class="summary-card">
+
+            <span>Teknisi Aktif</span>
+
+            <strong id="totalTechnician">
+                <span class="loading">...</span>
+            </strong>
+
+        </div>
+
+    </div>
 
 
     <!-- =========================
-         MAIN
-    ========================== -->
+         MENU
+    ========================= -->
 
-    <main class="container">
-
-
-        <div id="loading">
-
-            Memuat dashboard...
-
-        </div>
+    <div class="menu-grid">
 
 
+        <!-- CUSTOMER -->
 
-        <div id="dashboard">
+        <div class="menu-card customer">
 
+            <a href="customer.html">
 
-            <!-- =========================
-                 WELCOME
-            ========================== -->
+                <div class="menu-icon">
+                    👥
+                </div>
 
-            <section class="welcome">
+                <h3>
+                    Customer
+                </h3>
 
-                <h1>
-                    Dashboard Owner
-                </h1>
-
-                <p id="welcomeText">
-                    Selamat datang di WAT ERP
+                <p>
+                    Kelola data customer WAT.
                 </p>
 
-            </section>
-
-
-
-            <!-- =========================
-                 SUMMARY
-            ========================== -->
-
-            <section class="cards">
-
-
-                <!-- CUSTOMER -->
-
-                <div class="card blue">
-
-                    <div class="card-title">
-                        Total Customer
-                    </div>
-
-                    <div
-                        class="card-value"
-                        id="totalCustomer"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-
-                <!-- JOB -->
-
-                <div class="card green">
-
-                    <div class="card-title">
-                        Total Job
-                    </div>
-
-                    <div
-                        class="card-value"
-                        id="totalJobs"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-
-                <!-- INVOICE -->
-
-                <div class="card orange">
-
-                    <div class="card-title">
-                        Invoice
-                    </div>
-
-                    <div
-                        class="card-value"
-                        id="totalInvoices"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-
-                <!-- TEKNISI -->
-
-                <div class="card red">
-
-                    <div class="card-title">
-                        Teknisi Aktif
-                    </div>
-
-                    <div
-                        class="card-value"
-                        id="totalTechnicians"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-            </section>
-
-
-
-            <!-- =========================
-                 MENU OWNER
-            ========================== -->
-
-            <section class="menu-grid">
-
-
-                <!-- CUSTOMER -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('customer.html')"
-                >
-
-                    <div class="menu-icon">
-                        👥
-                    </div>
-
-                    <h3>
-                        Customer
-                    </h3>
-
-                    <p>
-                        Kelola data customer WAT.
-                    </p>
-
-                </div>
-
-
-
-                <!-- JOBS -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('jobs.html')"
-                >
-
-                    <div class="menu-icon">
-                        🔧
-                    </div>
-
-                    <h3>
-                        Jobs
-                    </h3>
-
-                    <p>
-                        Pantau pekerjaan teknisi.
-                    </p>
-
-                </div>
-
-
-
-                <!-- INVOICE -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('invoice.html')"
-                >
-
-                    <div class="menu-icon">
-                        🧾
-                    </div>
-
-                    <h3>
-                        Invoice
-                    </h3>
-
-                    <p>
-                        Kelola invoice dan pembayaran.
-                    </p>
-
-                </div>
-
-
-
-                <!-- TEKNISI -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('teknisi.html')"
-                >
-
-                    <div class="menu-icon">
-                        👨‍🔧
-                    </div>
-
-                    <h3>
-                        Teknisi
-                    </h3>
-
-                    <p>
-                        Kontrol teknisi dan pekerjaan.
-                    </p>
-
-                </div>
-
-
-
-                <!-- =====================
-                     PENGELUARAN BARU
-                ====================== -->
-
-                <div
-                    class="menu pengeluaran"
-                    onclick="goTo('pengeluaran.html')"
-                >
-
-                    <div class="menu-icon">
-                        💰
-                    </div>
-
-                    <h3>
-                        Pengeluaran
-                    </h3>
-
-                    <p>
-                        Kelola belanja material dan biaya operasional.
-                    </p>
-
-                </div>
-
-
-
-                <!-- LAPORAN -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('reports.html')"
-                >
-
-                    <div class="menu-icon">
-                        📊
-                    </div>
-
-                    <h3>
-                        Laporan
-                    </h3>
-
-                    <p>
-                        Lihat laporan pendapatan, HPP dan laba rugi.
-                    </p>
-
-                </div>
-
-
-
-                <!-- AUDIT LOG -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('audit-logs.html')"
-                >
-
-                    <div class="menu-icon">
-                        🔐
-                    </div>
-
-                    <h3>
-                        Audit Log
-                    </h3>
-
-                    <p>
-                        Pantau aktivitas pengguna.
-                    </p>
-
-                </div>
-
-
-
-                <!-- SETTINGS -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('settings.html')"
-                >
-
-                    <div class="menu-icon">
-                        ⚙️
-                    </div>
-
-                    <h3>
-                        Pengaturan
-                    </h3>
-
-                    <p>
-                        Pengaturan sistem WAT ERP.
-                    </p>
-
-                </div>
-
-
-
-                <!-- HOME -->
-
-                <div
-                    class="menu"
-                    onclick="goTo('index.html')"
-                >
-
-                    <div class="menu-icon">
-                        🏠
-                    </div>
-
-                    <h3>
-                        Beranda
-                    </h3>
-
-                    <p>
-                        Kembali ke halaman utama.
-                    </p>
-
-                </div>
-
-
-            </section>
-
+            </a>
 
         </div>
 
 
-    </main>
+        <!-- JOBS -->
 
+        <div class="menu-card jobs">
 
+            <a href="jobs.html">
 
-    <!-- =========================
-         SUPABASE
-    ========================== -->
+                <div class="menu-icon">
+                    🔧
+                </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                <h3>
+                    Jobs
+                </h3>
 
-    <script src="assets/js/config.js"></script>
+                <p>
+                    Pantau pekerjaan teknisi.
+                </p>
 
+            </a>
 
+        </div>
 
-    <script>
 
-        /* =====================================
-           SUPABASE CLIENT
-        ===================================== */
+        <!-- INVOICE -->
 
-        const {
-            createClient
-        } = window.supabase;
+        <div class="menu-card invoice">
 
+            <a href="invoice.html">
 
-        const supabaseClient =
-            createClient(
-                SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
-            );
+                <div class="menu-icon">
+                    📜
+                </div>
 
+                <h3>
+                    Invoice
+                </h3>
 
+                <p>
+                    Kelola invoice dan pembayaran.
+                </p>
 
-        /* =====================================
-           CHECK OWNER
-        ===================================== */
+            </a>
 
-        async function checkOwner(){
+        </div>
 
-            try{
 
-                const {
-                    data:{
-                        user
-                    }
-                } =
-                await supabaseClient
-                    .auth
-                    .getUser();
+        <!-- TEKNISI -->
 
+        <div class="menu-card teknisi">
 
+            <a href="teknisi.html">
 
-                /* =========================
-                   BELUM LOGIN
-                ========================== */
+                <div class="menu-icon">
+                    🧑‍🔧
+                </div>
 
-                if(!user){
+                <h3>
+                    Teknisi
+                </h3>
 
-                    window.location.href =
-                        "login.html";
+                <p>
+                    Kontrol teknisi dan pekerjaan.
+                </p>
 
-                    return;
+            </a>
 
-                }
+        </div>
 
 
+        <!-- PENGELUARAN -->
 
-                /* =========================
-                   GET PROFILE
-                ========================== */
+        <div class="menu-card pengeluaran">
 
-                const {
-                    data:profile,
-                    error
-                } =
-                await supabaseClient
-                    .from("profiles")
-                    .select(
-                        "full_name,email,role,status"
-                    )
-                    .eq(
-                        "id",
-                        user.id
-                    )
-                    .single();
+            <a href="pengeluaran.html">
 
+                <div class="menu-icon">
+                    💰
+                </div>
 
+                <h3>
+                    Pengeluaran
+                </h3>
 
-                if(
-                    error ||
-                    !profile
-                ){
+                <p>
+                    Kelola belanja material dan biaya operasional.
+                </p>
 
-                    alert(
-                        "Profile user tidak ditemukan."
-                    );
+            </a>
 
-                    await supabaseClient
-                        .auth
-                        .signOut();
+        </div>
 
-                    window.location.href =
-                        "login.html";
 
-                    return;
+        <!-- MATERIAL -->
 
-                }
+        <div class="menu-card material">
 
+            <a href="materials.html">
 
+                <div class="menu-icon">
+                    📦
+                </div>
 
-                /* =========================
-                   ROLE CHECK
-                ========================== */
+                <h3>
+                    Material
+                </h3>
 
-                if(
-                    profile.role !==
-                    "OWNER"
-                ){
+                <p>
+                    Kelola master material, stok dan harga modal.
+                </p>
 
-                    alert(
-                        "Akses ditolak. Halaman ini hanya untuk OWNER."
-                    );
+            </a>
 
-                    window.location.href =
-                        "login.html";
+        </div>
 
-                    return;
 
-                }
+        <!-- LAPORAN -->
 
+        <div class="menu-card laporan">
 
+            <a href="reports.html">
 
-                /* =========================
-                   STATUS CHECK
-                ========================== */
+                <div class="menu-icon">
+                    📊
+                </div>
 
-                if(
-                    profile.status !==
-                    "ACTIVE"
-                ){
+                <h3>
+                    Laporan
+                </h3>
 
-                    alert(
-                        "Akun Anda tidak aktif."
-                    );
+                <p>
+                    Lihat laporan pendapatan, HPP dan laba rugi.
+                </p>
 
-                    await supabaseClient
-                        .auth
-                        .signOut();
+            </a>
 
-                    window.location.href =
-                        "login.html";
+        </div>
 
-                    return;
 
-                }
+        <!-- AUDIT LOG -->
 
+        <div class="menu-card audit">
 
+            <a href="audit.html">
 
-                /* =========================
-                   WELCOME
-                ========================== */
+                <div class="menu-icon">
+                    🔐
+                </div>
 
-                document.getElementById(
-                    "welcomeText"
-                ).textContent =
+                <h3>
+                    Audit Log
+                </h3>
 
-                    "Selamat datang, " +
+                <p>
+                    Pantau aktivitas pengguna.
+                </p>
 
-                    (
-                        profile.full_name ||
-                        "Owner"
-                    ) +
+            </a>
 
-                    ".";
+        </div>
 
 
+        <!-- PENGATURAN -->
 
-                /* =========================
-                   LOAD STATISTICS
-                ========================== */
+        <div class="menu-card pengaturan">
 
-                await loadStatistics();
+            <a href="settings.html">
 
+                <div class="menu-icon">
+                    ⚙️
+                </div>
 
+                <h3>
+                    Pengaturan
+                </h3>
 
-                /* =========================
-                   SHOW DASHBOARD
-                ========================== */
+                <p>
+                    Pengaturan sistem WAT ERP.
+                </p>
 
-                document.getElementById(
-                    "loading"
-                ).style.display =
-                    "none";
+            </a>
 
+        </div>
 
-                document.getElementById(
-                    "dashboard"
-                ).style.display =
-                    "block";
 
-            }
+        <!-- BERANDA -->
 
-            catch(error){
+        <div class="menu-card beranda">
 
-                console.error(
-                    "Gagal memuat dashboard:",
-                    error
-                );
+            <a href="index.html">
 
-                alert(
-                    "Terjadi kesalahan saat memuat dashboard."
-                );
+                <div class="menu-icon">
+                    🏠
+                </div>
 
-            }
+                <h3>
+                    Beranda
+                </h3>
 
-        }
+                <p>
+                    Kembali ke halaman utama.
+                </p>
 
+            </a>
 
+        </div>
 
-        /* =====================================
-           LOAD STATISTICS
-        ===================================== */
+    </div>
 
-        async function loadStatistics(){
+</div>
 
-            try{
 
-                /* =========================
-                   CUSTOMER
-                ========================== */
+<script>
 
-                const customers =
-                    await supabaseClient
-                        .from("customers")
-                        .select(
-                            "id",
-                            {
-                                count:"exact",
-                                head:true
-                            }
-                        );
+/* =====================================================
+   SUPABASE
+===================================================== */
 
+const SUPABASE_URL =
+"GANTI_DENGAN_SUPABASE_URL";
 
+const SUPABASE_ANON_KEY =
+"GANTI_DENGAN_SUPABASE_ANON_KEY";
 
-                /* =========================
-                   JOB
-                ========================== */
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
-                const jobs =
-                    await supabaseClient
-                        .from("jobs")
-                        .select(
-                            "id",
-                            {
-                                count:"exact",
-                                head:true
-                            }
-                        );
 
+/* =====================================================
+   INIT
+===================================================== */
 
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
 
-                /* =========================
-                   INVOICE
-                ========================== */
 
-                const invoices =
-                    await supabaseClient
-                        .from("invoices")
-                        .select(
-                            "id",
-                            {
-                                count:"exact",
-                                head:true
-                            }
-                        );
+async function init(){
 
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
 
 
-                /* =========================
-                   TEKNISI AKTIF
-                ========================== */
+    /*
+       BELUM LOGIN
+    */
 
-                const technicians =
-                    await supabaseClient
-                        .from("profiles")
-                        .select(
-                            "id",
-                            {
-                                count:"exact",
-                                head:true
-                            }
-                        )
-                        .eq(
-                            "role",
-                            "TEKNISI"
-                        )
-                        .eq(
-                            "status",
-                            "ACTIVE"
-                        );
+    if(error || !data.user){
 
+        window.location.href =
+            "login.html";
 
+        return;
+    }
 
-                /* =========================
-                   UPDATE UI
-                ========================== */
 
-                document.getElementById(
-                    "totalCustomer"
-                ).textContent =
-                    customers.count ??
-                    0;
+    /*
+       DATA USER
+    */
 
+    const user =
+        data.user;
 
-                document.getElementById(
-                    "totalJobs"
-                ).textContent =
-                    jobs.count ??
-                    0;
 
+    /*
+       NAMA USER
+    */
 
-                document.getElementById(
-                    "totalInvoices"
-                ).textContent =
-                    invoices.count ??
-                    0;
+    let nama =
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.email ||
+        "Owner";
 
 
-                document.getElementById(
-                    "totalTechnicians"
-                ).textContent =
-                    technicians.count ??
-                    0;
+    document.getElementById(
+        "ownerName"
+    ).textContent = nama;
 
-            }
 
-            catch(error){
+    /*
+       LOAD DASHBOARD
+    */
 
-                console.error(
-                    "Gagal memuat statistik:",
-                    error
-                );
+    await loadDashboard();
 
-            }
+}
 
-        }
 
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
 
+async function loadDashboard(){
 
-        /* =====================================
-           LOGOUT
-        ===================================== */
+    await Promise.all([
 
-        document
-            .getElementById(
-                "logoutButton"
-            )
-            .addEventListener(
-                "click",
-                async function(){
+        loadCustomer(),
 
-                    await supabaseClient
-                        .auth
-                        .signOut();
+        loadJobs(),
 
-                    window.location.href =
-                        "login.html";
+        loadInvoice(),
 
-                }
-            );
+        loadTechnician()
 
+    ]);
 
+}
 
-        /* =====================================
-           NAVIGATION
-        ===================================== */
 
-        function goTo(page){
+/* =====================================================
+   CUSTOMER
+===================================================== */
 
-            window.location.href =
-                page;
+async function loadCustomer(){
 
-        }
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("customers")
+        .select("*",{
+            count:"exact",
+            head:true
+        });
 
 
+    if(error){
 
-        /* =====================================
-           START
-        ===================================== */
+        console.error(
+            "Customer:",
+            error
+        );
 
-        checkOwner();
+        document.getElementById(
+            "totalCustomer"
+        ).textContent = "0";
 
-    </script>
+        return;
+    }
+
+
+    document.getElementById(
+        "totalCustomer"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   JOBS
+===================================================== */
+
+async function loadJobs(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("jobs")
+        .select("*",{
+            count:"exact",
+            head:true
+        });
+
+
+    if(error){
+
+        console.error(
+            "Jobs:",
+            error
+        );
+
+        document.getElementById(
+            "totalJob"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalJob"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   INVOICE
+===================================================== */
+
+async function loadInvoice(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("invoices")
+        .select("*",{
+            count:"exact",
+            head:true
+        });
+
+
+    if(error){
+
+        console.error(
+            "Invoice:",
+            error
+        );
+
+        document.getElementById(
+            "totalInvoice"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalInvoice"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   TEKNISI AKTIF
+===================================================== */
+
+async function loadTechnician(){
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+        .from("technicians")
+        .select("*",{
+            count:"exact",
+            head:true
+        })
+        .eq(
+            "status",
+            "ACTIVE"
+        );
+
+
+    if(error){
+
+        console.error(
+            "Technician:",
+            error
+        );
+
+        document.getElementById(
+            "totalTechnician"
+        ).textContent = "0";
+
+        return;
+    }
+
+
+    document.getElementById(
+        "totalTechnician"
+    ).textContent = count || 0;
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href =
+        "login.html";
+
+}
+
+</script>
 
 </body>
-
 </html>
