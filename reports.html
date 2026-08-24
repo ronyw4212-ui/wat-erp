@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Laporan Keuangan - WAT ERP</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f6fb;
+    color:#172033;
+}
+
+.header{
+    height:68px;
+    background:linear-gradient(90deg,#0d47a1,#1268d8);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 28px;
+}
+
+.brand h2{
+    font-size:20px;
+}
+
+.brand span{
+    display:block;
+    font-size:12px;
+    opacity:.85;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.user-name{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.logout{
+    border:0;
+    background:#fff;
+    color:#0d47a1;
+    padding:9px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.container{
+    max-width:1200px;
+    margin:28px auto;
+    padding:0 18px;
+}
+
+.page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:20px;
+}
+
+.page-head h1{
+    font-size:28px;
+}
+
+.page-head p{
+    color:#718096;
+    margin-top:6px;
+    font-size:14px;
+}
+
+/* FILTER */
+
+.filter-card{
+    background:#fff;
+    border-radius:12px;
+    padding:16px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+    margin-bottom:18px;
+}
+
+.filter-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr auto;
+    gap:10px;
+    align-items:end;
+}
+
+.filter label{
+    display:block;
+    font-size:11px;
+    font-weight:bold;
+    color:#64748b;
+    margin-bottom:5px;
+}
+
+.filter input,
+.filter select{
+    width:100%;
+    height:42px;
+    border:1px solid #d7dfeb;
+    border-radius:8px;
+    padding:0 10px;
+    background:#fff;
+}
+
+.btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#0d5dcc;
+    color:#fff;
+}
+
+.btn-secondary{
+    background:#e7edf6;
+    color:#24344d;
+}
+
+/* SUMMARY */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.card{
+    background:#fff;
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+}
+
+.summary .card{
+    border-left:4px solid #0d5dcc;
+}
+
+.card-label{
+    display:block;
+    color:#718096;
+    font-size:12px;
+}
+
+.card-value{
+    display:block;
+    font-size:21px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.card.profit{
+    border-left-color:#16a34a;
+}
+
+.card.loss{
+    border-left-color:#dc2626;
+}
+
+.profit-value{
+    color:#15803d;
+}
+
+.loss-value{
+    color:#b91c1c;
+}
+
+/* ALERT */
+
+.alert{
+    display:none;
+    padding:12px 14px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:13px;
+}
+
+.alert.show{
+    display:block;
+}
+
+.alert-error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.alert-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* REPORT */
+
+.report-card{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+}
+
+.report-title{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.report-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 0;
+    border-bottom:1px solid #edf0f5;
+    font-size:14px;
+}
+
+.report-row:last-child{
+    border-bottom:0;
+}
+
+.report-row strong{
+    font-size:15px;
+}
+
+.report-total{
+    margin-top:8px;
+    padding-top:16px;
+    border-top:2px solid #dbe3ef;
+    font-size:16px;
+}
+
+.report-total strong{
+    font-size:20px;
+}
+
+/* TABLE */
+
+.table-box{
+    background:#fff;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 4px 16px rgba(20,40,80,.07);
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#edf3fa;
+    color:#40516a;
+    font-size:12px;
+    text-align:left;
+    padding:13px;
+    white-space:nowrap;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #edf0f5;
+    font-size:13px;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.badge-income{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-hpp{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge-operational{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.loading,
+.empty{
+    text-align:center;
+    padding:40px 20px;
+    color:#718096;
+}
+
+/* PRINT */
+
+@media print{
+
+    .header{
+        background:#fff;
+        color:#000;
+        border-bottom:1px solid #ddd;
+    }
+
+    .logout,
+    .filter-card,
+    .no-print{
+        display:none !important;
+    }
+
+    body{
+        background:#fff;
+    }
+
+    .container{
+        max-width:none;
+        margin:10px;
+    }
+
+    .card,
+    .report-card,
+    .table-box{
+        box-shadow:none;
+        border:1px solid #ddd;
+    }
+
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .filter-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:0 15px;
+    }
+
+    .user-name{
+        display:none;
+    }
+
+    .container{
+        margin:20px auto;
+        padding:0 12px;
+    }
+
+    .page-head{
+        display:block;
+    }
+
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .filter-grid{
+        grid-template-columns:1fr;
+    }
+
+    th,
+    td{
+        white-space:nowrap;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand">
+        <h2>WAT ERP</h2>
+        <span>Laporan Keuangan</span>
+    </div>
+
+    <div class="header-right">
+
+        <span
+            class="user-name"
+            id="userName"
+        >
+            OWNER
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            LOGOUT
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-head">
+
+        <div>
+
+            <h1>Laporan Keuangan</h1>
+
+            <p>
+                Pendapatan, HPP, pengeluaran dan laba rugi.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-primary no-print"
+            onclick="window.print()"
+        >
+            🖨 Cetak Laporan
+        </button>
+
+    </div>
+
+
+    <div
+        id="alert"
+        class="alert"
+    ></div>
+
+
+    <!-- FILTER -->
+
+    <section class="filter-card no-print">
+
+        <div class="filter-grid">
+
+            <div class="filter">
+
+                <label>
+                    Dari Tanggal
+                </label>
+
+                <input
+                    type="date"
+                    id="filterFrom"
+                >
+
+            </div>
+
+
+            <div class="filter">
+
+                <label>
+                    Sampai Tanggal
+                </label>
+
+                <input
+                    type="date"
+                    id="filterTo"
+                >
+
+            </div>
+
+
+            <div class="filter">
+
+                <label>
+                    Bulan
+                </label>
+
+                <select id="filterMonth">
+
+                    <option value="">
+                        Semua Bulan
+                    </option>
+
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter">
+
+                <label>
+                    Tahun
+                </label>
+
+                <select id="filterYear">
+
+                    <option value="">
+                        Semua Tahun
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="btn btn-primary"
+                onclick="loadReport()"
+            >
+                Tampilkan
+            </button>
+
+        </div>
+
+        <div
+            style="
+                margin-top:10px;
+                font-size:11px;
+                color:#718096;
+            "
+        >
+            Jika menggunakan Bulan/Tahun, filter tersebut akan menjadi
+            dasar periode laporan. Filter tanggal dapat digunakan untuk
+            laporan yang lebih spesifik.
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary">
+
+        <div class="card">
+
+            <span class="card-label">
+                Pendapatan
+            </span>
+
+            <strong
+                class="card-value"
+                id="incomeTotal"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-label">
+                HPP
+            </span>
+
+            <strong
+                class="card-value"
+                id="hppTotal"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="card-label">
+                Operasional
+            </span>
+
+            <strong
+                class="card-value"
+                id="operationalTotal"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="card profit">
+
+            <span class="card-label">
+                Laba Kotor
+            </span>
+
+            <strong
+                class="card-value profit-value"
+                id="grossProfit"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div
+            class="card profit"
+            id="netProfitCard"
+        >
+
+            <span class="card-label">
+                Laba Bersih
+            </span>
+
+            <strong
+                class="card-value profit-value"
+                id="netProfit"
+            >
+                Rp 0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- RINGKASAN LABA RUGI -->
+
+    <section class="report-card">
+
+        <h2 class="report-title">
+            Ringkasan Laba Rugi
+        </h2>
+
+
+        <div class="report-row">
+
+            <span>
+                Pendapatan
+            </span>
+
+            <strong id="detailIncome">
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="report-row">
+
+            <span>
+                (-) Harga Pokok Penjualan / HPP
+            </span>
+
+            <strong id="detailHpp">
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="report-row report-total">
+
+            <span>
+                Laba Kotor
+            </span>
+
+            <strong id="detailGross">
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="report-row">
+
+            <span>
+                (-) Biaya Operasional
+            </span>
+
+            <strong id="detailOperational">
+                Rp 0
+            </strong>
+
+        </div>
+
+
+        <div class="report-row report-total">
+
+            <span>
+                Laba Bersih
+            </span>
+
+            <strong id="detailNet">
+                Rp 0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- RINCIAN TRANSAKSI -->
+
+    <section class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Tanggal
+                    </th>
+
+                    <th>
+                        Jenis
+                    </th>
+
+                    <th>
+                        Keterangan
+                    </th>
+
+                    <th>
+                        Jumlah
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="reportTable">
+
+                <tr>
+
+                    <td colspan="4">
+
+                        <div class="loading">
+                            Memuat laporan...
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* =====================================
+   SUPABASE
+===================================== */
+
+const {
+    createClient
+} = window.supabase;
+
+
+const supabaseClient =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =====================================
+   STATE
+===================================== */
+
+let currentUser = null;
+
+let invoiceData = [];
+
+let hppData = [];
+
+let expenseData = [];
+
+
+/* =====================================
+   INIT
+===================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+
+async function init(){
+
+    try{
+
+        const {
+            data:{
+                session
+            }
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if(!session){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser =
+            session.user;
+
+
+        await checkOwner();
+
+        populateYears();
+
+        setDefaultPeriod();
+
+        await loadReport();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal memuat laporan: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   OWNER
+===================================== */
+
+async function checkOwner(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("profiles")
+        .select(`
+            id,
+            full_name,
+            email,
+            role,
+            status
+        `)
+        .eq(
+            "id",
+            currentUser.id
+        )
+        .single();
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    if(
+        data.role !== "OWNER"
+    ){
+
+        alert(
+            "Akses ditolak. Halaman ini hanya untuk OWNER."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    if(
+        data.status !== "ACTIVE"
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "userName"
+    ).textContent =
+        data.full_name ||
+        data.email ||
+        "OWNER";
+
+}
+
+
+/* =====================================
+   YEAR
+===================================== */
+
+function populateYears(){
+
+    const select =
+        document.getElementById(
+            "filterYear"
+        );
+
+
+    const currentYear =
+        new Date()
+            .getFullYear();
+
+
+    for(
+        let year =
+            currentYear - 5;
+
+        year <=
+            currentYear + 1;
+
+        year++
+    ){
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            year;
+
+
+        option.textContent =
+            year;
+
+
+        select.appendChild(
+            option
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   DEFAULT PERIOD
+===================================== */
+
+function setDefaultPeriod(){
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "filterYear"
+    ).value =
+        year;
+
+
+    document.getElementById(
+        "filterMonth"
+    ).value =
+        now.getMonth() + 1;
+
+}
+
+
+/* =====================================
+   LOAD REPORT
+===================================== */
+
+async function loadReport(){
+
+    try{
+
+        showLoading();
+
+        const period =
+            getPeriod();
+
+
+        await Promise.all([
+
+            loadInvoices(
+                period
+            ),
+
+            loadHpp(
+                period
+            ),
+
+            loadExpenses(
+                period
+            )
+
+        ]);
+
+
+        calculateReport();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        showAlert(
+            "Gagal mengambil data laporan: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   PERIOD
+===================================== */
+
+function getPeriod(){
+
+    let from =
+        document.getElementById(
+            "filterFrom"
+        ).value;
+
+
+    let to =
+        document.getElementById(
+            "filterTo"
+        ).value;
+
+
+    const month =
+        document.getElementById(
+            "filterMonth"
+        ).value;
+
+
+    const year =
+        document.getElementById(
+            "filterYear"
+        ).value;
+
+
+    /*
+       Jika tanggal tidak dipilih,
+       gunakan bulan + tahun.
+    */
+
+    if(
+        !from &&
+        !to &&
+        month &&
+        year
+    ){
+
+        const m =
+            String(
+                month
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        from =
+            `${year}-${m}-01`;
+
+
+        const lastDay =
+            new Date(
+                Number(year),
+                Number(month),
+                0
+            )
+            .getDate();
+
+
+        to =
+            `${year}-${m}-${String(lastDay).padStart(2,"0")}`;
+
+    }
+
+
+    return {
+        from,
+        to
+    };
+
+}
+
+
+/* =====================================
+   LOAD INVOICES
+===================================== */
+
+async function loadInvoices(
+    period
+){
+
+    let query =
+        supabaseClient
+            .from("invoices")
+            .select("*");
+
+
+    /*
+       Gunakan range tanggal jika tersedia.
+       Kolom tanggal akan dideteksi otomatis.
+    */
+
+    const {
+        data,
+        error
+    } =
+    await query;
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    invoiceData =
+        (data || [])
+            .filter(
+                row =>
+                    isInsidePeriod(
+                        getDateFromRow(
+                            row,
+                            [
+                                "invoice_date",
+                                "date",
+                                "issued_at",
+                                "created_at"
+                            ]
+                        ),
+                        period
+                    )
+            );
+
+}
+
+
+/* =====================================
+   LOAD HPP
+===================================== */
+
+async function loadHpp(
+    period
+){
+
+    let query =
+        supabaseClient
+            .from("material_usage")
+            .select("*");
+
+
+    const {
+        data,
+        error
+    } =
+    await query;
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    hppData =
+        (data || [])
+            .filter(
+                row =>
+                    isInsidePeriod(
+                        getDateFromRow(
+                            row,
+                            [
+                                "usage_date",
+                                "used_date",
+                                "date",
+                                "created_at"
+                            ]
+                        ),
+                        period
+                    )
+            );
+
+}
+
+
+/* =====================================
+   LOAD EXPENSES
+===================================== */
+
+async function loadExpenses(
+    period
+){
+
+    let query =
+        supabaseClient
+            .from("expenses")
+            .select("*");
+
+
+    const {
+        data,
+        error
+    } =
+    await query;
+
+
+    if(error){
+
+        throw error;
+
+    }
+
+
+    expenseData =
+        (data || [])
+            .filter(
+                row =>
+                    isInsidePeriod(
+                        getDateFromRow(
+                            row,
+                            [
+                                "expense_date",
+                                "date",
+                                "created_at"
+                            ]
+                        ),
+                        period
+                    )
+            );
+
+}
+
+
+/* =====================================
+   CALCULATE
+===================================== */
+
+function calculateReport(){
+
+    /*
+       PENDAPATAN
+    */
+
+    const income =
+        invoiceData
+            .reduce(
+                (
+                    total,
+                    row
+                ) =>
+                    total +
+                    getAmount(
+                        row,
+                        [
+                            "grand_total",
+                            "total_amount",
+                            "total",
+                            "amount",
+                            "invoice_total"
+                        ]
+                    ),
+                0
+            );
+
+
+    /*
+       HPP
+    */
+
+    const hpp =
+        hppData
+            .reduce(
+                (
+                    total,
+                    row
+                ) =>
+                    total +
+                    getHppAmount(
+                        row
+                    ),
+                0
+            );
+
+
+    /*
+       OPERASIONAL
+
+       MATERIAL TIDAK DIMASUKKAN
+       SEBAGAI OPERASIONAL.
+
+       MATERIAL BELI =
+       persediaan.
+
+       MATERIAL TERPAKAI =
+       HPP.
+    */
+
+    const operational =
+        expenseData
+            .filter(
+                row =>
+                    String(
+                        row.category ||
+                        row.type ||
+                        ""
+                    )
+                    .toUpperCase()
+                    .includes(
+                        "OPER"
+                    )
+            )
+            .reduce(
+                (
+                    total,
+                    row
+                ) =>
+                    total +
+                    getAmount(
+                        row,
+                        [
+                            "amount",
+                            "total_amount",
+                            "total",
+                            "nominal"
+                        ]
+                    ),
+                0
+            );
+
+
+    const grossProfit =
+        income -
+        hpp;
+
+
+    const netProfit =
+        grossProfit -
+        operational;
+
+
+    updateSummary(
+        income,
+        hpp,
+        operational,
+        grossProfit,
+        netProfit
+    );
+
+
+    renderTransactions(
+        income,
+        hpp,
+        operational
+    );
+
+}
+
+
+/* =====================================
+   HPP AMOUNT
+===================================== */
+
+function getHppAmount(
+    row
+){
+
+    /*
+       Kalau sudah ada total_cost,
+       gunakan itu.
+    */
+
+    const direct =
+        getNumeric(
+            row,
+            [
+                "total_cost",
+                "total_amount",
+                "amount",
+                "hpp",
+                "cost"
+            ]
+        );
+
+
+    if(
+        direct > 0
+    ){
+
+        return direct;
+
+    }
+
+
+    /*
+       Kalau belum ada total,
+       hitung quantity x unit_cost.
+    */
+
+    const quantity =
+        getNumeric(
+            row,
+            [
+                "quantity",
+                "qty",
+                "used_quantity"
+            ]
+        );
+
+
+    const unitCost =
+        getNumeric(
+            row,
+            [
+                "unit_cost",
+                "cost_per_unit",
+                "average_cost",
+                "price"
+            ]
+        );
+
+
+    return (
+        quantity *
+        unitCost
+    );
+
+}
+
+
+/* =====================================
+   UPDATE SUMMARY
+===================================== */
+
+function updateSummary(
+    income,
+    hpp,
+    operational,
+    grossProfit,
+    netProfit
+){
+
+    document.getElementById(
+        "incomeTotal"
+    ).textContent =
+        formatRupiah(
+            income
+        );
+
+
+    document.getElementById(
+        "hppTotal"
+    ).textContent =
+        formatRupiah(
+            hpp
+        );
+
+
+    document.getElementById(
+        "operationalTotal"
+    ).textContent =
+        formatRupiah(
+            operational
+        );
+
+
+    document.getElementById(
+        "grossProfit"
+    ).textContent =
+        formatRupiah(
+            grossProfit
+        );
+
+
+    document.getElementById(
+        "netProfit"
+    ).textContent =
+        formatRupiah(
+            netProfit
+        );
+
+
+    document.getElementById(
+        "detailIncome"
+    ).textContent =
+        formatRupiah(
+            income
+        );
+
+
+    document.getElementById(
+        "detailHpp"
+    ).textContent =
+        formatRupiah(
+            hpp
+        );
+
+
+    document.getElementById(
+        "detailGross"
+    ).textContent =
+        formatRupiah(
+            grossProfit
+        );
+
+
+    document.getElementById(
+        "detailOperational"
+    ).textContent =
+        formatRupiah(
+            operational
+        );
+
+
+    document.getElementById(
+        "detailNet"
+    ).textContent =
+        formatRupiah(
+            netProfit
+        );
+
+
+    const card =
+        document.getElementById(
+            "netProfitCard"
+        );
+
+
+    const value =
+        document.getElementById(
+            "netProfit"
+        );
+
+
+    card.classList.remove(
+        "profit",
+        "loss"
+    );
+
+
+    value.classList.remove(
+        "profit-value",
+        "loss-value"
+    );
+
+
+    if(
+        netProfit >= 0
+    ){
+
+        card.classList.add(
+            "profit"
+        );
+
+        value.classList.add(
+            "profit-value"
+        );
+
+    }
+    else{
+
+        card.classList.add(
+            "loss"
+        );
+
+        value.classList.add(
+            "loss-value"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   TRANSACTIONS
+===================================== */
+
+function renderTransactions(){
+
+    const tbody =
+        document.getElementById(
+            "reportTable"
+        );
+
+
+    const rows = [];
+
+
+    /*
+       INVOICE
+    */
+
+    invoiceData.forEach(
+        row => {
+
+            rows.push({
+
+                date:
+                    getDateFromRow(
+                        row,
+                        [
+                            "invoice_date",
+                            "date",
+                            "issued_at",
+                            "created_at"
+                        ]
+                    ),
+
+                type:
+                    "PENDAPATAN",
+
+                label:
+                    row.invoice_number ||
+                    row.invoice_no ||
+                    row.number ||
+                    row.description ||
+                    "Invoice",
+
+                amount:
+                    getAmount(
+                        row,
+                        [
+                            "grand_total",
+                            "total_amount",
+                            "total",
+                            "amount",
+                            "invoice_total"
+                        ]
+                    )
+
+            });
+
+        }
+    );
+
+
+    /*
+       HPP
+    */
+
+    hppData.forEach(
+        row => {
+
+            rows.push({
+
+                date:
+                    getDateFromRow(
+                        row,
+                        [
+                            "usage_date",
+                            "used_date",
+                            "date",
+                            "created_at"
+                        ]
+                    ),
+
+                type:
+                    "HPP",
+
+                label:
+                    row.description ||
+                    row.notes ||
+                    row.material_name ||
+                    "Material digunakan",
+
+                amount:
+                    getHppAmount(
+                        row
+                    )
+
+            });
+
+        }
+    );
+
+
+    /*
+       OPERASIONAL
+    */
+
+    expenseData
+        .filter(
+            row =>
+                String(
+                    row.category ||
+                    row.type ||
+                    ""
+                )
+                .toUpperCase()
+                .includes(
+                    "OPER"
+                )
+        )
+        .forEach(
+            row => {
+
+                rows.push({
+
+                    date:
+                        getDateFromRow(
+                            row,
+                            [
+                                "expense_date",
+                                "date",
+                                "created_at"
+                            ]
+                        ),
+
+                    type:
+                        "OPERASIONAL",
+
+                    label:
+                        row.description ||
+                        row.notes ||
+                        "Biaya operasional",
+
+                    amount:
+                        getAmount(
+                            row,
+                            [
+                                "amount",
+                                "total_amount",
+                                "total",
+                                "nominal"
+                            ]
+                        )
+
+                });
+
+            }
+        );
+
+
+    rows.sort(
+        (
+            a,
+            b
+        ) =>
+            String(
+                b.date || ""
+            )
+            .localeCompare(
+                String(
+                    a.date || ""
+                )
+            )
+    );
+
+
+    if(
+        rows.length === 0
+    ){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <div class="empty">
+                        Tidak ada transaksi pada periode ini.
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+        rows
+            .map(
+                row => `
+
+                    <tr>
+
+                        <td>
+                            ${formatDate(
+                                row.date
+                            )}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${
+                                    row.type === "PENDAPATAN"
+                                        ? "badge-income"
+                                        :
+                                    row.type === "HPP"
+                                        ? "badge-hpp"
+                                        :
+                                          "badge-operational"
+                                }"
+                            >
+                                ${row.type}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            ${escapeHtml(
+                                row.label
+                            )}
+                        </td>
+
+
+                        <td>
+                            <strong>
+                                ${formatRupiah(
+                                    row.amount
+                                )}
+                            </strong>
+                        </td>
+
+                    </tr>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* =====================================
+   GET AMOUNT
+===================================== */
+
+function getAmount(
+    row,
+    fields
+){
+
+    for(
+        const field of fields
+    ){
+
+        if(
+            row[field] !==
+            undefined &&
+            row[field] !==
+            null &&
+            row[field] !==
+            ""
+        ){
+
+            const number =
+                Number(
+                    String(
+                        row[field]
+                    )
+                    .replace(
+                        /[^0-9.-]/g,
+                        ""
+                    )
+                );
+
+
+            if(
+                !isNaN(
+                    number
+                )
+            ){
+
+                return number;
+
+            }
+
+        }
+
+    }
+
+
+    return 0;
+
+}
+
+
+/* =====================================
+   GET NUMERIC
+===================================== */
+
+function getNumeric(
+    row,
+    fields
+){
+
+    return getAmount(
+        row,
+        fields
+    );
+
+}
+
+
+/* =====================================
+   GET DATE
+===================================== */
+
+function getDateFromRow(
+    row,
+    fields
+){
+
+    for(
+        const field of fields
+    ){
+
+        if(
+            row[field]
+        ){
+
+            return String(
+                row[field]
+            )
+            .slice(
+                0,
+                10
+            );
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================
+   PERIOD CHECK
+===================================== */
+
+function isInsidePeriod(
+    date,
+    period
+){
+
+    if(
+        !date
+    ){
+
+        return true;
+
+    }
+
+
+    if(
+        period.from &&
+        date <
+        period.from
+    ){
+
+        return false;
+
+    }
+
+
+    if(
+        period.to &&
+        date >
+        period.to
+    ){
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================
+   LOADING
+===================================== */
+
+function showLoading(){
+
+    document.getElementById(
+        "reportTable"
+    ).innerHTML = `
+        <tr>
+            <td colspan="4">
+                <div class="loading">
+                    Memuat laporan...
+                </div>
+            </td>
+        </tr>
+    `;
+
+}
+
+
+/* =====================================
+   FORMAT RUPIAH
+===================================== */
+
+function formatRupiah(
+    value
+){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(
+        Number(
+            value ||
+            0
+        )
+    );
+
+}
+
+
+/* =====================================
+   FORMAT DATE
+===================================== */
+
+function formatDate(
+    value
+){
+
+    if(
+        !value
+    ){
+
+        return "-";
+
+    }
+
+
+    return new Intl.DateTimeFormat(
+        "id-ID",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        }
+    ).format(
+        new Date(
+            value +
+            "T00:00:00"
+        )
+    );
+
+}
+
+
+/* =====================================
+   ESCAPE HTML
+===================================== */
+
+function escapeHtml(
+    value
+){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(
+        value
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================
+   ALERT
+===================================== */
+
+function showAlert(
+    message,
+    type
+){
+
+    const alert =
+        document.getElementById(
+            "alert"
+        );
+
+
+    alert.textContent =
+        message;
+
+
+    alert.className =
+        "alert show " +
+        (
+            type === "error"
+                ? "alert-error"
+                : "alert-success"
+        );
+
+
+    setTimeout(
+        () => {
+
+            alert.classList.remove(
+                "show"
+            );
+
+        },
+        5000
+    );
+
+}
+
+
+/* =====================================
+   LOGOUT
+===================================== */
+
+async function logout(){
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+</script>
+
+</body>
+</html>
