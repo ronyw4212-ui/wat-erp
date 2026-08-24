@@ -929,7 +929,7 @@ async function loadJobs(){
                 customer_name,
                 customer_phone,
                 customer_address,
-                work_description,
+                work_description
             `)
             .eq("assigned_to", currentUser.id)
             .order("scheduled_at", {
@@ -969,7 +969,7 @@ async function loadJobs(){
                 customer_name,
                 customer_phone,
                 customer_address,
-                work_description,
+                work_description
             `)
             .eq("technician_id", currentUser.id)
             .order("scheduled_at", {
@@ -2081,17 +2081,6 @@ function showAlert(message,type){
 /* =========================
    CLOSE MODAL CLICK OUTSIDE
 ========================= */
-
-document
-    .getElementById("billingModal")
-    .addEventListener("click",function(e){
-
-        if(e.target === this){
-            closeBillingModal();
-        }
-
-    });
-
 
 document
     .getElementById("detailModal")
