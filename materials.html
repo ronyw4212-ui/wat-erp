@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Master Material - WAT ERP</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f4f7fb;color:#102a43}
+header{background:#1267e8;color:white;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:20px} header small{display:block;margin-top:4px}
+button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer}
+.logout{background:white;color:#1267e8}
+.container{max-width:1050px;margin:28px auto;padding:0 16px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+h1{margin:0} p{color:#627d98}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+.card,.box{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px #dce3ec;margin-bottom:20px}
+.card{border-left:4px solid #1267e8}
+.card:nth-child(2){border-color:#16a34a}.card:nth-child(3){border-color:#f59e0b}
+.card small{color:#627d98}.card strong{display:block;font-size:24px;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{grid-column:1/-1}
+label{font-size:13px;font-weight:bold;display:block;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;background:white}
+textarea{min-height:75px}
+.actions{text-align:right;margin-top:15px}
+.primary{background:#1267e8;color:white}
+.secondary{background:#e8eef7;color:#102a43}
+.danger{background:#dc2626;color:white}
+.success{background:#16a34a;color:white}
+.filter{display:grid;grid-template-columns:1fr 180px auto;gap:10px;margin-bottom:15px}
+.table{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th{background:#edf3fa;text-align:left;padding:12px;font-size:12px}
+td{padding:12px;border-bottom:1px solid #edf2f7;font-size:13px}
+.badge{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:bold}
+.active{background:#dcfce7;color:#15803d}.inactive{background:#fee2e2;color:#b91c1c}
+.msg{display:none;padding:12px;border-radius:8px;margin-bottom:15px}
+.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}
+@media(max-width:700px){.cards,.grid{grid-template-columns:1fr}.filter{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>
+<b>WAT ERP</b>
+<small>Master Material</small>
+</div>
+<div>
+<span id="user">OWNER</span>
+<button class="logout" onclick="logout()">LOGOUT</button>
+</div>
+</header>
+
+<div class="container">
+
+<div class="top">
+<div>
+<h1>Master Material</h1>
+<p>Kelola material, stok dan harga modal.</p>
+</div>
+<button class="secondary" onclick="location.href='dashboard-owner.html'">
+← Dashboard
+</button>
+</div>
+
+<div id="msg" class="msg"></div>
+
+<div class="cards">
+<div class="card">
+<small>Material Aktif</small>
+<strong id="total">0</strong>
+</div>
+<div class="card">
+<small>Total Stok</small>
+<strong id="stok">0</strong>
+</div>
+<div class="card">
+<small>Nilai Persediaan</small>
+<strong id="nilai">Rp 0</strong>
+</div>
+</div>
+
+<div class="box">
+<h2>Tambah Material</h2>
+
+<form id="form">
+
+<div class="grid">
+
+<div>
+<label>Kode Material *</label>
+<input id="kode" placeholder="MAT-001" required>
+</div>
+
+<div>
+<label>Nama Material *</label>
+<input id="nama" placeholder="Freon R32" required>
+</div>
+
+<div>
+<label>Satuan *</label>
+<select id="satuan" required>
+<option value="">-- Pilih --</option>
+<option>pcs</option>
+<option>unit</option>
+<option>set</option>
+<option>kg</option>
+<option>liter</option>
+<option>meter</option>
+<option>roll</option>
+<option>box</option>
+<option>pack</option>
+<option>buah</option>
+</select>
+</div>
+
+<div>
+<label>Stok Awal</label>
+<input id="stokawal" type="number" min="0" value="0">
+</div>
+
+<div>
+<label>Harga Modal / Satuan</label>
+<input id="harga" type="number" min="0" value="0">
+</div>
+
+<div>
+<label>Status</label>
+<select id="status">
+<option value="ACTIVE">Aktif</option>
+<option value="INACTIVE">Nonaktif</option>
+</select>
+</div>
+
+<div class="full">
+<label>Catatan</label>
+<textarea id="catatan" placeholder="Catatan material..."></textarea>
+</div>
+
+</div>
+
+<div class="actions">
+<button type="reset" class="secondary">Reset</button>
+<button class="primary" id="simpan">Simpan Material</button>
+</div>
+
+</form>
+</div>
+
+<div class="box">
+
+<h2>Daftar Material</h2>
+
+<div class="filter">
+<input id="cari" placeholder="Cari kode atau nama...">
+
+<select id="filterStatus">
+<option value="ALL">Semua Status</option>
+<option value="ACTIVE">Aktif</option>
+<option value="INACTIVE">Nonaktif</option>
+</select>
+
+<button class="secondary" onclick="load()">Refresh</button>
+</div>
+
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>Kode</th>
+<th>Material</th>
+<th>Satuan</th>
+<th>Stok</th>
+<th>Harga Modal</th>
+<th>Nilai Stok</th>
+<th>Status</th>
+<th>Aksi</th>
+</tr>
+</thead>
+
+<tbody id="data">
+<tr><td colspan="8">Memuat...</td></tr>
+</tbody>
+
+</table>
+</div>
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL="GANTI_DENGAN_URL_SUPABASE";
+const SUPABASE_ANON_KEY="GANTI_DENGAN_ANON_KEY";
+
+const db=supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
+
+let user=null;
+let materials=[];
+
+
+/* =========================
+   INIT
+========================= */
+
+document.addEventListener("DOMContentLoaded",async()=>{
+const r=await db.auth.getUser();
+
+if(!r.data.user){
+location.href="login.html";
+return;
+}
+
+user=r.data.user;
+document.getElementById("user").textContent=
+user.email||"OWNER";
+
+load();
+});
+
+
+/* =========================
+   LOAD
+========================= */
+
+async function load(){
+
+const {data,error}=await db
+.from("materials")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+show(error.message,"err");
+return;
+}
+
+materials=data||[];
+render();
+summary();
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+let q=document.getElementById("cari").value.toLowerCase();
+let s=document.getElementById("filterStatus").value;
+
+let list=materials.filter(x=>
+(!q||
+(x.material_code||"").toLowerCase().includes(q)||
+(x.name||"").toLowerCase().includes(q))
+&&(s==="ALL"||x.status===s)
+);
+
+let html="";
+
+if(!list.length){
+html=`<tr><td colspan="8" style="text-align:center">
+Belum ada material.
+</td></tr>`;
+}else{
+
+list.forEach(x=>{
+
+let stock=Number(x.current_stock||0);
+let cost=Number(x.average_cost||0);
+
+html+=`
+<tr>
+<td><b>${esc(x.material_code)}</b></td>
+<td>${esc(x.name)}</td>
+<td>${esc(x.unit)}</td>
+<td><b>${fmt(stock)}</b></td>
+<td>${rp(cost)}</td>
+<td>${rp(stock*cost)}</td>
+<td>
+<span class="badge ${x.status==="ACTIVE"?"active":"inactive"}">
+${x.status==="ACTIVE"?"AKTIF":"NONAKTIF"}
+</span>
+</td>
+<td>
+<button class="secondary"
+onclick="edit('${x.id}')">Edit</button>
+
+<button class="${x.status==="ACTIVE"?"danger":"success"}"
+onclick="toggle('${x.id}','${x.status}')">
+${x.status==="ACTIVE"?"Nonaktif":"Aktif"}
+</button>
+</td>
+</tr>`;
+});
+}
+
+document.getElementById("data").innerHTML=html;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+function summary(){
+
+let active=materials.filter(
+x=>x.status==="ACTIVE"
+);
+
+let stock=active.reduce(
+(a,x)=>a+Number(x.current_stock||0),0
+);
+
+let value=active.reduce(
+(a,x)=>
+a+
+Number(x.current_stock||0)*
+Number(x.average_cost||0),0
+);
+
+document.getElementById("total").textContent=active.length;
+document.getElementById("stok").textContent=fmt(stock);
+document.getElementById("nilai").textContent=rp(value);
+}
+
+
+/* =========================
+   TAMBAH
+========================= */
+
+document.getElementById("form")
+.addEventListener("submit",async e=>{
+
+e.preventDefault();
+
+let kode=document.getElementById("kode")
+.value.trim().toUpperCase();
+
+let nama=document.getElementById("nama")
+.value.trim();
+
+let satuan=document.getElementById("satuan").value;
+
+let stok=Number(
+document.getElementById("stokawal").value||0
+);
+
+let harga=Number(
+document.getElementById("harga").value||0
+);
+
+let status=document.getElementById("status").value;
+
+let catatan=document.getElementById("catatan").value.trim();
+
+if(materials.some(x=>
+(x.material_code||"").toUpperCase()===kode
+)){
+show("Kode material sudah ada.","err");
+return;
+}
+
+let btn=document.getElementById("simpan");
+btn.disabled=true;
+btn.textContent="Menyimpan...";
+
+const {error}=await db
+.from("materials")
+.insert({
+material_code:kode,
+name:nama,
+unit:satuan,
+current_stock:stok,
+average_cost:harga,
+status:status,
+notes:catatan||null,
+created_by:user.id
+});
+
+btn.disabled=false;
+btn.textContent="Simpan Material";
+
+if(error){
+show(error.message,"err");
+return;
+}
+
+show("Material berhasil ditambahkan.","ok");
+
+document.getElementById("form").reset();
+
+document.getElementById("stokawal").value=0;
+document.getElementById("harga").value=0;
+
+load();
+
+});
+
+
+/* =========================
+   EDIT
+========================= */
+
+async function edit(id){
+
+let x=materials.find(a=>a.id===id);
+
+if(!x)return;
+
+let nama=prompt("Nama material:",x.name);
+if(nama===null)return;
+
+let satuan=prompt("Satuan:",x.unit);
+if(satuan===null)return;
+
+let harga=prompt(
+"Harga modal / satuan:",
+x.average_cost||0
+);
+
+if(harga===null)return;
+
+const {error}=await db
+.from("materials")
+.update({
+name:nama.trim(),
+unit:satuan.trim(),
+average_cost:Number(harga),
+updated_at:new Date().toISOString()
+})
+.eq("id",id);
+
+if(error){
+show(error.message,"err");
+return;
+}
+
+show("Material berhasil diperbarui.","ok");
+load();
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+async function toggle(id,status){
+
+let next=status==="ACTIVE"?
+"INACTIVE":"ACTIVE";
+
+if(!confirm(
+`Yakin ingin ${next==="ACTIVE"?"mengaktifkan":"menonaktifkan"} material ini?`
+))return;
+
+const {error}=await db
+.from("materials")
+.update({
+status:next,
+updated_at:new Date().toISOString()
+})
+.eq("id",id);
+
+if(error){
+show(error.message,"err");
+return;
+}
+
+show("Status berhasil diperbarui.","ok");
+load();
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+document.getElementById("cari")
+.addEventListener("input",render);
+
+document.getElementById("filterStatus")
+.addEventListener("change",render);
+
+
+/* =========================
+   FORMAT
+========================= */
+
+function rp(n){
+return new Intl.NumberFormat(
+"id-ID",
+{
+style:"currency",
+currency:"IDR",
+maximumFractionDigits:0
+}
+).format(Number(n||0));
+}
+
+function fmt(n){
+return new Intl.NumberFormat(
+"id-ID",
+{maximumFractionDigits:2}
+).format(Number(n||0));
+}
+
+function esc(v){
+return String(v||"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;");
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function show(text,type){
+
+let x=document.getElementById("msg");
+
+x.textContent=text;
+x.className="msg "+type;
+x.style.display="block";
+
+setTimeout(()=>{
+x.style.display="none";
+},4000);
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+await db.auth.signOut();
+location.href="login.html";
+
+}
+
+</script>
+
+</body>
+</html>
