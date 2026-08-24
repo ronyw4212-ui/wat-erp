@@ -3,388 +3,2404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Beranda - WAT ERP</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#102a43}
-header{background:linear-gradient(90deg,#1257b8,#0878f9);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
-.brand{font-size:20px;font-weight:bold}.brand small{display:block;font-size:11px;margin-top:3px;font-weight:normal}
-.header-right{display:flex;align-items:center;gap:12px}.role{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:bold}
-button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.6;cursor:not-allowed}.logout{background:#fff;color:#1267e8}
-.container{max-width:960px;margin:28px auto;padding:0 16px 50px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-h1{margin:0 0 5px;font-size:27px}p{margin:0;color:#627d98}
-.primary{background:#1267e8;color:#fff}.secondary{background:#e8eef7;color:#102a43}
-.message{display:none;padding:12px 14px;border-radius:8px;margin-bottom:15px;font-size:13px}
-.message.ok{display:block;background:#dcfce7;color:#166534}.message.error{display:block;background:#fee2e2;color:#991b1b}
+*{
+  box-sizing:border-box
+}
 
-.period{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(16,42,67,.08);margin-bottom:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.period span{font-size:12px;color:#627d98;font-weight:bold}.period button{background:#e8eef7;color:#102a43}.period button.active{background:#1267e8;color:#fff}
-.custom{display:none;gap:8px;align-items:center}.custom.show{display:flex}.custom input{padding:9px;border:1px solid #cbd5e1;border-radius:7px}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f7fb;
+  color:#102a43
+}
 
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:15px}
-.card{background:#fff;border-radius:12px;padding:17px;box-shadow:0 2px 10px rgba(16,42,67,.08);border-left:4px solid #1267e8}
-.card:nth-child(2){border-color:#16a34a}.card:nth-child(3){border-color:#f59e0b}.card:nth-child(4){border-color:#7c3aed}
-.card:nth-child(5){border-color:#0ea5e9}.card:nth-child(6){border-color:#dc2626}.card:nth-child(7){border-color:#16a34a}.card:nth-child(8){border-color:#f97316}
-.card small{color:#627d98}.card strong{display:block;margin-top:7px;font-size:21px}
+header{
+  background:linear-gradient(90deg,#1257b8,#0878f9);
+  color:#fff;
+  padding:16px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
 
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.box{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(16,42,67,.08);margin-bottom:15px}
-.box h2{margin:0 0 14px;font-size:18px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf2f7;font-size:13px}.row:last-child{border-bottom:0}.row b{color:#102a43}
-.green{color:#15803d}.orange{color:#c2410c}.red{color:#dc2626}.blue{color:#2563eb}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th{background:#edf3fa;padding:10px;text-align:left;font-size:11px}td{padding:10px;border-bottom:1px solid #edf2f7;font-size:12px}
-.empty{text-align:center;padding:20px;color:#627d98}.linkbtn{display:inline-block;margin-top:12px;padding:8px 11px;border-radius:7px;background:#e8eef7;color:#102a43;text-decoration:none;font-size:12px;font-weight:bold}
-.reminder{padding:10px;border:1px solid #fde68a;background:#fffbeb;border-radius:8px;margin-bottom:8px;font-size:12px}.reminder b{display:block;margin-bottom:3px}
-.status{display:inline-block;padding:4px 7px;border-radius:15px;font-size:10px;font-weight:bold;background:#dcfce7;color:#15803d}
-@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
-@media(max-width:500px){.cards{grid-template-columns:1fr}.top{align-items:flex-start;gap:10px}.custom{width:100%;flex-wrap:wrap}}
+.brand{
+  font-size:20px;
+  font-weight:bold
+}
+
+.brand small{
+  display:block;
+  font-size:11px;
+  margin-top:3px;
+  font-weight:normal
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+
+.role{
+  background:rgba(255,255,255,.15);
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed
+}
+
+.logout{
+  background:#fff;
+  color:#1267e8
+}
+
+.container{
+  max-width:960px;
+  margin:28px auto;
+  padding:0 16px 50px
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px
+}
+
+h1{
+  margin:0 0 5px;
+  font-size:27px
+}
+
+p{
+  margin:0;
+  color:#627d98
+}
+
+.primary{
+  background:#1267e8;
+  color:#fff
+}
+
+.secondary{
+  background:#e8eef7;
+  color:#102a43
+}
+
+.message{
+  display:none;
+  padding:12px 14px;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-size:13px
+}
+
+.message.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534
+}
+
+.message.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b
+}
+
+.period{
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  box-shadow:0 2px 10px rgba(16,42,67,.08);
+  margin-bottom:15px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap
+}
+
+.period span{
+  font-size:12px;
+  color:#627d98;
+  font-weight:bold
+}
+
+.period button{
+  background:#e8eef7;
+  color:#102a43
+}
+
+.period button.active{
+  background:#1267e8;
+  color:#fff
+}
+
+.custom{
+  display:none;
+  gap:8px;
+  align-items:center
+}
+
+.custom.show{
+  display:flex
+}
+
+.custom input{
+  padding:9px;
+  border:1px solid #cbd5e1;
+  border-radius:7px
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:15px
+}
+
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:17px;
+  box-shadow:0 2px 10px rgba(16,42,67,.08);
+  border-left:4px solid #1267e8
+}
+
+.card:nth-child(2){
+  border-color:#16a34a
+}
+
+.card:nth-child(3){
+  border-color:#f59e0b
+}
+
+.card:nth-child(4){
+  border-color:#7c3aed
+}
+
+.card:nth-child(5){
+  border-color:#0ea5e9
+}
+
+.card:nth-child(6){
+  border-color:#dc2626
+}
+
+.card:nth-child(7){
+  border-color:#16a34a
+}
+
+.card:nth-child(8){
+  border-color:#f97316
+}
+
+.card small{
+  color:#627d98
+}
+
+.card strong{
+  display:block;
+  margin-top:7px;
+  font-size:21px
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px
+}
+
+.box{
+  background:#fff;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 2px 10px rgba(16,42,67,.08);
+  margin-bottom:15px
+}
+
+.box h2{
+  margin:0 0 14px;
+  font-size:18px
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #edf2f7;
+  font-size:13px
+}
+
+.row:last-child{
+  border-bottom:0
+}
+
+.row b{
+  color:#102a43
+}
+
+.green{
+  color:#15803d
+}
+
+.orange{
+  color:#c2410c
+}
+
+.red{
+  color:#dc2626
+}
+
+.blue{
+  color:#2563eb
+}
+
+.table-wrap{
+  overflow-x:auto
+}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th{
+  background:#edf3fa;
+  padding:10px;
+  text-align:left;
+  font-size:11px
+}
+
+td{
+  padding:10px;
+  border-bottom:1px solid #edf2f7;
+  font-size:12px
+}
+
+.empty{
+  text-align:center;
+  padding:20px;
+  color:#627d98
+}
+
+.linkbtn{
+  display:inline-block;
+  margin-top:12px;
+  padding:8px 11px;
+  border-radius:7px;
+  background:#e8eef7;
+  color:#102a43;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:bold
+}
+
+.reminder{
+  padding:10px;
+  border:1px solid #fde68a;
+  background:#fffbeb;
+  border-radius:8px;
+  margin-bottom:8px;
+  font-size:12px
+}
+
+.reminder b{
+  display:block;
+  margin-bottom:3px
+}
+
+.status{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:15px;
+  font-size:10px;
+  font-weight:bold;
+  background:#dcfce7;
+  color:#15803d
+}
+
+@media(max-width:800px){
+  .cards{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .grid2{
+    grid-template-columns:1fr
+  }
+}
+
+@media(max-width:500px){
+  .cards{
+    grid-template-columns:1fr
+  }
+
+  .top{
+    align-items:flex-start;
+    gap:10px
+  }
+
+  .custom{
+    width:100%;
+    flex-wrap:wrap
+  }
+}
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="brand">WAT ERP<small>Beranda & Ringkasan Sistem</small></div>
+
+  <div class="brand">
+    WAT ERP
+    <small>Beranda & Ringkasan Sistem</small>
+  </div>
+
   <div class="header-right">
     <span class="role" id="userName">OWNER</span>
     <button class="logout" onclick="logout()">LOGOUT</button>
   </div>
+
 </header>
 
+
 <div class="container">
+
   <div class="top">
-    <div><h1>Beranda</h1><p>Ringkasan seluruh kegiatan operasional dan keuangan WAT ERP.</p></div>
-    <button class="primary" id="refreshBtn" onclick="loadDashboard()">↻ Refresh Data</button>
+
+    <div>
+      <h1>Beranda</h1>
+      <p>Ringkasan seluruh kegiatan operasional dan keuangan WAT ERP.</p>
+    </div>
+
+    <button
+      class="primary"
+      id="refreshBtn"
+      onclick="loadDashboard()">
+      ↻ Refresh Data
+    </button>
+
   </div>
+
 
   <div id="message" class="message"></div>
 
+
+  <!-- PERIODE -->
+
   <div class="period">
+
     <span>PERIODE</span>
-    <button id="pToday" onclick="setPeriod('today')">Hari Ini</button>
-    <button id="pWeek" onclick="setPeriod('week')">Minggu Ini</button>
-    <button id="pMonth" onclick="setPeriod('month')">Bulan Ini</button>
-    <button id="pYear" onclick="setPeriod('year')">Tahun Ini</button>
-    <button id="pCustom" onclick="setPeriod('custom')">Custom</button>
+
+    <button
+      id="pToday"
+      onclick="setPeriod('today')">
+      Hari Ini
+    </button>
+
+    <button
+      id="pWeek"
+      onclick="setPeriod('week')">
+      Minggu Ini
+    </button>
+
+    <button
+      id="pMonth"
+      onclick="setPeriod('month')">
+      Bulan Ini
+    </button>
+
+    <button
+      id="pYear"
+      onclick="setPeriod('year')">
+      Tahun Ini
+    </button>
+
+    <button
+      id="pCustom"
+      onclick="setPeriod('custom')">
+      Custom
+    </button>
+
+
     <div id="customBox" class="custom">
-      <input type="date" id="fromDate">
+
+      <input
+        type="date"
+        id="fromDate">
+
       <span>s/d</span>
-      <input type="date" id="toDate">
-      <button class="primary" onclick="applyCustom()">Terapkan</button>
+
+      <input
+        type="date"
+        id="toDate">
+
+      <button
+        class="primary"
+        onclick="applyCustom()">
+        Terapkan
+      </button>
+
     </div>
+
   </div>
+
+
+  <!-- SUMMARY CARDS -->
 
   <div class="cards">
-    <div class="card"><small>Total Customer</small><strong id="totalCustomers">0</strong></div>
-    <div class="card"><small>Pekerjaan</small><strong id="totalJobs">0</strong></div>
-    <div class="card"><small>Teknisi Aktif</small><strong id="activeTechs">0</strong></div>
-    <div class="card"><small>Invoice</small><strong id="totalInvoices">0</strong></div>
-    <div class="card"><small>Pendapatan</small><strong id="revenue">Rp 0</strong></div>
-    <div class="card"><small>Pengeluaran</small><strong id="expenses">Rp 0</strong></div>
-    <div class="card"><small>Laba Bersih</small><strong id="profit">Rp 0</strong></div>
-    <div class="card"><small>Reminder</small><strong id="reminderCount">0</strong></div>
+
+    <div class="card">
+      <small>Total Customer</small>
+      <strong id="totalCustomers">0</strong>
+    </div>
+
+    <div class="card">
+      <small>Pekerjaan</small>
+      <strong id="totalJobs">0</strong>
+    </div>
+
+    <div class="card">
+      <small>Teknisi Aktif</small>
+      <strong id="activeTechs">0</strong>
+    </div>
+
+    <div class="card">
+      <small>Invoice</small>
+      <strong id="totalInvoices">0</strong>
+    </div>
+
+    <div class="card">
+      <small>Pendapatan</small>
+      <strong id="revenue">Rp 0</strong>
+    </div>
+
+    <div class="card">
+      <small>Pengeluaran</small>
+      <strong id="expenses">Rp 0</strong>
+    </div>
+
+    <div class="card">
+      <small>Laba Bersih</small>
+      <strong id="profit">Rp 0</strong>
+    </div>
+
+    <div class="card">
+      <small>Reminder</small>
+      <strong id="reminderCount">0</strong>
+    </div>
+
   </div>
 
+
+  <!-- PEKERJAAN + KEUANGAN -->
+
   <div class="grid2">
+
     <div class="box">
+
       <h2>🔧 Ringkasan Pekerjaan</h2>
-      <div class="row"><span>Total Pekerjaan</span><b id="jobTotal">0</b></div>
-      <div class="row"><span class="green">Pekerjaan Selesai</span><b id="jobDone">0</b></div>
-      <div class="row"><span class="orange">Sedang Berjalan</span><b id="jobRunning">0</b></div>
-      <div class="row"><span class="blue">Belum Dikerjakan</span><b id="jobPending">0</b></div>
-      <div class="row"><span class="red">Dibatalkan</span><b id="jobCancelled">0</b></div>
-      <div class="row"><span class="red">Belum Assign Teknisi</span><b id="jobUnassigned">0</b></div>
+
+      <div class="row">
+        <span>Total Pekerjaan</span>
+        <b id="jobTotal">0</b>
+      </div>
+
+      <div class="row">
+        <span class="green">Pekerjaan Selesai</span>
+        <b id="jobDone">0</b>
+      </div>
+
+      <div class="row">
+        <span class="orange">Sedang Berjalan</span>
+        <b id="jobRunning">0</b>
+      </div>
+
+      <div class="row">
+        <span class="blue">Belum Dikerjakan</span>
+        <b id="jobPending">0</b>
+      </div>
+
+      <div class="row">
+        <span class="red">Dibatalkan</span>
+        <b id="jobCancelled">0</b>
+      </div>
+
+      <div class="row">
+        <span class="red">Belum Assign Teknisi</span>
+        <b id="jobUnassigned">0</b>
+      </div>
+
     </div>
 
+
     <div class="box">
+
       <h2>💰 Ringkasan Keuangan</h2>
-      <div class="row"><span>Pendapatan / Pembayaran Masuk</span><b id="finRevenue">Rp 0</b></div>
-      <div class="row"><span>Total Pengeluaran</span><b id="finExpense">Rp 0</b></div>
-      <div class="row"><span class="green">Laba Bersih</span><b id="finProfit">Rp 0</b></div>
-      <div class="row"><span>Invoice Lunas</span><b id="paidInvoices">0</b></div>
-      <div class="row"><span class="orange">Invoice Belum Lunas</span><b id="unpaidInvoices">0</b></div>
-      <div class="row"><span class="red">Piutang</span><b id="receivable">Rp 0</b></div>
+
+      <div class="row">
+        <span>Pendapatan / Pembayaran Masuk</span>
+        <b id="finRevenue">Rp 0</b>
+      </div>
+
+      <div class="row">
+        <span>Total Pengeluaran</span>
+        <b id="finExpense">Rp 0</b>
+      </div>
+
+      <div class="row">
+        <span class="green">Laba Bersih</span>
+        <b id="finProfit">Rp 0</b>
+      </div>
+
+      <div class="row">
+        <span>Invoice Lunas</span>
+        <b id="paidInvoices">0</b>
+      </div>
+
+      <div class="row">
+        <span class="orange">Invoice Belum Lunas</span>
+        <b id="unpaidInvoices">0</b>
+      </div>
+
+      <div class="row">
+        <span class="red">Piutang</span>
+        <b id="receivable">Rp 0</b>
+      </div>
+
     </div>
+
   </div>
+
+
+  <!-- REMINDER + AUDIT -->
 
   <div class="grid2">
-    <div class="box">
-      <h2>🔔 Reminder Service AC</h2>
-      <div id="reminderList"><div class="empty">Memuat reminder...</div></div>
-      <a class="linkbtn" href="customer.html">Lihat Customer & Reminder →</a>
-    </div>
 
     <div class="box">
-      <h2>📋 Aktivitas Terbaru</h2>
-      <div class="table-wrap">
-        <table><thead><tr><th>Waktu</th><th>Aktivitas</th><th>Modul</th></tr></thead>
-        <tbody id="auditTable"><tr><td colspan="3" class="empty">Memuat aktivitas...</td></tr></tbody></table>
+
+      <h2>🔔 Reminder Service AC</h2>
+
+      <div id="reminderList">
+        <div class="empty">
+          Memuat reminder...
+        </div>
       </div>
-      <a class="linkbtn" href="audit-log.html">Lihat Audit Log →</a>
+
+      <a
+        class="linkbtn"
+        href="customer.html">
+        Lihat Customer & Reminder →
+      </a>
+
     </div>
+
+
+    <div class="box">
+
+      <h2>📋 Aktivitas Terbaru</h2>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Waktu</th>
+              <th>Aktivitas</th>
+              <th>Modul</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="auditTable">
+
+            <tr>
+              <td
+                colspan="3"
+                class="empty">
+                Memuat aktivitas...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <a
+        class="linkbtn"
+        href="audit-log.html">
+        Lihat Audit Log →
+      </a>
+
+    </div>
+
   </div>
+
+
+  <!-- UPCOMING JOB -->
 
   <div class="box">
+
     <h2>📅 Pekerjaan Terdekat</h2>
+
     <div class="table-wrap">
-      <table><thead><tr><th>Tanggal</th><th>Job</th><th>Customer</th><th>Teknisi</th><th>Status</th></tr></thead>
-      <tbody id="upcomingJobs"><tr><td colspan="5" class="empty">Memuat jadwal...</td></tr></tbody></table>
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Tanggal</th>
+            <th>Job</th>
+            <th>Customer</th>
+            <th>Teknisi</th>
+            <th>Status</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="upcomingJobs">
+
+          <tr>
+            <td
+              colspan="5"
+              class="empty">
+              Memuat jadwal...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
     </div>
-    <a class="linkbtn" href="jobs.html">Lihat Semua Pekerjaan →</a>
+
+
+    <a
+      class="linkbtn"
+      href="jobs.html">
+      Lihat Semua Pekerjaan →
+    </a>
+
   </div>
+
 </div>
 
-<script>
-/* =========================================================
-   SUPABASE
-   PENTING: pakai nama supabaseClient agar tidak bentrok
-   dengan object global "supabase" dari CDN.
-========================================================= */
-const SUPABASE_URL = "PASTE_URL_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
-const SUPABASE_ANON_KEY = "PASTE_ANON_KEY_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+<script>
+
+/* =========================================================
+   WAT ERP - SUPABASE
+   Menggunakan nama unik "watDb"
+   agar tidak bentrok dengan object/library Supabase
+========================================================= */
+
+
+/*
+   ========================================================
+   PENTING
+   ========================================================
+
+   GANTI 2 VALUE DI BAWAH DENGAN YANG SAMA
+   SEPERTI customer.html / jobs.html YANG SUDAH BERHASIL.
+*/
+
+
+const WAT_SUPABASE_URL =
+  "PASTE_URL_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
+
+
+const WAT_SUPABASE_ANON_KEY =
+  "PASTE_ANON_KEY_SUPABASE_DARI_FILE_YANG_SUDAH_BERHASIL";
+
+
+/*
+   CLIENT SUPABASE
+*/
+
+let watDb = null;
+
+
+/*
+   DATABASE CACHE
+*/
+
+let db = {
+
+  customers: [],
+  jobs: [],
+  technicians: [],
+  invoices: [],
+  payments: [],
+  expenses: [],
+  audit: []
+
+};
+
+
+/*
+   USER
+*/
 
 let currentUser = null;
+
+
+/*
+   PERIODE
+*/
+
 let periodType = "today";
 let periodFrom = "";
 let periodTo = "";
 
-let db = {
-  customers: [], jobs: [], technicians: [], invoices: [],
-  payments: [], expenses: [], audit: []
-};
 
-document.addEventListener("DOMContentLoaded", start);
+/*
+   INIT
+*/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  start
+);
+
+
+/* =========================================================
+   START
+========================================================= */
 
 async function start(){
+
   try{
-    const {data,error} = await supabaseClient.auth.getUser();
-    if(error) throw error;
-    if(!data.user){ location.href="login.html"; return; }
+
+    /*
+       Pastikan library Supabase sudah tersedia
+    */
+
+    if(
+      !window.supabase ||
+      typeof window.supabase.createClient !== "function"
+    ){
+
+      throw new Error(
+        "Library Supabase belum siap."
+      );
+
+    }
+
+
+    /*
+       Buat client dengan nama unik
+    */
+
+    watDb = window.supabase.createClient(
+      WAT_SUPABASE_URL,
+      WAT_SUPABASE_ANON_KEY
+    );
+
+
+    /*
+       Cek login
+    */
+
+    const {
+      data,
+      error
+    } = await watDb.auth.getUser();
+
+
+    if(error){
+      throw error;
+    }
+
+
+    if(!data.user){
+
+      location.href = "login.html";
+      return;
+
+    }
+
 
     currentUser = data.user;
-    document.getElementById("userName").textContent = currentUser.email || "OWNER";
+
+
+    /*
+       Tampilkan email user
+    */
+
+    document.getElementById(
+      "userName"
+    ).textContent =
+      currentUser.email || "OWNER";
+
+
+    /*
+       Default periode
+    */
 
     setPeriod("today");
+
+
   }catch(error){
-    console.error("INIT ERROR",error);
-    showMessage("Gagal menghubungkan ke Supabase: "+error.message,"error");
+
+    console.error(
+      "INIT ERROR:",
+      error
+    );
+
+
+    showMessage(
+      "Gagal menghubungkan ke Supabase: " +
+      error.message,
+      "error"
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   PERIODE
+========================================================= */
 
 function setPeriod(type){
-  periodType = type;
-  document.querySelectorAll(".period button").forEach(b=>b.classList.remove("active"));
-  const map={today:"pToday",week:"pWeek",month:"pMonth",year:"pYear",custom:"pCustom"};
-  document.getElementById(map[type]).classList.add("active");
-  document.getElementById("customBox").classList.toggle("show",type==="custom");
 
-  if(type!=="custom"){
-    const r = getPeriodRange(type);
-    periodFrom=r.from; periodTo=r.to;
-    loadDashboard();
+  periodType = type;
+
+
+  document
+    .querySelectorAll(".period button")
+    .forEach(
+      button =>
+        button.classList.remove("active")
+    );
+
+
+  const map = {
+
+    today:"pToday",
+    week:"pWeek",
+    month:"pMonth",
+    year:"pYear",
+    custom:"pCustom"
+
+  };
+
+
+  const activeButton =
+    document.getElementById(
+      map[type]
+    );
+
+
+  if(activeButton){
+    activeButton.classList.add("active");
   }
+
+
+  document
+    .getElementById("customBox")
+    .classList.toggle(
+      "show",
+      type === "custom"
+    );
+
+
+  if(type !== "custom"){
+
+    const range =
+      getPeriodRange(type);
+
+
+    periodFrom = range.from;
+    periodTo = range.to;
+
+
+    loadDashboard();
+
+  }
+
 }
+
+
+/* =========================================================
+   CUSTOM PERIOD
+========================================================= */
 
 function applyCustom(){
-  const from=document.getElementById("fromDate").value;
-  const to=document.getElementById("toDate").value;
-  if(!from || !to){showMessage("Tanggal awal dan akhir wajib diisi.","error");return}
-  if(from>to){showMessage("Tanggal awal tidak boleh lebih besar dari tanggal akhir.","error");return}
-  periodFrom=from; periodTo=to; loadDashboard();
+
+  const from =
+    document.getElementById(
+      "fromDate"
+    ).value;
+
+
+  const to =
+    document.getElementById(
+      "toDate"
+    ).value;
+
+
+  if(!from || !to){
+
+    showMessage(
+      "Tanggal awal dan akhir wajib diisi.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(from > to){
+
+    showMessage(
+      "Tanggal awal tidak boleh lebih besar dari tanggal akhir.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  periodFrom = from;
+  periodTo = to;
+
+
+  loadDashboard();
+
 }
+
+
+/* =========================================================
+   RANGE PERIODE
+========================================================= */
 
 function getPeriodRange(type){
-  const now=new Date();
-  const y=now.getFullYear(), m=now.getMonth(), d=now.getDate();
-  let from,to;
-  if(type==="today"){
-    from=new Date(y,m,d); to=new Date(y,m,d,23,59,59,999);
-  }else if(type==="week"){
-    const day=now.getDay();
-    const diff=day===0?-6:1-day;
-    from=new Date(y,m,d+diff); to=new Date(from); to.setDate(from.getDate()+6); to.setHours(23,59,59,999);
-  }else if(type==="month"){
-    from=new Date(y,m,1); to=new Date(y,m+1,0,23,59,59,999);
-  }else{
-    from=new Date(y,0,1); to=new Date(y,11,31,23,59,59,999);
+
+  const now = new Date();
+
+
+  const y =
+    now.getFullYear();
+
+  const m =
+    now.getMonth();
+
+  const d =
+    now.getDate();
+
+
+  let from;
+  let to;
+
+
+  if(type === "today"){
+
+    from =
+      new Date(
+        y,
+        m,
+        d
+      );
+
+
+    to =
+      new Date(
+        y,
+        m,
+        d,
+        23,
+        59,
+        59,
+        999
+      );
+
   }
-  return {from:dateOnly(from),to:dateOnly(to)};
+
+
+  else if(type === "week"){
+
+    const day =
+      now.getDay();
+
+
+    const diff =
+      day === 0
+        ? -6
+        : 1 - day;
+
+
+    from =
+      new Date(
+        y,
+        m,
+        d + diff
+      );
+
+
+    to =
+      new Date(from);
+
+
+    to.setDate(
+      from.getDate() + 6
+    );
+
+
+    to.setHours(
+      23,
+      59,
+      59,
+      999
+    );
+
+  }
+
+
+  else if(type === "month"){
+
+    from =
+      new Date(
+        y,
+        m,
+        1
+      );
+
+
+    to =
+      new Date(
+        y,
+        m + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+      );
+
+  }
+
+
+  else{
+
+    from =
+      new Date(
+        y,
+        0,
+        1
+      );
+
+
+    to =
+      new Date(
+        y,
+        11,
+        31,
+        23,
+        59,
+        59,
+        999
+      );
+
+  }
+
+
+  return {
+
+    from:dateOnly(from),
+    to:dateOnly(to)
+
+  };
+
 }
+
+
+/* =========================================================
+   DATE ONLY
+========================================================= */
 
 function dateOnly(d){
-  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+
+  const y =
+    d.getFullYear();
+
+
+  const m =
+    String(
+      d.getMonth() + 1
+    ).padStart(2,"0");
+
+
+  const day =
+    String(
+      d.getDate()
+    ).padStart(2,"0");
+
+
   return `${y}-${m}-${day}`;
+
 }
+
+
+/* =========================================================
+   CEK RANGE
+========================================================= */
 
 function inRangeDate(value){
-  if(!value) return false;
-  const date=String(value).slice(0,10);
-  return (!periodFrom || date>=periodFrom) && (!periodTo || date<=periodTo);
+
+  if(!value){
+    return false;
+  }
+
+
+  const date =
+    String(value).slice(0,10);
+
+
+  return (
+
+    (!periodFrom ||
+      date >= periodFrom)
+
+    &&
+
+    (!periodTo ||
+      date <= periodTo)
+
+  );
+
 }
+
+
+/* =========================================================
+   LOAD DASHBOARD
+========================================================= */
 
 async function loadDashboard(){
-  const btn=document.getElementById("refreshBtn");
-  btn.disabled=true; btn.textContent="Memuat...";
-  try{
-    await Promise.all([
-      loadTable("customers","created_at"),
-      loadTable("jobs","scheduled_at"),
-      loadTable("technicians","created_at"),
-      loadTable("invoices","created_at"),
-      loadTable("invoice_payments","payment_date"),
-      loadTable("expenses","expense_date"),
-      loadTable("audit_logs","created_at")
-    ]);
-    renderAll();
-    showMessage("Data dashboard berhasil diperbarui.","ok");
-  }catch(error){
-    console.error("DASHBOARD ERROR",error);
-    showMessage("Gagal mengambil data dashboard: "+error.message,"error");
-  }finally{
-    btn.disabled=false; btn.textContent="↻ Refresh Data";
+
+  if(!watDb){
+
+    showMessage(
+      "Supabase belum siap. Silakan refresh halaman.",
+      "error"
+    );
+
+    return;
+
   }
+
+
+  const btn =
+    document.getElementById(
+      "refreshBtn"
+    );
+
+
+  btn.disabled = true;
+  btn.textContent = "Memuat...";
+
+
+  try{
+
+    await Promise.all([
+
+      loadTable(
+        "customers",
+        "created_at"
+      ),
+
+      loadTable(
+        "jobs",
+        "scheduled_at"
+      ),
+
+      loadTable(
+        "technicians",
+        "created_at"
+      ),
+
+      loadTable(
+        "invoices",
+        "created_at"
+      ),
+
+      loadTable(
+        "invoice_payments",
+        "payment_date"
+      ),
+
+      loadTable(
+        "expenses",
+        "expense_date"
+      ),
+
+      loadTable(
+        "audit_logs",
+        "created_at"
+      )
+
+    ]);
+
+
+    renderAll();
+
+
+    showMessage(
+      "Data dashboard berhasil diperbarui.",
+      "ok"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "DASHBOARD ERROR:",
+      error
+    );
+
+
+    showMessage(
+      "Gagal mengambil data dashboard: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+
+  finally{
+
+    btn.disabled = false;
+    btn.textContent = "↻ Refresh Data";
+
+  }
+
 }
 
-async function loadTable(name,orderColumn){
-  const {data,error}=await supabaseClient.from(name).select("*").order(orderColumn,{ascending:false});
-  if(error) throw new Error(name+": "+error.message);
-  db[name==="invoice_payments"?"payments":name==="audit_logs"?"audit":name]=data||[];
+
+/* =========================================================
+   LOAD TABLE
+========================================================= */
+
+async function loadTable(
+  name,
+  orderColumn
+){
+
+  const {
+    data,
+    error
+  } = await watDb
+    .from(name)
+    .select("*")
+    .order(
+      orderColumn,
+      {
+        ascending:false
+      }
+    );
+
+
+  if(error){
+
+    throw new Error(
+      name + ": " +
+      error.message
+    );
+
+  }
+
+
+  if(name === "invoice_payments"){
+
+    db.payments =
+      data || [];
+
+  }
+
+  else if(name === "audit_logs"){
+
+    db.audit =
+      data || [];
+
+  }
+
+  else{
+
+    db[name] =
+      data || [];
+
+  }
+
 }
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
 
 function renderAll(){
-  const jobs=db.jobs.filter(x=>inRangeDate(x.scheduled_at||x.created_at));
-  const invoices=db.invoices.filter(x=>inRangeDate(x.issued_at||x.created_at));
-  const payments=db.payments.filter(x=>inRangeDate(x.payment_date));
-  const expenses=db.expenses.filter(x=>inRangeDate(x.expense_date));
-  const activeTechs=db.technicians.filter(x=>String(x.status||"").toUpperCase()==="ACTIVE").length;
 
-  const revenue=payments.reduce((s,x)=>s+Number(x.amount||0),0);
-  const expenseTotal=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
-  const profit=revenue-expenseTotal;
+  const jobs =
+    db.jobs.filter(
+      x =>
+        inRangeDate(
+          x.scheduled_at ||
+          x.created_at
+        )
+    );
 
-  setText("totalCustomers",db.customers.length);
-  setText("totalJobs",jobs.length);
-  setText("activeTechs",activeTechs);
-  setText("totalInvoices",invoices.length);
-  setText("revenue",rupiah(revenue));
-  setText("expenses",rupiah(expenseTotal));
-  setText("profit",rupiah(profit));
 
-  const done=jobs.filter(x=>isStatus(x,"COMPLETED","SELESAI","DONE")).length;
-  const running=jobs.filter(x=>isStatus(x,"IN_PROGRESS","ONGOING","BERJALAN","PROCESS")).length;
-  const cancelled=jobs.filter(x=>isStatus(x,"CANCELLED","CANCELED","DIBATALKAN")).length;
-  const pending=jobs.filter(x=>!isStatus(x,"COMPLETED","SELESAI","DONE","IN_PROGRESS","ONGOING","BERJALAN","PROCESS","CANCELLED","CANCELED","DIBATALKAN")).length;
-  const unassigned=jobs.filter(x=>!x.technician_id && !x.assigned_to).length;
+  const invoices =
+    db.invoices.filter(
+      x =>
+        inRangeDate(
+          x.issued_at ||
+          x.created_at
+        )
+    );
 
-  setText("jobTotal",jobs.length);setText("jobDone",done);setText("jobRunning",running);
-  setText("jobPending",pending);setText("jobCancelled",cancelled);setText("jobUnassigned",unassigned);
 
-  const paidIds=new Set(db.payments.map(x=>x.invoice_id));
-  const paid=invoices.filter(x=>String(x.status||"").toUpperCase()==="PAID" || paidIds.has(x.id)).length;
-  const unpaid=Math.max(0,invoices.length-paid);
-  const receivable=invoices.filter(x=>!paidIds.has(x.id) && String(x.status||"").toUpperCase()!=="PAID")
-    .reduce((s,x)=>s+Number(x.total||0),0);
+  const payments =
+    db.payments.filter(
+      x =>
+        inRangeDate(
+          x.payment_date
+        )
+    );
 
-  setText("finRevenue",rupiah(revenue));setText("finExpense",rupiah(expenseTotal));setText("finProfit",rupiah(profit));
-  setText("paidInvoices",paid);setText("unpaidInvoices",unpaid);setText("receivable",rupiah(receivable));
+
+  const expenses =
+    db.expenses.filter(
+      x =>
+        inRangeDate(
+          x.expense_date
+        )
+    );
+
+
+  const activeTechs =
+    db.technicians.filter(
+      x =>
+        String(
+          x.status || ""
+        ).toUpperCase() === "ACTIVE"
+    ).length;
+
+
+  /*
+     KEUANGAN
+  */
+
+  const revenue =
+    payments.reduce(
+      (sum,x) =>
+        sum +
+        Number(
+          x.amount || 0
+        ),
+      0
+    );
+
+
+  const expenseTotal =
+    expenses.reduce(
+      (sum,x) =>
+        sum +
+        Number(
+          x.amount || 0
+        ),
+      0
+    );
+
+
+  const profit =
+    revenue -
+    expenseTotal;
+
+
+  /*
+     SUMMARY
+  */
+
+  setText(
+    "totalCustomers",
+    db.customers.length
+  );
+
+
+  setText(
+    "totalJobs",
+    jobs.length
+  );
+
+
+  setText(
+    "activeTechs",
+    activeTechs
+  );
+
+
+  setText(
+    "totalInvoices",
+    invoices.length
+  );
+
+
+  setText(
+    "revenue",
+    rupiah(revenue)
+  );
+
+
+  setText(
+    "expenses",
+    rupiah(expenseTotal)
+  );
+
+
+  setText(
+    "profit",
+    rupiah(profit)
+  );
+
+
+  /*
+     STATUS JOB
+  */
+
+  const done =
+    jobs.filter(
+      x =>
+        isStatus(
+          x,
+          "COMPLETED",
+          "SELESAI",
+          "DONE"
+        )
+    ).length;
+
+
+  const running =
+    jobs.filter(
+      x =>
+        isStatus(
+          x,
+          "IN_PROGRESS",
+          "ONGOING",
+          "BERJALAN",
+          "PROCESS"
+        )
+    ).length;
+
+
+  const cancelled =
+    jobs.filter(
+      x =>
+        isStatus(
+          x,
+          "CANCELLED",
+          "CANCELED",
+          "DIBATALKAN"
+        )
+    ).length;
+
+
+  const pending =
+    jobs.filter(
+      x =>
+        !isStatus(
+          x,
+          "COMPLETED",
+          "SELESAI",
+          "DONE",
+          "IN_PROGRESS",
+          "ONGOING",
+          "BERJALAN",
+          "PROCESS",
+          "CANCELLED",
+          "CANCELED",
+          "DIBATALKAN"
+        )
+    ).length;
+
+
+  const unassigned =
+    jobs.filter(
+      x =>
+        !x.technician_id &&
+        !x.assigned_to
+    ).length;
+
+
+  setText(
+    "jobTotal",
+    jobs.length
+  );
+
+
+  setText(
+    "jobDone",
+    done
+  );
+
+
+  setText(
+    "jobRunning",
+    running
+  );
+
+
+  setText(
+    "jobPending",
+    pending
+  );
+
+
+  setText(
+    "jobCancelled",
+    cancelled
+  );
+
+
+  setText(
+    "jobUnassigned",
+    unassigned
+  );
+
+
+  /*
+     INVOICE
+  */
+
+  const paidIds =
+    new Set(
+      db.payments.map(
+        x => x.invoice_id
+      )
+    );
+
+
+  const paid =
+    invoices.filter(
+      x =>
+        String(
+          x.status || ""
+        ).toUpperCase() === "PAID"
+        ||
+        paidIds.has(x.id)
+    ).length;
+
+
+  const unpaid =
+    Math.max(
+      0,
+      invoices.length - paid
+    );
+
+
+  const receivable =
+    invoices
+      .filter(
+        x =>
+          !paidIds.has(x.id)
+          &&
+          String(
+            x.status || ""
+          ).toUpperCase() !== "PAID"
+      )
+      .reduce(
+        (sum,x) =>
+          sum +
+          Number(
+            x.total || 0
+          ),
+        0
+      );
+
+
+  setText(
+    "finRevenue",
+    rupiah(revenue)
+  );
+
+
+  setText(
+    "finExpense",
+    rupiah(expenseTotal)
+  );
+
+
+  setText(
+    "finProfit",
+    rupiah(profit)
+  );
+
+
+  setText(
+    "paidInvoices",
+    paid
+  );
+
+
+  setText(
+    "unpaidInvoices",
+    unpaid
+  );
+
+
+  setText(
+    "receivable",
+    rupiah(receivable)
+  );
+
+
+  /*
+     BAGIAN BAWAH
+  */
 
   renderReminders();
+
   renderAudit();
+
   renderUpcomingJobs();
+
 }
 
-function isStatus(row,...values){
-  const s=String(row.status||"").toUpperCase().replace(/\s+/g,"_");
-  return values.map(v=>v.toUpperCase()).includes(s);
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function isStatus(
+  row,
+  ...values
+){
+
+  const s =
+    String(
+      row.status || ""
+    )
+    .toUpperCase()
+    .replace(
+      /\s+/g,
+      "_"
+    );
+
+
+  return values
+    .map(
+      v =>
+        v.toUpperCase()
+    )
+    .includes(s);
+
 }
+
+
+/* =========================================================
+   REMINDER SERVICE AC
+   3 BULAN DARI JOB TERAKHIR SELESAI
+========================================================= */
 
 function renderReminders(){
-  const list=document.getElementById("reminderList");
-  const today=new Date(); today.setHours(0,0,0,0);
-  const items=[];
 
-  /* Reminder dihitung dari pekerjaan terakhir yang selesai.
-     Jika belum pernah ada job selesai, tidak dianggap reminder. */
-  db.customers.forEach(c=>{
-    const jobs=db.jobs.filter(j=>String(j.customer_id)===String(c.id) && isStatus(j,"COMPLETED","SELESAI","DONE"));
-    if(!jobs.length)return;
-    jobs.sort((a,b)=>new Date(b.completed_at||b.scheduled_at||b.created_at)-new Date(a.completed_at||a.scheduled_at||a.created_at));
-    const last=jobs[0];
-    const base=new Date(last.completed_at||last.scheduled_at||last.created_at);
-    const due=new Date(base); due.setMonth(due.getMonth()+3);
-    const diff=Math.ceil((due-today)/86400000);
-    if(diff<=30){
-      items.push({name:c.name||c.customer_name||"Customer",phone:c.whatsapp||c.phone||"",due,diff});
+  const list =
+    document.getElementById(
+      "reminderList"
+    );
+
+
+  const today =
+    new Date();
+
+
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  const items = [];
+
+
+  /*
+     Reminder dihitung dari
+     pekerjaan terakhir yang selesai.
+
+     Jika customer belum pernah
+     punya job selesai,
+     tidak dibuat reminder.
+  */
+
+  db.customers.forEach(
+    customer => {
+
+      const jobs =
+        db.jobs.filter(
+          job =>
+            String(
+              job.customer_id
+            ) ===
+            String(
+              customer.id
+            )
+            &&
+            isStatus(
+              job,
+              "COMPLETED",
+              "SELESAI",
+              "DONE"
+            )
+        );
+
+
+      if(!jobs.length){
+        return;
+      }
+
+
+      /*
+         Urutkan job terbaru
+      */
+
+      jobs.sort(
+        (a,b) =>
+          new Date(
+            b.completed_at ||
+            b.scheduled_at ||
+            b.created_at
+          )
+          -
+          new Date(
+            a.completed_at ||
+            a.scheduled_at ||
+            a.created_at
+          )
+      );
+
+
+      const last =
+        jobs[0];
+
+
+      const base =
+        new Date(
+          last.completed_at ||
+          last.scheduled_at ||
+          last.created_at
+        );
+
+
+      /*
+         + 3 BULAN
+      */
+
+      const due =
+        new Date(base);
+
+
+      due.setMonth(
+        due.getMonth() + 3
+      );
+
+
+      const diff =
+        Math.ceil(
+          (
+            due - today
+          )
+          /
+          86400000
+        );
+
+
+      /*
+         Tampilkan H-30
+         sampai terlambat
+      */
+
+      if(diff <= 30){
+
+        items.push({
+
+          name:
+            customer.name ||
+            customer.customer_name ||
+            "Customer",
+
+          phone:
+            customer.whatsapp ||
+            customer.phone ||
+            "",
+
+          due,
+
+          diff
+
+        });
+
+      }
+
     }
-  });
+  );
 
-  items.sort((a,b)=>a.due-b.due);
-  setText("reminderCount",items.length);
 
-  if(!items.length){list.innerHTML='<div class="empty">Belum ada reminder service AC.</div>';return}
-  list.innerHTML=items.slice(0,6).map(x=>{
-    const status=x.diff<0?"TERLAMBAT":x.diff===0?"HARI INI":"H- "+x.diff;
-    return `<div class="reminder"><b>${escapeHtml(x.name)}</b>${formatDateTime(x.due)} · <span class="${x.diff<=0?"red":"orange"}">${status}</span></div>`;
-  }).join("");
+  /*
+     Urutkan berdasarkan
+     tanggal reminder
+  */
+
+  items.sort(
+    (a,b) =>
+      a.due - b.due
+  );
+
+
+  setText(
+    "reminderCount",
+    items.length
+  );
+
+
+  if(!items.length){
+
+    list.innerHTML =
+      '<div class="empty">' +
+      'Belum ada reminder service AC.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    items
+      .slice(0,6)
+      .map(
+        x => {
+
+          const status =
+            x.diff < 0
+              ? "TERLAMBAT"
+              : x.diff === 0
+                ? "HARI INI"
+                : "H- " + x.diff;
+
+
+          return `
+            <div class="reminder">
+
+              <b>
+                ${escapeHtml(x.name)}
+              </b>
+
+              ${formatDateTime(x.due)}
+
+              ·
+
+              <span
+                class="${
+                  x.diff <= 0
+                    ? "red"
+                    : "orange"
+                }">
+
+                ${status}
+
+              </span>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
 }
+
+
+/* =========================================================
+   AUDIT LOG
+========================================================= */
 
 function renderAudit(){
-  const rows=db.audit.slice(0,8);
-  const table=document.getElementById("auditTable");
-  if(!rows.length){table.innerHTML='<tr><td colspan="3" class="empty">Belum ada aktivitas.</td></tr>';return}
-  table.innerHTML=rows.map(x=>`<tr><td>${formatDateTime(x.created_at)}</td><td><b>${escapeHtml(x.action||"-")}</b></td><td>${escapeHtml(x.entity_type||"-")}</td></tr>`).join("");
+
+  const rows =
+    db.audit.slice(
+      0,
+      8
+    );
+
+
+  const table =
+    document.getElementById(
+      "auditTable"
+    );
+
+
+  if(!rows.length){
+
+    table.innerHTML =
+      '<tr>' +
+      '<td colspan="3" class="empty">' +
+      'Belum ada aktivitas.' +
+      '</td>' +
+      '</tr>';
+
+    return;
+
+  }
+
+
+  table.innerHTML =
+    rows
+      .map(
+        x => `
+
+          <tr>
+
+            <td>
+              ${formatDateTime(
+                x.created_at
+              )}
+            </td>
+
+            <td>
+              <b>
+                ${escapeHtml(
+                  x.action || "-"
+                )}
+              </b>
+            </td>
+
+            <td>
+              ${escapeHtml(
+                x.entity_type || "-"
+              )}
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("");
+
 }
+
+
+/* =========================================================
+   UPCOMING JOBS
+========================================================= */
 
 function renderUpcomingJobs(){
-  const now=new Date();
-  const rows=db.jobs.filter(x=>x.scheduled_at && new Date(x.scheduled_at)>=now).sort((a,b)=>new Date(a.scheduled_at)-new Date(b.scheduled_at)).slice(0,8);
-  const table=document.getElementById("upcomingJobs");
-  if(!rows.length){table.innerHTML='<tr><td colspan="5" class="empty">Tidak ada pekerjaan terdekat.</td></tr>';return}
-  table.innerHTML=rows.map(x=>`<tr>
-    <td>${formatDateTime(x.scheduled_at)}</td>
-    <td><b>${escapeHtml(x.job_code||"-")}</b></td>
-    <td>${escapeHtml(x.customer_name||getCustomerName(x.customer_id)||"-")}</td>
-    <td>${escapeHtml(getTechnicianName(x.technician_id||x.assigned_to)||"-")}</td>
-    <td><span class="status">${escapeHtml(x.status||"-")}</span></td>
-  </tr>`).join("");
+
+  const now =
+    new Date();
+
+
+  const rows =
+    db.jobs
+      .filter(
+        x =>
+          x.scheduled_at
+          &&
+          new Date(
+            x.scheduled_at
+          ) >= now
+      )
+      .sort(
+        (a,b) =>
+          new Date(
+            a.scheduled_at
+          )
+          -
+          new Date(
+            b.scheduled_at
+          )
+      )
+      .slice(
+        0,
+        8
+      );
+
+
+  const table =
+    document.getElementById(
+      "upcomingJobs"
+    );
+
+
+  if(!rows.length){
+
+    table.innerHTML =
+      '<tr>' +
+      '<td colspan="5" class="empty">' +
+      'Tidak ada pekerjaan terdekat.' +
+      '</td>' +
+      '</tr>';
+
+    return;
+
+  }
+
+
+  table.innerHTML =
+    rows
+      .map(
+        x => `
+
+          <tr>
+
+            <td>
+              ${formatDateTime(
+                x.scheduled_at
+              )}
+            </td>
+
+            <td>
+              <b>
+                ${escapeHtml(
+                  x.job_code || "-"
+                )}
+              </b>
+            </td>
+
+            <td>
+              ${escapeHtml(
+                x.customer_name ||
+                getCustomerName(
+                  x.customer_id
+                ) ||
+                "-"
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                getTechnicianName(
+                  x.technician_id ||
+                  x.assigned_to
+                ) ||
+                "-"
+              )}
+            </td>
+
+            <td>
+
+              <span class="status">
+
+                ${escapeHtml(
+                  x.status || "-"
+                )}
+
+              </span>
+
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("");
+
 }
+
+
+/* =========================================================
+   CUSTOMER NAME
+========================================================= */
 
 function getCustomerName(id){
-  const x=db.customers.find(c=>String(c.id)===String(id));
-  return x ? (x.name||x.customer_name) : "";
-}
-function getTechnicianName(id){
-  const x=db.technicians.find(t=>String(t.id)===String(id) || String(t.user_id)===String(id));
-  return x ? (x.name||x.full_name||x.technician_name) : "";
+
+  const customer =
+    db.customers.find(
+      c =>
+        String(c.id) ===
+        String(id)
+    );
+
+
+  if(!customer){
+    return "";
+  }
+
+
+  return (
+    customer.name ||
+    customer.customer_name ||
+    ""
+  );
+
 }
 
-function setText(id,value){document.getElementById(id).textContent=value}
-function rupiah(v){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v||0))}
+
+/* =========================================================
+   TECHNICIAN NAME
+========================================================= */
+
+function getTechnicianName(id){
+
+  const technician =
+    db.technicians.find(
+      t =>
+        String(t.id) ===
+          String(id)
+        ||
+        String(t.user_id) ===
+          String(id)
+    );
+
+
+  if(!technician){
+    return "";
+  }
+
+
+  return (
+    technician.name ||
+    technician.full_name ||
+    technician.technician_name ||
+    ""
+  );
+
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+function setText(
+  id,
+  value
+){
+
+  const element =
+    document.getElementById(id);
+
+
+  if(element){
+
+    element.textContent =
+      value;
+
+  }
+
+}
+
+
+/* =========================================================
+   RUPIAH
+========================================================= */
+
+function rupiah(v){
+
+  return new Intl.NumberFormat(
+    "id-ID",
+    {
+      style:"currency",
+      currency:"IDR",
+      maximumFractionDigits:0
+    }
+  ).format(
+    Number(v || 0)
+  );
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
 function formatDateTime(v){
-  if(!v)return "-";
-  const d=new Date(v);
-  if(isNaN(d))return String(v);
-  return d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"})+" "+d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
+
+  if(!v){
+    return "-";
+  }
+
+
+  const d =
+    new Date(v);
+
+
+  if(isNaN(d)){
+    return String(v);
+  }
+
+
+  return (
+
+    d.toLocaleDateString(
+      "id-ID",
+      {
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+      }
+    )
+
+    +
+
+    " "
+
+    +
+
+    d.toLocaleTimeString(
+      "id-ID",
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    )
+
+  );
+
 }
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
 function escapeHtml(v){
-  return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+
+  return String(
+    v ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
 }
-function showMessage(text,type){
-  const box=document.getElementById("message");
-  box.textContent=text;box.className="message "+type;box.style.display="block";
-  clearTimeout(window.msgTimer);window.msgTimer=setTimeout(()=>box.style.display="none",5000);
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+  text,
+  type
+){
+
+  const box =
+    document.getElementById(
+      "message"
+    );
+
+
+  box.textContent =
+    text;
+
+
+  box.className =
+    "message " +
+    type;
+
+
+  box.style.display =
+    "block";
+
+
+  clearTimeout(
+    window.watMessageTimer
+  );
+
+
+  window.watMessageTimer =
+    setTimeout(
+      () => {
+
+        box.style.display =
+          "none";
+
+      },
+      5000
+    );
+
 }
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
 async function logout(){
-  await supabaseClient.auth.signOut();
-  location.href="login.html";
+
+  try{
+
+    if(watDb){
+
+      await watDb.auth.signOut();
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "LOGOUT ERROR:",
+      error
+    );
+
+  }
+
+
+  location.href =
+    "login.html";
+
 }
+
 </script>
+
 </body>
 </html>
