@@ -1,1465 +1,3398 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customer & Reminder - WAT ERP</title>
 
-  <title>Customer - WAT ERP</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-  <!-- Config WAT ERP -->
-  <script src="assets/js/config.js"></script>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+.header{
+    height:72px;
+    background:linear-gradient(135deg,#0866ff,#1976f3);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+
+.brand h2{
+    font-size:22px;
+    margin-bottom:3px;
+}
+
+.brand span{
+    font-size:12px;
+    opacity:.9;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.role{
+    background:rgba(255,255,255,.18);
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.header-btn,
+.logout{
+    border:none;
+    padding:9px 14px;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.header-btn{
+    background:rgba(255,255,255,.15);
+    color:white;
+}
+
+.logout{
+    background:white;
+    color:#0866ff;
+}
+
+.container{
+    max-width:1250px;
+    margin:30px auto;
+    padding:0 20px 50px;
+}
+
+.page-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:22px;
+}
+
+.page-title h1{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.page-title p{
+    color:#718096;
+    font-size:14px;
+}
+
+.btn-primary{
+    background:#0866ff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:12px 18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn-primary:hover{
+    background:#0054dc;
+}
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+    margin-bottom:20px;
+}
+
+.summary-card{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+    border-left:4px solid #0866ff;
+}
+
+.summary-card.green{
+    border-left-color:#16a34a;
+}
+
+.summary-card.yellow{
+    border-left-color:#f59e0b;
+}
+
+.summary-card.red{
+    border-left-color:#dc2626;
+}
+
+.summary-card.gray{
+    border-left-color:#64748b;
+}
+
+.summary-card span{
+    display:block;
+    color:#718096;
+    font-size:12px;
+}
+
+.summary-card strong{
+    display:block;
+    font-size:25px;
+    margin-top:7px;
+}
+
+.toolbar{
+    background:white;
+    padding:16px;
+    border-radius:12px;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;
+    gap:10px;
+    margin-bottom:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.search,
+select,
+input{
+    padding:11px 13px;
+    border:1px solid #d8dee9;
+    border-radius:8px;
+    outline:none;
+    background:white;
+    font-family:inherit;
+    font-size:13px;
+}
+
+.search:focus,
+select:focus,
+input:focus{
+    border-color:#0866ff;
+    box-shadow:0 0 0 3px rgba(8,102,255,.1);
+}
+
+.reset-btn{
+    border:none;
+    background:#e2e8f0;
+    color:#334155;
+    padding:10px 14px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.reminder-info{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1e40af;
+    border-radius:10px;
+    padding:12px 15px;
+    margin-bottom:18px;
+    font-size:12px;
+}
+
+.table-card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1250px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    text-align:left;
+    padding:13px;
+    font-size:11px;
+    text-transform:uppercase;
+    border-bottom:1px solid #e5e7eb;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #edf0f4;
+    font-size:12px;
+    vertical-align:top;
+}
+
+tr:hover td{
+    background:#fafcff;
+}
+
+.customer-name{
+    font-weight:bold;
+    color:#172033;
+    font-size:13px;
+}
+
+.customer-code{
+    color:#64748b;
+    font-size:10px;
+    margin-top:3px;
+}
+
+.contact{
+    line-height:1.7;
+}
+
+.type-badge,
+.status-badge,
+.reminder-badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.type-badge{
+    background:#e8f1ff;
+    color:#0757c7;
+}
+
+.badge-active{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.badge-inactive{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.reminder-safe{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.reminder-soon{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.reminder-due{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.reminder-none{
+    background:#e2e8f0;
+    color:#475569;
+}
+
+.last-service{
+    font-weight:bold;
+}
+
+.next-service{
+    margin-top:4px;
+    color:#475569;
+}
+
+.days{
+    margin-top:4px;
+    font-size:10px;
+    color:#64748b;
+}
+
+.wa-btn,
+.action-btn{
+    border:none;
+    padding:7px 9px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:bold;
+    display:inline-block;
+    text-decoration:none;
+    margin-right:3px;
+    margin-bottom:4px;
+}
+
+.wa-btn{
+    background:#16a34a;
+    color:white;
+}
+
+.reminder-btn{
+    background:#2563eb;
+    color:white;
+}
+
+.edit-btn{
+    background:#e8f1ff;
+    color:#0757c7;
+}
+
+.disable-btn{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.activate-btn{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.empty,
+.loading{
+    text-align:center;
+    padding:45px;
+    color:#718096;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.55);
+    z-index:999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:680px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:14px;
+    box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+
+.modal-header{
+    padding:20px 22px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:19px;
+}
+
+.close{
+    border:none;
+    background:transparent;
+    font-size:25px;
+    cursor:pointer;
+    color:#64748b;
+}
+
+.form{
+    padding:22px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:7px;
+    color:#334155;
+}
+
+textarea{
+    padding:11px 13px;
+    border:1px solid #d8dee9;
+    border-radius:7px;
+    outline:none;
+    font-family:inherit;
+    font-size:13px;
+    resize:vertical;
+    min-height:80px;
+}
+
+textarea:focus{
+    border-color:#0866ff;
+    box-shadow:0 0 0 3px rgba(8,102,255,.1);
+}
+
+.modal-footer{
+    padding:18px 22px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.btn-secondary,
+.btn-save{
+    border:none;
+    padding:11px 17px;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn-secondary{
+    background:#e2e8f0;
+    color:#334155;
+}
+
+.btn-save{
+    background:#0866ff;
+    color:white;
+}
+
+.error{
+    color:#dc2626;
+    font-size:12px;
+    margin-top:10px;
+}
+
+.detail-box{
+    margin:0 22px 20px;
+    background:#f8fafc;
+    border-radius:10px;
+    padding:15px;
+}
+
+.detail-box h3{
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:7px 0;
+    border-bottom:1px solid #e5e7eb;
+    font-size:12px;
+}
+
+.detail-row:last-child{
+    border-bottom:none;
+}
+
+.detail-row span:first-child{
+    color:#64748b;
+}
+
+.detail-row strong{
+    text-align:right;
+}
+
+@media(max-width:1000px){
+
+    .summary{
+        grid-template-columns:repeat(3,1fr);
     }
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f4f7fb;
-      color: #172033;
+    .toolbar{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .header{
+        padding:0 15px;
     }
 
-    /* HEADER */
-    .header {
-      height: 72px;
-      background: linear-gradient(135deg, #0866ff, #1976f3);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    .brand h2{
+        font-size:18px;
     }
 
-    .brand h2 {
-      font-size: 22px;
-      margin-bottom: 3px;
+    .role{
+        display:none;
     }
 
-    .brand span {
-      font-size: 12px;
-      opacity: .9;
+    .container{
+        padding:0 12px 30px;
+        margin-top:20px;
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .page-title{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
     }
 
-    .role {
-      background: rgba(255,255,255,.18);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
+    .summary{
+        grid-template-columns:1fr 1fr;
     }
 
-    .logout {
-      border: none;
-      background: white;
-      color: #0866ff;
-      padding: 10px 17px;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
+    .toolbar{
+        grid-template-columns:1fr;
     }
 
-    /* MAIN */
-    .container {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px 40px;
+    .form-grid{
+        grid-template-columns:1fr;
     }
 
-    .page-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
+    .full{
+        grid-column:auto;
     }
-
-    .page-title h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-
-    .page-title p {
-      color: #718096;
-      font-size: 14px;
-    }
-
-    .btn-primary {
-      background: #0866ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 18px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(8,102,255,.2);
-    }
-
-    .btn-primary:hover {
-      background: #0054dc;
-    }
-
-    /* SUMMARY */
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .summary-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-      border-left: 4px solid #0866ff;
-    }
-
-    .summary-card.active {
-      border-left-color: #16a34a;
-    }
-
-    .summary-card.inactive {
-      border-left-color: #ef4444;
-    }
-
-    .summary-card span {
-      color: #718096;
-      font-size: 13px;
-    }
-
-    .summary-card strong {
-      display: block;
-      font-size: 27px;
-      margin-top: 8px;
-    }
-
-    /* TOOLBAR */
-    .toolbar {
-      background: white;
-      padding: 18px;
-      border-radius: 12px;
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
-
-    .search {
-      flex: 1;
-      padding: 12px 14px;
-      border: 1px solid #d8dee9;
-      border-radius: 8px;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .search:focus,
-    select:focus,
-    input:focus,
-    textarea:focus {
-      border-color: #0866ff;
-      box-shadow: 0 0 0 3px rgba(8,102,255,.1);
-    }
-
-    select {
-      padding: 12px 14px;
-      border: 1px solid #d8dee9;
-      border-radius: 8px;
-      background: white;
-      outline: none;
-      min-width: 180px;
-    }
-
-    /* TABLE */
-    .table-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #475569;
-      text-align: left;
-      padding: 15px;
-      font-size: 12px;
-      text-transform: uppercase;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    td {
-      padding: 15px;
-      border-bottom: 1px solid #edf0f4;
-      font-size: 13px;
-    }
-
-    tr:hover td {
-      background: #fafcff;
-    }
-
-    .customer-name {
-      font-weight: bold;
-      color: #172033;
-    }
-
-    .customer-code {
-      color: #64748b;
-      font-size: 11px;
-      margin-top: 3px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .badge-active {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .badge-inactive {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .type-badge {
-      background: #e8f1ff;
-      color: #0757c7;
-      padding: 5px 9px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .wa-btn {
-      background: #16a34a;
-      color: white;
-      text-decoration: none;
-      padding: 7px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: bold;
-      display: inline-block;
-    }
-
-    .action-btn {
-      border: none;
-      padding: 7px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: bold;
-      margin-right: 4px;
-    }
-
-    .edit-btn {
-      background: #e8f1ff;
-      color: #0757c7;
-    }
-
-    .disable-btn {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .activate-btn {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 50px;
-      color: #718096;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #718096;
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 650px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border-radius: 14px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.2);
-    }
-
-    .modal-header {
-      padding: 20px 22px;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h2 {
-      font-size: 19px;
-    }
-
-    .close {
-      border: none;
-      background: transparent;
-      font-size: 25px;
-      cursor: pointer;
-      color: #64748b;
-    }
-
-    .form {
-      padding: 22px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 12px;
-      font-weight: bold;
-      margin-bottom: 7px;
-      color: #334155;
-    }
-
-    input,
-    textarea {
-      padding: 11px 13px;
-      border: 1px solid #d8dee9;
-      border-radius: 7px;
-      outline: none;
-      font-family: inherit;
-      font-size: 13px;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .modal-footer {
-      padding: 18px 22px;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    .btn-secondary {
-      border: none;
-      background: #e2e8f0;
-      color: #334155;
-      padding: 11px 17px;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-save {
-      border: none;
-      background: #0866ff;
-      color: white;
-      padding: 11px 20px;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .error {
-      color: #dc2626;
-      font-size: 12px;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 700px) {
-      .header {
-        padding: 0 15px;
-      }
-
-      .container {
-        padding: 0 12px 30px;
-        margin-top: 20px;
-      }
-
-      .page-title {
-        align-items: flex-start;
-        gap: 15px;
-        flex-direction: column;
-      }
-
-      .summary {
-        grid-template-columns: 1fr;
-      }
-
-      .toolbar {
-        flex-direction: column;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .full {
-        grid-column: auto;
-      }
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="header">
+<header class="header">
+
     <div class="brand">
-      <h2>WAT ERP</h2>
-      <span>Technician Control System</span>
+        <h2>WAT ERP</h2>
+        <span>Customer & Reminder Service</span>
     </div>
 
     <div class="header-right">
-      <div class="role">OWNER</div>
-      <button class="logout" onclick="logout()">LOGOUT</button>
-    </div>
-  </header>
 
-  <!-- MAIN -->
-  <main class="container">
-
-    <div class="page-title">
-      <div>
-        <h1>Customer</h1>
-        <p>Kelola database customer WAT ERP.</p>
-      </div>
-
-      <button class="btn-primary" onclick="openAddModal()">
-        + Tambah Customer
-      </button>
-    </div>
-
-    <!-- SUMMARY -->
-    <section class="summary">
-
-      <div class="summary-card">
-        <span>Total Customer</span>
-        <strong id="totalCustomer">0</strong>
-      </div>
-
-      <div class="summary-card active">
-        <span>Customer Aktif</span>
-        <strong id="activeCustomer">0</strong>
-      </div>
-
-      <div class="summary-card inactive">
-        <span>Customer Nonaktif</span>
-        <strong id="inactiveCustomer">0</strong>
-      </div>
-
-    </section>
-
-    <!-- TOOLBAR -->
-    <section class="toolbar">
-
-      <input
-        type="text"
-        id="searchInput"
-        class="search"
-        placeholder="Cari nama, kode, WhatsApp, telepon..."
-        oninput="renderCustomers()"
-      >
-
-      <select id="typeFilter" onchange="renderCustomers()">
-        <option value="">Semua Tipe</option>
-        <option value="RESIDENTIAL">Residential</option>
-        <option value="COMMERCIAL">Commercial</option>
-        <option value="CORPORATE">Corporate</option>
-      </select>
-
-      <select id="statusFilter" onchange="renderCustomers()">
-        <option value="">Semua Status</option>
-        <option value="ACTIVE">Aktif</option>
-        <option value="INACTIVE">Nonaktif</option>
-      </select>
-
-    </section>
-
-    <!-- TABLE -->
-    <section class="table-card">
-
-      <div class="table-wrapper">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Kontak</th>
-              <th>Kota</th>
-              <th>Tipe</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody id="customerTable">
-
-            <tr>
-              <td colspan="6" class="loading">
-                Memuat data customer...
-              </td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- MODAL -->
-  <div class="modal" id="customerModal">
-
-    <div class="modal-box">
-
-      <div class="modal-header">
-
-        <h2 id="modalTitle">
-          Tambah Customer
-        </h2>
-
-        <button class="close" onclick="closeModal()">
-          ×
+        <button
+            class="header-btn"
+            onclick="location.href='dashboard-owner.html'">
+            ← Dashboard
         </button>
 
-      </div>
+        <div class="role">
+            OWNER
+        </div>
 
-      <form class="form" id="customerForm">
+        <button
+            class="logout"
+            onclick="logout()">
+            LOGOUT
+        </button>
 
-        <input type="hidden" id="customerId">
+    </div>
 
-        <div class="form-grid">
+</header>
 
-          <div class="form-group">
-            <label>Kode Customer</label>
-            <input
-              type="text"
-              id="customerCode"
-              placeholder="CUS-0001"
-              required
-            >
-          </div>
 
-          <div class="form-group">
-            <label>Nama Customer *</label>
-            <input
-              type="text"
-              id="customerName"
-              placeholder="Nama customer"
-              required
-            >
-          </div>
+<main class="container">
 
-          <div class="form-group">
-            <label>WhatsApp</label>
-            <input
-              type="text"
-              id="customerWhatsapp"
-              placeholder="628xxxxxxxxxx"
-            >
-          </div>
+    <div class="page-title">
 
-          <div class="form-group">
-            <label>Telepon</label>
-            <input
-              type="text"
-              id="customerPhone"
-              placeholder="021xxxxxxx"
-            >
-          </div>
+        <div>
+            <h1>Customer</h1>
+            <p>
+                Database customer dan reminder cuci AC setiap 3 bulan.
+            </p>
+        </div>
 
-          <div class="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              id="customerEmail"
-              placeholder="customer@email.com"
-            >
-          </div>
+        <button
+            class="btn-primary"
+            onclick="openAddModal()">
+            + Tambah Customer
+        </button>
 
-          <div class="form-group">
-            <label>Kota</label>
-            <input
-              type="text"
-              id="customerCity"
-              placeholder="Tangerang Selatan"
-            >
-          </div>
+    </div>
 
-          <div class="form-group full">
-            <label>Alamat</label>
-            <textarea
-              id="customerAddress"
-              placeholder="Alamat lengkap customer"
-            ></textarea>
-          </div>
 
-          <div class="form-group">
-            <label>Tipe Customer *</label>
+    <!-- SUMMARY -->
 
-            <select id="customerType" required>
+    <section class="summary">
 
-              <option value="RESIDENTIAL">
+        <div class="summary-card">
+            <span>Total Customer</span>
+            <strong id="totalCustomer">0</strong>
+        </div>
+
+        <div class="summary-card green">
+            <span>Customer Aktif</span>
+            <strong id="activeCustomer">0</strong>
+        </div>
+
+        <div class="summary-card yellow">
+            <span>Segera Reminder</span>
+            <strong id="soonCustomer">0</strong>
+        </div>
+
+        <div class="summary-card red">
+            <span>Sudah Waktunya</span>
+            <strong id="dueCustomer">0</strong>
+        </div>
+
+        <div class="summary-card gray">
+            <span>Belum Pernah Cuci</span>
+            <strong id="neverCustomer">0</strong>
+        </div>
+
+    </section>
+
+
+    <!-- FILTER -->
+
+    <section class="toolbar">
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search"
+            placeholder="Cari nama, kode, WhatsApp, telepon..."
+            oninput="renderCustomers()"
+        >
+
+        <select
+            id="typeFilter"
+            onchange="renderCustomers()">
+
+            <option value="">
+                Semua Tipe
+            </option>
+
+            <option value="RESIDENTIAL">
                 Residential
-              </option>
+            </option>
 
-              <option value="COMMERCIAL">
+            <option value="COMMERCIAL">
                 Commercial
-              </option>
+            </option>
 
-              <option value="CORPORATE">
+            <option value="CORPORATE">
                 Corporate
-              </option>
+            </option>
 
-            </select>
+        </select>
 
-          </div>
 
-          <div class="form-group">
-            <label>Status</label>
+        <select
+            id="statusFilter"
+            onchange="renderCustomers()">
 
-            <select id="customerStatus">
+            <option value="">
+                Semua Status Customer
+            </option>
 
-              <option value="ACTIVE">
+            <option value="ACTIVE">
                 Aktif
-              </option>
+            </option>
 
-              <option value="INACTIVE">
+            <option value="INACTIVE">
                 Nonaktif
-              </option>
+            </option>
 
-            </select>
+        </select>
 
-          </div>
 
-          <div class="form-group full">
-            <label>Catatan</label>
+        <select
+            id="reminderFilter"
+            onchange="renderCustomers()">
 
-            <textarea
-              id="customerNotes"
-              placeholder="Catatan tambahan..."
-            ></textarea>
+            <option value="">
+                Semua Reminder
+            </option>
 
-          </div>
+            <option value="SAFE">
+                🟢 Masih Aman
+            </option>
 
-          <div id="formError" class="error full"></div>
+            <option value="SOON">
+                🟡 Segera
+            </option>
+
+            <option value="DUE">
+                🔴 Sudah Waktunya
+            </option>
+
+            <option value="NONE">
+                ⚪ Belum Pernah Cuci
+            </option>
+
+        </select>
+
+
+        <select
+            id="monthFilter"
+            onchange="renderCustomers()">
+
+            <option value="">
+                Semua Bulan
+            </option>
+
+            <option value="01">Januari</option>
+            <option value="02">Februari</option>
+            <option value="03">Maret</option>
+            <option value="04">April</option>
+            <option value="05">Mei</option>
+            <option value="06">Juni</option>
+            <option value="07">Juli</option>
+            <option value="08">Agustus</option>
+            <option value="09">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+
+        </select>
+
+
+        <input
+            type="date"
+            id="dateFilter"
+            title="Filter tanggal jatuh tempo"
+            onchange="renderCustomers()"
+        >
+
+
+        <button
+            class="reset-btn"
+            onclick="resetFilters()">
+            ↺ Reset
+        </button>
+
+    </section>
+
+
+    <div class="reminder-info">
+
+        🔔 <b>Sistem Reminder:</b>
+        tanggal cuci AC terakhir diambil dari
+        <b>jobs</b> yang sudah <b>COMPLETED</b>.
+        Sistem menghitung otomatis
+        <b>+3 bulan</b> untuk menentukan jadwal reminder berikutnya.
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <section class="table-card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Customer</th>
+
+                        <th>Kontak</th>
+
+                        <th>Kota</th>
+
+                        <th>Tipe</th>
+
+                        <th>Status</th>
+
+                        <th>Cuci Terakhir</th>
+
+                        <th>Jadwal Berikutnya</th>
+
+                        <th>Reminder</th>
+
+                        <th>Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="customerTable">
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            class="loading">
+
+                            Memuat data customer...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
 
         </div>
 
-      </form>
+    </section>
 
-      <div class="modal-footer">
+</main>
 
-        <button
-          class="btn-secondary"
-          onclick="closeModal()"
-          type="button"
-        >
-          Batal
-        </button>
 
-        <button
-          class="btn-save"
-          onclick="saveCustomer()"
-          type="button"
-        >
-          Simpan Customer
-        </button>
+<!-- CUSTOMER MODAL -->
 
-      </div>
+<div
+    class="modal"
+    id="customerModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Tambah Customer
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            class="form"
+            id="customerForm">
+
+            <input
+                type="hidden"
+                id="customerId">
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        Kode Customer
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerCode"
+                        placeholder="CUS-0001"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Nama Customer *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Nama customer"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        WhatsApp
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerWhatsapp"
+                        placeholder="628xxxxxxxxxx">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Telepon
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerPhone"
+                        placeholder="021xxxxxxx">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="customerEmail"
+                        placeholder="customer@email.com">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Kota
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerCity"
+                        placeholder="Tangerang Selatan">
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+                        Alamat
+                    </label>
+
+                    <textarea
+                        id="customerAddress"
+                        placeholder="Alamat lengkap customer"></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Tipe Customer *
+                    </label>
+
+                    <select
+                        id="customerType"
+                        required>
+
+                        <option value="RESIDENTIAL">
+                            Residential
+                        </option>
+
+                        <option value="COMMERCIAL">
+                            Commercial
+                        </option>
+
+                        <option value="CORPORATE">
+                            Corporate
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="customerStatus">
+
+                        <option value="ACTIVE">
+                            Aktif
+                        </option>
+
+                        <option value="INACTIVE">
+                            Nonaktif
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+                        Catatan
+                    </label>
+
+                    <textarea
+                        id="customerNotes"
+                        placeholder="Catatan tambahan..."></textarea>
+
+                </div>
+
+
+                <div
+                    id="formError"
+                    class="error full"></div>
+
+            </div>
+
+        </form>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn-secondary"
+                onclick="closeModal()"
+                type="button">
+
+                Batal
+
+            </button>
+
+
+            <button
+                class="btn-save"
+                onclick="saveCustomer()"
+                type="button">
+
+                Simpan Customer
+
+            </button>
+
+        </div>
 
     </div>
 
-  </div>
-
-  <script>
-
-    /* ==========================================
-       SUPABASE
-    ========================================== */
-
-    const { createClient } = window.supabase;
-
-    const supabaseClient = createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+</div>
 
 
-    /* ==========================================
-       VARIABLES
-    ========================================== */
+<!-- DETAIL REMINDER MODAL -->
 
-    let customers = [];
+<div
+    class="modal"
+    id="reminderModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>
+                Detail Reminder Cuci AC
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeReminderModal()">
+                ×
+            </button>
+
+        </div>
 
 
-    /* ==========================================
-       AUTH CHECK
-    ========================================== */
+        <div
+            class="detail-box"
+            id="reminderDetail">
 
-    async function checkAuth() {
+        </div>
 
-      const {
-        data: { session }
-      } = await supabaseClient.auth.getSession();
 
-      if (!session) {
+        <div class="modal-footer">
 
-        window.location.href = "login.html";
+            <button
+                class="btn-secondary"
+                onclick="closeReminderModal()">
+
+                Tutup
+
+            </button>
+
+            <button
+                class="btn-save"
+                id="reminderWhatsAppButton">
+
+                💬 Kirim Reminder WhatsApp
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const { createClient } = window.supabase;
+
+const supabaseClient = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let customers = [];
+let jobs = [];
+let serviceMap = {};
+
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+async function checkAuth(){
+
+    const {
+        data:{
+            session
+        }
+    } = await supabaseClient.auth.getSession();
+
+    if(!session){
+
+        window.location.href =
+            "login.html";
 
         return null;
-
-      }
-
-      return session;
-
     }
 
+    return session;
+}
 
-    /* ==========================================
-       LOAD CUSTOMER
-    ========================================== */
 
-    async function loadCustomers() {
+/* =====================================================
+   INIT
+===================================================== */
 
-      const session = await checkAuth();
+document.addEventListener(
+    "DOMContentLoaded",
+    loadAll
+);
 
-      if (!session) return;
 
-      const {
+async function loadAll(){
+
+    const session =
+        await checkAuth();
+
+    if(!session){
+        return;
+    }
+
+    await loadCustomers();
+
+    await loadJobs();
+
+    buildServiceMap();
+
+    updateSummary();
+
+    renderCustomers();
+}
+
+
+/* =====================================================
+   LOAD CUSTOMERS
+===================================================== */
+
+async function loadCustomers(){
+
+    const {
         data,
         error
-      } = await supabaseClient
+    } = await supabaseClient
         .from("customers")
         .select("*")
-        .order("created_at", {
-          ascending: false
-        });
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
 
-      if (error) {
+    if(error){
 
         console.error(error);
 
-        document.getElementById("customerTable").innerHTML = `
-          <tr>
-            <td colspan="6" class="empty">
-              Gagal mengambil data customer.
-              <br>
-              ${error.message}
-            </td>
-          </tr>
+        document.getElementById(
+            "customerTable"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    class="empty">
+
+                    Gagal mengambil data customer.
+
+                    <br><br>
+
+                    ${escapeHtml(error.message)}
+
+                </td>
+
+            </tr>
+
         `;
 
         return;
-
-      }
-
-      customers = data || [];
-
-      updateSummary();
-
-      renderCustomers();
-
     }
 
+    customers =
+        data || [];
+}
 
-    /* ==========================================
-       SUMMARY
-    ========================================== */
 
-    function updateSummary() {
+/* =====================================================
+   LOAD JOBS
+===================================================== */
 
-      const total = customers.length;
+async function loadJobs(){
 
-      const active = customers.filter(
-        c => c.status === "ACTIVE"
-      ).length;
-
-      const inactive = customers.filter(
-        c => c.status === "INACTIVE"
-      ).length;
-
-      document.getElementById("totalCustomer")
-        .textContent = total;
-
-      document.getElementById("activeCustomer")
-        .textContent = active;
-
-      document.getElementById("inactiveCustomer")
-        .textContent = inactive;
-
-    }
-
-
-    /* ==========================================
-       RENDER TABLE
-    ========================================== */
-
-    function renderCustomers() {
-
-      const search =
-        document.getElementById("searchInput")
-          .value
-          .toLowerCase()
-          .trim();
-
-      const type =
-        document.getElementById("typeFilter").value;
-
-      const status =
-        document.getElementById("statusFilter").value;
-
-
-      const filtered = customers.filter(customer => {
-
-        const text = [
-
-          customer.customer_code,
-          customer.name,
-          customer.whatsapp,
-          customer.phone,
-          customer.email,
-          customer.city,
-          customer.address
-
-        ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-
-        const matchSearch =
-          !search || text.includes(search);
-
-        const matchType =
-          !type || customer.customer_type === type;
-
-        const matchStatus =
-          !status || customer.status === status;
-
-
-        return (
-          matchSearch &&
-          matchType &&
-          matchStatus
-        );
-
-      });
-
-
-      const table =
-        document.getElementById("customerTable");
-
-
-      if (!filtered.length) {
-
-        table.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty">
-              Belum ada customer.
-            </td>
-          </tr>
-        `;
-
-        return;
-
-      }
-
-
-      table.innerHTML = filtered.map(customer => {
-
-        const whatsapp =
-          normalizeWhatsApp(customer.whatsapp);
-
-
-        const waButton = whatsapp
-          ? `
-            <a
-              class="wa-btn"
-              href="https://wa.me/${whatsapp}"
-              target="_blank"
-            >
-              WhatsApp
-            </a>
-          `
-          : "-";
-
-
-        const statusBadge =
-          customer.status === "ACTIVE"
-          ? `<span class="badge badge-active">AKTIF</span>`
-          : `<span class="badge badge-inactive">NONAKTIF</span>`;
-
-
-        const actionButton =
-          customer.status === "ACTIVE"
-          ? `
-            <button
-              class="action-btn disable-btn"
-              onclick="changeStatus('${customer.id}', 'INACTIVE')"
-            >
-              Nonaktifkan
-            </button>
-          `
-          : `
-            <button
-              class="action-btn activate-btn"
-              onclick="changeStatus('${customer.id}', 'ACTIVE')"
-            >
-              Aktifkan
-            </button>
-          `;
-
-
-        return `
-
-          <tr>
-
-            <td>
-
-              <div class="customer-name">
-                ${escapeHtml(customer.name)}
-              </div>
-
-              <div class="customer-code">
-                ${escapeHtml(customer.customer_code)}
-              </div>
-
-            </td>
-
-
-            <td>
-
-              ${waButton}
-
-              ${
-                customer.phone
-                ? `<div style="margin-top:5px;color:#64748b;">
-                    ${escapeHtml(customer.phone)}
-                  </div>`
-                : ""
-              }
-
-            </td>
-
-
-            <td>
-              ${escapeHtml(customer.city || "-")}
-            </td>
-
-
-            <td>
-
-              <span class="type-badge">
-                ${escapeHtml(customer.customer_type || "-")}
-              </span>
-
-            </td>
-
-
-            <td>
-              ${statusBadge}
-            </td>
-
-
-            <td>
-
-              <button
-                class="action-btn edit-btn"
-                onclick="editCustomer('${customer.id}')"
-              >
-                Edit
-              </button>
-
-              ${actionButton}
-
-            </td>
-
-          </tr>
-
-        `;
-
-      }).join("");
-
-    }
-
-
-    /* ==========================================
-       ADD MODAL
-    ========================================== */
-
-    async function openAddModal() {
-
-      document.getElementById("modalTitle")
-        .textContent = "Tambah Customer";
-
-      document.getElementById("customerForm")
-        .reset();
-
-      document.getElementById("customerId")
-        .value = "";
-
-      document.getElementById("formError")
-        .textContent = "";
-
-      document.getElementById("customerCode")
-        .value = await generateCustomerCode();
-
-      document.getElementById("customerStatus")
-        .value = "ACTIVE";
-
-      document.getElementById("customerType")
-        .value = "RESIDENTIAL";
-
-
-      document.getElementById("customerModal")
-        .classList.add("show");
-
-    }
-
-
-    /* ==========================================
-       EDIT CUSTOMER
-    ========================================== */
-
-    function editCustomer(id) {
-
-      const customer =
-        customers.find(c => c.id === id);
-
-      if (!customer) return;
-
-
-      document.getElementById("modalTitle")
-        .textContent = "Edit Customer";
-
-
-      document.getElementById("customerId")
-        .value = customer.id;
-
-      document.getElementById("customerCode")
-        .value = customer.customer_code || "";
-
-      document.getElementById("customerName")
-        .value = customer.name || "";
-
-      document.getElementById("customerWhatsapp")
-        .value = customer.whatsapp || "";
-
-      document.getElementById("customerPhone")
-        .value = customer.phone || "";
-
-      document.getElementById("customerEmail")
-        .value = customer.email || "";
-
-      document.getElementById("customerAddress")
-        .value = customer.address || "";
-
-      document.getElementById("customerCity")
-        .value = customer.city || "";
-
-      document.getElementById("customerType")
-        .value = customer.customer_type || "RESIDENTIAL";
-
-      document.getElementById("customerStatus")
-        .value = customer.status || "ACTIVE";
-
-      document.getElementById("customerNotes")
-        .value = customer.notes || "";
-
-      document.getElementById("formError")
-        .textContent = "";
-
-
-      document.getElementById("customerModal")
-        .classList.add("show");
-
-    }
-
-
-    /* ==========================================
-       SAVE CUSTOMER
-    ========================================== */
-
-    async function saveCustomer() {
-
-      const errorBox =
-        document.getElementById("formError");
-
-      errorBox.textContent = "";
-
-
-      const session = await checkAuth();
-
-      if (!session) return;
-
-
-      const id =
-        document.getElementById("customerId").value;
-
-
-      const payload = {
-
-        customer_code:
-          document.getElementById("customerCode")
-            .value
-            .trim(),
-
-        name:
-          document.getElementById("customerName")
-            .value
-            .trim(),
-
-        whatsapp:
-          document.getElementById("customerWhatsapp")
-            .value
-            .trim() || null,
-
-        phone:
-          document.getElementById("customerPhone")
-            .value
-            .trim() || null,
-
-        email:
-          document.getElementById("customerEmail")
-            .value
-            .trim() || null,
-
-        address:
-          document.getElementById("customerAddress")
-            .value
-            .trim() || null,
-
-        city:
-          document.getElementById("customerCity")
-            .value
-            .trim() || null,
-
-        customer_type:
-          document.getElementById("customerType")
-            .value,
-
-        status:
-          document.getElementById("customerStatus")
-            .value,
-
-        notes:
-          document.getElementById("customerNotes")
-            .value
-            .trim() || null
-
-      };
-
-
-      if (!payload.customer_code) {
-
-        errorBox.textContent =
-          "Kode customer wajib diisi.";
-
-        return;
-
-      }
-
-
-      if (!payload.name) {
-
-        errorBox.textContent =
-          "Nama customer wajib diisi.";
-
-        return;
-
-      }
-
-
-      let result;
-
-
-      if (id) {
-
-        result = await supabaseClient
-          .from("customers")
-          .update(payload)
-          .eq("id", id);
-
-      } else {
-
-        payload.created_by =
-          session.user.id;
-
-        result = await supabaseClient
-          .from("customers")
-          .insert(payload);
-
-      }
-
-
-      if (result.error) {
-
-        console.error(result.error);
-
-        errorBox.textContent =
-          result.error.message;
-
-        return;
-
-      }
-
-
-      closeModal();
-
-      await loadCustomers();
-
-    }
-
-
-    /* ==========================================
-       CHANGE STATUS
-    ========================================== */
-
-    async function changeStatus(id, newStatus) {
-
-      const customer =
-        customers.find(c => c.id === id);
-
-      if (!customer) return;
-
-
-      const action =
-        newStatus === "ACTIVE"
-        ? "mengaktifkan"
-        : "menonaktifkan";
-
-
-      const confirmed =
-        confirm(
-          `Yakin ingin ${action} customer "${customer.name}"?`
-        );
-
-
-      if (!confirmed) return;
-
-
-      const {
+    const {
+        data,
         error
-      } = await supabaseClient
-        .from("customers")
-        .update({
-          status: newStatus
-        })
-        .eq("id", id);
-
-
-      if (error) {
-
-        alert(
-          "Gagal mengubah status: " +
-          error.message
+    } = await supabaseClient
+        .from("jobs")
+        .select(`
+            id,
+            customer_id,
+            job_code,
+            title,
+            description,
+            scheduled_at,
+            completed_at,
+            status,
+            job_type,
+            work_description,
+            customer_name,
+            customer_phone
+        `)
+        .order(
+            "completed_at",
+            {
+                ascending:false,
+                nullsFirst:false
+            }
         );
 
+    if(error){
+
+        console.error(
+            "LOAD JOB ERROR:",
+            error
+        );
+
+        jobs = [];
+
         return;
-
-      }
-
-
-      await loadCustomers();
-
     }
 
+    jobs =
+        data || [];
+}
 
-    /* ==========================================
-       GENERATE CUSTOMER CODE
-    ========================================== */
 
-    async function generateCustomerCode() {
+/* =====================================================
+   BUILD SERVICE MAP
+===================================================== */
 
-      const {
-        count,
-        error
-      } = await supabaseClient
-        .from("customers")
-        .select("*", {
-          count: "exact",
-          head: true
+function buildServiceMap(){
+
+    serviceMap = {};
+
+    const completedJobs =
+        jobs.filter(job => {
+
+            if(
+                job.status !==
+                "COMPLETED"
+            ){
+                return false;
+            }
+
+            return isCleaningJob(job);
+
         });
 
 
-      if (error) {
+    completedJobs.forEach(job => {
+
+        if(!job.customer_id){
+            return;
+        }
+
+        const completionDate =
+            job.completed_at ||
+            job.scheduled_at;
+
+        if(!completionDate){
+            return;
+        }
+
+        const current =
+            serviceMap[job.customer_id];
+
+
+        if(
+            !current ||
+            new Date(completionDate) >
+            new Date(current.date)
+        ){
+
+            serviceMap[job.customer_id] = {
+
+                jobId:
+                    job.id,
+
+                jobCode:
+                    job.job_code,
+
+                date:
+                    completionDate,
+
+                title:
+                    job.title,
+
+                jobType:
+                    job.job_type
+
+            };
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   DETECT CLEANING JOB
+===================================================== */
+
+function isCleaningJob(job){
+
+    const jobType =
+        String(
+            job.job_type || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    const title =
+        String(
+            job.title || ""
+        )
+        .toLowerCase();
+
+
+    const description =
+        String(
+            job.description || ""
+        )
+        .toLowerCase();
+
+
+    const work =
+        String(
+            job.work_description || ""
+        )
+        .toLowerCase();
+
+
+    const combined = [
+        jobType,
+        title,
+        description,
+        work
+    ].join(" ");
+
+
+    /*
+       Deteksi utama:
+       - cuci
+       - cleaning
+       - maintenance ac
+       - maintenance
+       - service cuci
+    */
+
+    const keywords = [
+
+        "cuci ac",
+        "cuci",
+        "cleaning ac",
+        "cleaning",
+        "maintenance ac"
+
+    ];
+
+
+    return keywords.some(
+        keyword =>
+            combined.includes(keyword)
+    );
+
+}
+
+
+/* =====================================================
+   GET REMINDER DATA
+===================================================== */
+
+function getReminderData(customerId){
+
+    const service =
+        serviceMap[customerId];
+
+
+    if(!service){
+
+        return {
+
+            status:"NONE",
+
+            lastDate:null,
+
+            nextDate:null,
+
+            days:null,
+
+            service:null
+
+        };
+
+    }
+
+
+    const lastDate =
+        new Date(service.date);
+
+
+    const nextDate =
+        addMonths(
+            lastDate,
+            3
+        );
+
+
+    const today =
+        startOfDay(
+            new Date()
+        );
+
+
+    const next =
+        startOfDay(
+            nextDate
+        );
+
+
+    const diff =
+        Math.ceil(
+            (
+                next - today
+            ) /
+            86400000
+        );
+
+
+    let status;
+
+
+    if(diff <= 0){
+
+        status = "DUE";
+
+    }
+    else if(diff <= 30){
+
+        status = "SOON";
+
+    }
+    else{
+
+        status = "SAFE";
+
+    }
+
+
+    return {
+
+        status,
+
+        lastDate,
+
+        nextDate,
+
+        days:diff,
+
+        service
+
+    };
+
+}
+
+
+/* =====================================================
+   ADD MONTHS
+===================================================== */
+
+function addMonths(date, months){
+
+    const result =
+        new Date(date);
+
+
+    const originalDay =
+        result.getDate();
+
+
+    result.setDate(1);
+
+    result.setMonth(
+        result.getMonth() +
+        months
+    );
+
+
+    const lastDay =
+        new Date(
+            result.getFullYear(),
+            result.getMonth() + 1,
+            0
+        ).getDate();
+
+
+    result.setDate(
+        Math.min(
+            originalDay,
+            lastDay
+        )
+    );
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   DATE HELPERS
+===================================================== */
+
+function startOfDay(date){
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    );
+
+}
+
+
+function dateKey(date){
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+    return `
+        ${year}-${month}-${day}
+    `.trim();
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function updateSummary(){
+
+    const total =
+        customers.length;
+
+
+    const active =
+        customers.filter(
+            c =>
+                c.status ===
+                "ACTIVE"
+        ).length;
+
+
+    let soon = 0;
+    let due = 0;
+    let never = 0;
+
+
+    customers.forEach(customer => {
+
+        const reminder =
+            getReminderData(
+                customer.id
+            );
+
+
+        if(
+            reminder.status ===
+            "SOON"
+        ){
+            soon++;
+        }
+
+
+        if(
+            reminder.status ===
+            "DUE"
+        ){
+            due++;
+        }
+
+
+        if(
+            reminder.status ===
+            "NONE"
+        ){
+            never++;
+        }
+
+    });
+
+
+    document.getElementById(
+        "totalCustomer"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "activeCustomer"
+    ).textContent =
+        active;
+
+
+    document.getElementById(
+        "soonCustomer"
+    ).textContent =
+        soon;
+
+
+    document.getElementById(
+        "dueCustomer"
+    ).textContent =
+        due;
+
+
+    document.getElementById(
+        "neverCustomer"
+    ).textContent =
+        never;
+
+}
+
+
+/* =====================================================
+   RENDER CUSTOMER
+===================================================== */
+
+function renderCustomers(){
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const type =
+        document.getElementById(
+            "typeFilter"
+        ).value;
+
+
+    const status =
+        document.getElementById(
+            "statusFilter"
+        ).value;
+
+
+    const reminderFilter =
+        document.getElementById(
+            "reminderFilter"
+        ).value;
+
+
+    const monthFilter =
+        document.getElementById(
+            "monthFilter"
+        ).value;
+
+
+    const dateFilter =
+        document.getElementById(
+            "dateFilter"
+        ).value;
+
+
+    const filtered =
+        customers.filter(customer => {
+
+            const text = [
+
+                customer.customer_code,
+
+                customer.name,
+
+                customer.whatsapp,
+
+                customer.phone,
+
+                customer.email,
+
+                customer.city,
+
+                customer.address
+
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+
+            const matchSearch =
+                !search ||
+                text.includes(search);
+
+
+            const matchType =
+                !type ||
+                customer.customer_type ===
+                type;
+
+
+            const matchStatus =
+                !status ||
+                customer.status ===
+                status;
+
+
+            const reminder =
+                getReminderData(
+                    customer.id
+                );
+
+
+            const matchReminder =
+                !reminderFilter ||
+                reminder.status ===
+                reminderFilter;
+
+
+            let matchMonth = true;
+
+
+            if(monthFilter){
+
+                if(!reminder.nextDate){
+
+                    matchMonth = false;
+
+                }
+                else{
+
+                    const month =
+                        String(
+                            reminder.nextDate
+                                .getMonth()+1
+                        )
+                        .padStart(2,"0");
+
+                    matchMonth =
+                        month ===
+                        monthFilter;
+
+                }
+
+            }
+
+
+            let matchDate = true;
+
+
+            if(dateFilter){
+
+                if(!reminder.nextDate){
+
+                    matchDate = false;
+
+                }
+                else{
+
+                    matchDate =
+                        dateKey(
+                            reminder.nextDate
+                        ) ===
+                        dateFilter;
+
+                }
+
+            }
+
+
+            return (
+
+                matchSearch &&
+                matchType &&
+                matchStatus &&
+                matchReminder &&
+                matchMonth &&
+                matchDate
+
+            );
+
+        });
+
+
+    const table =
+        document.getElementById(
+            "customerTable"
+        );
+
+
+    if(!filtered.length){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    class="empty">
+
+                    Tidak ada customer
+                    yang sesuai filter.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        filtered
+        .map(
+            renderCustomerRow
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   CUSTOMER ROW
+===================================================== */
+
+function renderCustomerRow(customer){
+
+    const reminder =
+        getReminderData(
+            customer.id
+        );
+
+
+    const whatsapp =
+        normalizeWhatsApp(
+            customer.whatsapp
+        );
+
+
+    const waButton =
+        whatsapp
+
+        ?
+
+        `
+
+        <a
+            class="wa-btn"
+            href="https://wa.me/${whatsapp}"
+            target="_blank">
+
+            WhatsApp
+
+        </a>
+
+        `
+
+        :
+
+        "-";
+
+
+    const statusBadge =
+        customer.status ===
+        "ACTIVE"
+
+        ?
+
+        `<span class="status-badge badge-active">
+            AKTIF
+        </span>`
+
+        :
+
+        `<span class="status-badge badge-inactive">
+            NONAKTIF
+        </span>`;
+
+
+    let reminderBadge;
+
+
+    if(
+        reminder.status ===
+        "SAFE"
+    ){
+
+        reminderBadge = `
+
+            <span
+                class="reminder-badge reminder-safe">
+
+                🟢 MASIH AMAN
+
+            </span>
+
+        `;
+
+    }
+    else if(
+        reminder.status ===
+        "SOON"
+    ){
+
+        reminderBadge = `
+
+            <span
+                class="reminder-badge reminder-soon">
+
+                🟡 SEGERA
+
+            </span>
+
+        `;
+
+    }
+    else if(
+        reminder.status ===
+        "DUE"
+    ){
+
+        reminderBadge = `
+
+            <span
+                class="reminder-badge reminder-due">
+
+                🔴 SUDAH WAKTUNYA
+
+            </span>
+
+        `;
+
+    }
+    else{
+
+        reminderBadge = `
+
+            <span
+                class="reminder-badge reminder-none">
+
+                ⚪ BELUM PERNAH
+
+            </span>
+
+        `;
+
+    }
+
+
+    let lastService = "-";
+    let nextService = "-";
+    let dayText = "";
+
+
+    if(reminder.lastDate){
+
+        lastService =
+            formatDate(
+                reminder.lastDate
+            );
+
+    }
+
+
+    if(reminder.nextDate){
+
+        nextService =
+            formatDate(
+                reminder.nextDate
+            );
+
+
+        if(
+            reminder.days <= 0
+        ){
+
+            dayText =
+                `Lewat ${Math.abs(reminder.days)} hari`;
+
+        }
+        else{
+
+            dayText =
+                `${reminder.days} hari lagi`;
+
+        }
+
+    }
+
+
+    let actionButton;
+
+
+    if(
+        customer.status ===
+        "ACTIVE"
+    ){
+
+        actionButton = `
+
+            <button
+                class="action-btn disable-btn"
+                onclick="changeStatus(
+                    '${customer.id}',
+                    'INACTIVE'
+                )">
+
+                Nonaktifkan
+
+            </button>
+
+        `;
+
+    }
+    else{
+
+        actionButton = `
+
+            <button
+                class="action-btn activate-btn"
+                onclick="changeStatus(
+                    '${customer.id}',
+                    'ACTIVE'
+                )">
+
+                Aktifkan
+
+            </button>
+
+        `;
+
+    }
+
+
+    const reminderButton =
+        reminder.status !==
+        "NONE"
+
+        ?
+
+        `
+
+        <button
+            class="action-btn reminder-btn"
+            onclick="openReminderModal(
+                '${customer.id}'
+            )">
+
+            🔔 Reminder
+
+        </button>
+
+        `
+
+        :
+
+        "";
+
+
+    return `
+
+        <tr>
+
+            <td>
+
+                <div class="customer-name">
+
+                    ${escapeHtml(
+                        customer.name
+                    )}
+
+                </div>
+
+                <div class="customer-code">
+
+                    ${escapeHtml(
+                        customer.customer_code
+                    )}
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="contact">
+
+                    ${waButton}
+
+                    ${
+                        customer.phone
+                        ?
+
+                        `<div>
+                            ${escapeHtml(
+                                customer.phone
+                            )}
+                        </div>`
+
+                        :
+
+                        ""
+                    }
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                ${escapeHtml(
+                    customer.city ||
+                    "-"
+                )}
+
+            </td>
+
+
+            <td>
+
+                <span class="type-badge">
+
+                    ${escapeHtml(
+                        customer.customer_type ||
+                        "-"
+                    )}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                ${statusBadge}
+
+            </td>
+
+
+            <td>
+
+                <div class="last-service">
+
+                    ${lastService}
+
+                </div>
+
+                ${
+                    reminder.service
+                    ?
+
+                    `<div class="days">
+                        Job:
+                        ${escapeHtml(
+                            reminder.service.jobCode ||
+                            "-"
+                        )}
+                    </div>`
+
+                    :
+
+                    ""
+                }
+
+            </td>
+
+
+            <td>
+
+                <div class="next-service">
+
+                    ${nextService}
+
+                </div>
+
+                ${
+                    dayText
+                    ?
+
+                    `<div class="days">
+                        ${dayText}
+                    </div>`
+
+                    :
+
+                    ""
+                }
+
+            </td>
+
+
+            <td>
+
+                ${reminderBadge}
+
+            </td>
+
+
+            <td>
+
+                ${reminderButton}
+
+                <button
+                    class="action-btn edit-btn"
+                    onclick="editCustomer(
+                        '${customer.id}'
+                    )">
+
+                    Edit
+
+                </button>
+
+                ${actionButton}
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RESET FILTER
+===================================================== */
+
+function resetFilters(){
+
+    document.getElementById(
+        "searchInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "typeFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "statusFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "reminderFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "monthFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "dateFilter"
+    ).value = "";
+
+
+    renderCustomers();
+
+}
+
+
+/* =====================================================
+   REMINDER MODAL
+===================================================== */
+
+function openReminderModal(customerId){
+
+    const customer =
+        customers.find(
+            c =>
+                c.id ===
+                customerId
+        );
+
+
+    if(!customer){
+        return;
+    }
+
+
+    const reminder =
+        getReminderData(
+            customerId
+        );
+
+
+    if(!reminder.service){
+        return;
+    }
+
+
+    const detail =
+        document.getElementById(
+            "reminderDetail"
+        );
+
+
+    let statusText;
+
+
+    if(
+        reminder.status ===
+        "DUE"
+    ){
+
+        statusText =
+            "🔴 SUDAH WAKTUNYA";
+
+    }
+    else if(
+        reminder.status ===
+        "SOON"
+    ){
+
+        statusText =
+            "🟡 SEGERA";
+
+    }
+    else{
+
+        statusText =
+            "🟢 MASIH AMAN";
+
+    }
+
+
+    detail.innerHTML = `
+
+        <h3>
+            ${escapeHtml(
+                customer.name
+            )}
+        </h3>
+
+
+        <div class="detail-row">
+
+            <span>
+                WhatsApp
+            </span>
+
+            <strong>
+                ${escapeHtml(
+                    customer.whatsapp ||
+                    "-"
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Cuci terakhir
+            </span>
+
+            <strong>
+                ${formatDate(
+                    reminder.lastDate
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Job terakhir
+            </span>
+
+            <strong>
+                ${escapeHtml(
+                    reminder.service.jobCode ||
+                    "-"
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Jadwal berikutnya
+            </span>
+
+            <strong>
+                ${formatDate(
+                    reminder.nextDate
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Status
+            </span>
+
+            <strong>
+                ${statusText}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Keterangan
+            </span>
+
+            <strong>
+
+                ${
+                    reminder.days <= 0
+
+                    ?
+
+                    `Sudah lewat
+                    ${Math.abs(reminder.days)}
+                    hari`
+
+                    :
+
+                    `${reminder.days}
+                    hari lagi`
+
+                }
+
+            </strong>
+
+        </div>
+
+    `;
+
+
+    const button =
+        document.getElementById(
+            "reminderWhatsAppButton"
+        );
+
+
+    const whatsapp =
+        normalizeWhatsApp(
+            customer.whatsapp
+        );
+
+
+    if(whatsapp){
+
+        button.style.display =
+            "block";
+
+
+        button.onclick =
+            function(){
+
+                sendReminderWhatsApp(
+                    customer,
+                    reminder
+                );
+
+            };
+
+    }
+    else{
+
+        button.style.display =
+            "none";
+
+    }
+
+
+    document
+        .getElementById(
+            "reminderModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+function closeReminderModal(){
+
+    document
+        .getElementById(
+            "reminderModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* =====================================================
+   WHATSAPP REMINDER
+===================================================== */
+
+function sendReminderWhatsApp(
+    customer,
+    reminder
+){
+
+    const phone =
+        normalizeWhatsApp(
+            customer.whatsapp
+        );
+
+
+    if(!phone){
+
+        alert(
+            "Nomor WhatsApp customer belum tersedia."
+        );
+
+        return;
+    }
+
+
+    const customerName =
+        customer.name ||
+        "Bapak/Ibu";
+
+
+    const nextDate =
+        formatDate(
+            reminder.nextDate
+        );
+
+
+    const message =
+
+`Halo ${customerName},
+
+Kami dari WAT / Wijaya AC ingin mengingatkan bahwa jadwal maintenance / cuci AC Bapak/Ibu sudah memasuki waktunya.
+
+📅 Jadwal reminder: ${nextDate}
+
+Kami siap membantu untuk melakukan cuci / maintenance AC agar kondisi unit tetap optimal.
+
+Apabila Bapak/Ibu berkenan, kami dapat membantu menjadwalkan kunjungan teknisi.
+
+Terima kasih.
+
+WAT / Wijaya AC`;
+
+
+    const url =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(
+            message
+        );
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =====================================================
+   ADD CUSTOMER
+===================================================== */
+
+async function openAddModal(){
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Tambah Customer";
+
+
+    document.getElementById(
+        "customerForm"
+    ).reset();
+
+
+    document.getElementById(
+        "customerId"
+    ).value = "";
+
+
+    document.getElementById(
+        "formError"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "customerCode"
+    ).value =
+        await generateCustomerCode();
+
+
+    document.getElementById(
+        "customerStatus"
+    ).value =
+        "ACTIVE";
+
+
+    document.getElementById(
+        "customerType"
+    ).value =
+        "RESIDENTIAL";
+
+
+    document
+        .getElementById(
+            "customerModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+/* =====================================================
+   EDIT CUSTOMER
+===================================================== */
+
+function editCustomer(id){
+
+    const customer =
+        customers.find(
+            c =>
+                c.id === id
+        );
+
+
+    if(!customer){
+        return;
+    }
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Edit Customer";
+
+
+    document.getElementById(
+        "customerId"
+    ).value =
+        customer.id;
+
+
+    document.getElementById(
+        "customerCode"
+    ).value =
+        customer.customer_code ||
+        "";
+
+
+    document.getElementById(
+        "customerName"
+    ).value =
+        customer.name ||
+        "";
+
+
+    document.getElementById(
+        "customerWhatsapp"
+    ).value =
+        customer.whatsapp ||
+        "";
+
+
+    document.getElementById(
+        "customerPhone"
+    ).value =
+        customer.phone ||
+        "";
+
+
+    document.getElementById(
+        "customerEmail"
+    ).value =
+        customer.email ||
+        "";
+
+
+    document.getElementById(
+        "customerAddress"
+    ).value =
+        customer.address ||
+        "";
+
+
+    document.getElementById(
+        "customerCity"
+    ).value =
+        customer.city ||
+        "";
+
+
+    document.getElementById(
+        "customerType"
+    ).value =
+        customer.customer_type ||
+        "RESIDENTIAL";
+
+
+    document.getElementById(
+        "customerStatus"
+    ).value =
+        customer.status ||
+        "ACTIVE";
+
+
+    document.getElementById(
+        "customerNotes"
+    ).value =
+        customer.notes ||
+        "";
+
+
+    document.getElementById(
+        "formError"
+    ).textContent =
+        "";
+
+
+    document
+        .getElementById(
+            "customerModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+/* =====================================================
+   SAVE CUSTOMER
+===================================================== */
+
+async function saveCustomer(){
+
+    const errorBox =
+        document.getElementById(
+            "formError"
+        );
+
+
+    errorBox.textContent = "";
+
+
+    const session =
+        await checkAuth();
+
+
+    if(!session){
+        return;
+    }
+
+
+    const id =
+        document.getElementById(
+            "customerId"
+        ).value;
+
+
+    const payload = {
+
+        customer_code:
+            document
+                .getElementById(
+                    "customerCode"
+                )
+                .value
+                .trim(),
+
+        name:
+            document
+                .getElementById(
+                    "customerName"
+                )
+                .value
+                .trim(),
+
+        whatsapp:
+            document
+                .getElementById(
+                    "customerWhatsapp"
+                )
+                .value
+                .trim() ||
+            null,
+
+        phone:
+            document
+                .getElementById(
+                    "customerPhone"
+                )
+                .value
+                .trim() ||
+            null,
+
+        email:
+            document
+                .getElementById(
+                    "customerEmail"
+                )
+                .value
+                .trim() ||
+            null,
+
+        address:
+            document
+                .getElementById(
+                    "customerAddress"
+                )
+                .value
+                .trim() ||
+            null,
+
+        city:
+            document
+                .getElementById(
+                    "customerCity"
+                )
+                .value
+                .trim() ||
+            null,
+
+        customer_type:
+            document
+                .getElementById(
+                    "customerType"
+                )
+                .value,
+
+        status:
+            document
+                .getElementById(
+                    "customerStatus"
+                )
+                .value,
+
+        notes:
+            document
+                .getElementById(
+                    "customerNotes"
+                )
+                .value
+                .trim() ||
+            null
+
+    };
+
+
+    if(!payload.customer_code){
+
+        errorBox.textContent =
+            "Kode customer wajib diisi.";
+
+        return;
+    }
+
+
+    if(!payload.name){
+
+        errorBox.textContent =
+            "Nama customer wajib diisi.";
+
+        return;
+    }
+
+
+    let result;
+
+
+    if(id){
+
+        result =
+            await supabaseClient
+                .from("customers")
+                .update(payload)
+                .eq(
+                    "id",
+                    id
+                );
+
+    }
+    else{
+
+        payload.created_by =
+            session.user.id;
+
+
+        result =
+            await supabaseClient
+                .from("customers")
+                .insert(
+                    payload
+                );
+
+    }
+
+
+    if(result.error){
+
+        console.error(
+            result.error
+        );
+
+
+        errorBox.textContent =
+            result.error.message;
+
+        return;
+    }
+
+
+    closeModal();
+
+    await loadCustomers();
+
+    updateSummary();
+
+    renderCustomers();
+
+}
+
+
+/* =====================================================
+   CHANGE STATUS
+===================================================== */
+
+async function changeStatus(
+    id,
+    newStatus
+){
+
+    const customer =
+        customers.find(
+            c =>
+                c.id === id
+        );
+
+
+    if(!customer){
+        return;
+    }
+
+
+    const action =
+        newStatus ===
+        "ACTIVE"
+
+        ?
+
+        "mengaktifkan"
+
+        :
+
+        "menonaktifkan";
+
+
+    const confirmed =
+        confirm(
+            `Yakin ingin ${action} customer "${customer.name}"?`
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("customers")
+        .update({
+
+            status:
+                newStatus
+
+        })
+        .eq(
+            "id",
+            id
+        );
+
+
+    if(error){
+
+        alert(
+            "Gagal mengubah status: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    await loadCustomers();
+
+    updateSummary();
+
+    renderCustomers();
+
+}
+
+
+/* =====================================================
+   GENERATE CUSTOMER CODE
+===================================================== */
+
+async function generateCustomerCode(){
+
+    const {
+        count,
+        error
+    } =
+    await supabaseClient
+        .from("customers")
+        .select(
+            "*",
+            {
+                count:"exact",
+                head:true
+            }
+        );
+
+
+    if(error){
 
         console.error(error);
 
         return "CUS-0001";
 
-      }
+    }
 
 
-      const number =
+    const number =
         (count || 0) + 1;
 
 
-      return "CUS-" +
-        String(number).padStart(4, "0");
+    return (
+        "CUS-" +
+        String(
+            number
+        ).padStart(
+            4,
+            "0"
+        )
+    );
 
+}
+
+
+/* =====================================================
+   NORMALIZE WHATSAPP
+===================================================== */
+
+function normalizeWhatsApp(number){
+
+    if(!number){
+        return "";
     }
 
 
-    /* ==========================================
-       NORMALIZE WHATSAPP
-    ========================================== */
-
-    function normalizeWhatsApp(number) {
-
-      if (!number) return "";
-
-      let value =
+    let value =
         String(number)
-          .replace(/\D/g, "");
+            .replace(
+                /\D/g,
+                ""
+            );
 
 
-      if (value.startsWith("0")) {
+    if(
+        value.startsWith("0")
+    ){
 
         value =
-          "62" + value.substring(1);
-
-      }
-
-
-      if (value.startsWith("8")) {
-
-        value = "62" + value;
-
-      }
-
-
-      return value;
+            "62" +
+            value.substring(1);
 
     }
 
 
-    /* ==========================================
-       ESCAPE HTML
-    ========================================== */
+    if(
+        value.startsWith("8")
+    ){
 
-    function escapeHtml(value) {
+        value =
+            "62" +
+            value;
 
-      if (value === null ||
-          value === undefined) {
+    }
+
+
+    return value;
+
+}
+
+
+/* =====================================================
+   FORMAT DATE
+===================================================== */
+
+function formatDate(value){
+
+    if(!value){
+        return "-";
+    }
+
+
+    const date =
+        value instanceof Date
+        ? value
+        : new Date(value);
+
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "-";
+
+    }
+
+
+    return date.toLocaleDateString(
+        "id-ID",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
 
         return "";
 
-      }
-
-
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
     }
 
 
-    /* ==========================================
-       CLOSE MODAL
-    ========================================== */
+    return String(value)
 
-    function closeModal() {
+        .replace(
+            /&/g,
+            "&amp;"
+        )
 
-      document.getElementById("customerModal")
-        .classList.remove("show");
+        .replace(
+            /</g,
+            "&lt;"
+        )
 
-    }
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
 
 
-    /* ==========================================
-       LOGOUT
-    ========================================== */
+/* =====================================================
+   CLOSE CUSTOMER MODAL
+===================================================== */
 
-    async function logout() {
+function closeModal(){
 
-      await supabaseClient.auth.signOut();
+    document
+        .getElementById(
+            "customerModal"
+        )
+        .classList.remove(
+            "show"
+        );
 
-      window.location.href = "login.html";
-
-    }
+}
 
 
-    /* ==========================================
-       INIT
-    ========================================== */
+/* =====================================================
+   LOGOUT
+===================================================== */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      loadCustomers
+async function logout(){
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS WHEN CLICK OUTSIDE
+===================================================== */
+
+document
+    .getElementById(
+        "customerModal"
+    )
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeModal();
+
+            }
+
+        }
     );
 
-  </script>
+
+document
+    .getElementById(
+        "reminderModal"
+    )
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeReminderModal();
+
+            }
+
+        }
+    );
+
+</script>
 
 </body>
 </html>
