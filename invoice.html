@@ -2,7 +2,6 @@
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -12,16 +11,13 @@
 
     <title>Invoice - WAT ERP</title>
 
-
     <!-- =====================================================
          SUPABASE
     ====================================================== -->
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- CONFIG WAT ERP -->
     <script src="assets/js/config.js"></script>
-
 
     <style>
 
@@ -32,274 +28,173 @@
         }
 
         body {
-
             font-family:
                 Arial,
                 Helvetica,
                 sans-serif;
 
             background: #f4f7fb;
-
             color: #172033;
-
         }
-
 
         /* =================================================
            HEADER
         ================================================= */
 
         header {
-
             background: #0d47a1;
-
             color: white;
-
             padding: 18px 30px;
 
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
         }
 
         .brand {
-
             font-size: 22px;
-
             font-weight: bold;
-
         }
 
         .subtitle {
-
             font-size: 12px;
-
             opacity: .85;
-
             margin-top: 3px;
-
         }
 
         .header-right {
-
             display: flex;
-
             align-items: center;
-
             gap: 15px;
-
         }
 
         .user-role {
-
             font-weight: bold;
-
             font-size: 14px;
-
         }
 
         .logout {
-
             background: white;
-
             color: #0d47a1;
-
             border: 0;
-
             padding: 9px 16px;
-
             border-radius: 7px;
-
             cursor: pointer;
-
             font-weight: bold;
-
         }
-
 
         /* =================================================
            MAIN
         ================================================= */
 
         main {
-
             max-width: 1050px;
-
             margin: 30px auto;
-
             padding: 0 20px;
-
         }
 
         .page-title-row {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             gap: 20px;
-
             margin-bottom: 20px;
-
         }
 
         h1 {
-
             font-size: 30px;
-
             margin-bottom: 5px;
-
         }
 
         .desc {
-
             color: #64748b;
-
         }
-
 
         /* =================================================
            BUTTON
         ================================================= */
 
         button {
-
             font-family: inherit;
-
         }
 
         .btn {
-
             border: 0;
-
             border-radius: 7px;
-
             padding: 10px 16px;
-
             cursor: pointer;
-
             font-weight: bold;
-
         }
 
         .btn-primary {
-
             background: #0d47a1;
-
             color: white;
-
         }
 
         .btn-primary:hover {
-
             background: #083b88;
-
         }
 
         .btn-secondary {
-
             background: #e2e8f0;
-
             color: #172033;
-
         }
 
         .btn-success {
-
             background: #16a34a;
-
             color: white;
-
         }
 
         .btn-danger {
-
             background: #dc2626;
-
             color: white;
-
         }
 
         .btn-small {
-
             padding: 7px 10px;
-
             font-size: 12px;
-
         }
-
 
         /* =================================================
            MESSAGE
         ================================================= */
 
         .message {
-
             display: none;
-
             margin-bottom: 18px;
-
             padding: 13px 16px;
-
             border-radius: 8px;
-
             font-weight: bold;
-
         }
 
         .message.error {
-
             display: block;
-
             background: #fef2f2;
-
             border: 1px solid #fecaca;
-
             color: #b91c1c;
-
         }
 
         .message.success {
-
             display: block;
-
             background: #ecfdf5;
-
             border: 1px solid #86efac;
-
             color: #166534;
-
         }
-
 
         /* =================================================
            STATS
         ================================================= */
 
         .stats {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-
             margin-bottom: 20px;
-
         }
 
         .stat-card {
-
             background: white;
-
             border-radius: 12px;
-
             padding: 20px;
 
             box-shadow:
@@ -307,54 +202,39 @@
 
             border-left:
                 4px solid #0d47a1;
-
         }
 
         .stat-title {
-
             color: #64748b;
-
             font-size: 13px;
-
             margin-bottom: 7px;
-
         }
 
         .stat-value {
-
             font-size: 24px;
-
             font-weight: bold;
-
         }
-
 
         /* =================================================
            FILTER
         ================================================= */
 
         .filter-card {
-
             background: white;
-
             padding: 14px;
-
             border-radius: 10px;
 
             display: flex;
-
             gap: 10px;
 
             margin-bottom: 20px;
 
             box-shadow:
                 0 3px 15px rgba(0,0,0,.04);
-
         }
 
         .filter-card input,
         .filter-card select {
-
             flex: 1;
 
             padding: 11px;
@@ -365,87 +245,63 @@
             border-radius: 7px;
 
             font-size: 14px;
-
         }
-
 
         /* =================================================
            TABLE
         ================================================= */
 
         .table-card {
-
             background: white;
-
             border-radius: 12px;
-
             padding: 18px;
 
             box-shadow:
                 0 3px 15px rgba(0,0,0,.06);
 
             overflow-x: auto;
-
         }
 
         table {
-
             width: 100%;
-
             border-collapse: collapse;
-
         }
 
         th {
-
             background: #eef3f8;
-
             color: #334155;
 
             font-size: 13px;
-
             text-align: left;
 
             padding: 12px;
-
         }
 
         td {
-
             padding: 12px;
 
             border-bottom:
                 1px solid #e2e8f0;
 
             font-size: 13px;
-
         }
 
         .invoice-number {
-
             font-weight: bold;
-
             color: #0d47a1;
-
         }
 
         .actions {
-
             display: flex;
-
             gap: 5px;
-
             flex-wrap: wrap;
-
         }
-
 
         /* =================================================
            STATUS
         ================================================= */
 
         .status {
-
             display: inline-block;
 
             padding: 5px 9px;
@@ -453,62 +309,42 @@
             border-radius: 20px;
 
             font-size: 11px;
-
             font-weight: bold;
-
         }
 
         .status-DRAFT {
-
             background: #e2e8f0;
-
             color: #475569;
-
         }
 
         .status-ISSUED {
-
             background: #dbeafe;
-
             color: #1d4ed8;
-
         }
 
         .status-PARTIAL {
-
             background: #fef3c7;
-
             color: #92400e;
-
         }
 
         .status-PAID {
-
             background: #dcfce7;
-
             color: #166534;
-
         }
 
         .status-CANCELLED {
-
             background: #fee2e2;
-
             color: #991b1b;
-
         }
-
 
         /* =================================================
            MODAL
         ================================================= */
 
         .modal {
-
             display: none;
 
             position: fixed;
-
             inset: 0;
 
             background:
@@ -517,25 +353,19 @@
             z-index: 9999;
 
             align-items: center;
-
             justify-content: center;
 
             padding: 20px;
-
         }
 
         .modal.active {
-
             display: flex;
-
         }
 
         .modal-box {
-
             background: white;
 
             width: 100%;
-
             max-width: 760px;
 
             max-height: 92vh;
@@ -546,34 +376,25 @@
 
             box-shadow:
                 0 20px 50px rgba(0,0,0,.25);
-
         }
 
         .modal-header {
-
             padding: 18px 20px;
 
             border-bottom:
                 1px solid #e2e8f0;
 
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
         }
 
         .modal-header h2 {
-
             font-size: 20px;
-
         }
 
         .close {
-
             border: 0;
-
             background: none;
 
             font-size: 24px;
@@ -581,43 +402,33 @@
             cursor: pointer;
 
             color: #64748b;
-
         }
 
         .modal-body {
-
             padding: 20px;
-
         }
 
         .modal-footer {
-
             padding: 16px 20px;
 
             border-top:
                 1px solid #e2e8f0;
 
             display: flex;
-
             justify-content: flex-end;
 
             gap: 10px;
-
         }
-
 
         /* =================================================
            FORM
         ================================================= */
 
         .form-group {
-
             margin-bottom: 15px;
-
         }
 
         label {
-
             display: block;
 
             font-size: 13px;
@@ -625,13 +436,11 @@
             font-weight: bold;
 
             margin-bottom: 6px;
-
         }
 
         input,
         select,
         textarea {
-
             width: 100%;
 
             padding: 11px;
@@ -644,48 +453,38 @@
             font-family: inherit;
 
             font-size: 14px;
-
         }
 
         textarea {
-
             min-height: 80px;
-
             resize: vertical;
-
         }
 
         input:focus,
         select:focus,
         textarea:focus {
-
             outline: none;
 
             border-color: #0d47a1;
 
             box-shadow:
                 0 0 0 2px rgba(13,71,161,.08);
-
         }
 
         .form-grid {
-
             display: grid;
 
             grid-template-columns:
                 repeat(2, 1fr);
 
             gap: 15px;
-
         }
-
 
         /* =================================================
            JOB INFO
         ================================================= */
 
         .job-info {
-
             display: none;
 
             background: #eff6ff;
@@ -698,73 +497,58 @@
             padding: 15px;
 
             margin-bottom: 18px;
-
         }
 
         .job-info.active {
-
             display: block;
-
         }
 
         .job-info-title {
-
             font-weight: bold;
 
             color: #1e40af;
 
             margin-bottom: 12px;
-
         }
 
         .job-info-grid {
-
             display: grid;
 
             grid-template-columns:
                 repeat(2, 1fr);
 
             gap: 10px;
-
         }
 
         .info-item {
-
             background: white;
 
             border-radius: 7px;
 
             padding: 10px;
-
         }
 
         .info-label {
-
             color: #64748b;
 
             font-size: 11px;
 
             margin-bottom: 3px;
-
         }
 
         .info-value {
-
             font-size: 13px;
 
             font-weight: bold;
 
             word-break: break-word;
-
         }
-
 
         /* =================================================
            TOTAL BOX
         ================================================= */
 
         .total-box {
-
             background: #eff6ff;
 
             border:
@@ -775,21 +559,17 @@
             padding: 15px;
 
             margin-top: 5px;
-
         }
 
         .total-row {
-
             display: flex;
 
             justify-content: space-between;
 
             padding: 5px 0;
-
         }
 
         .total-final {
-
             border-top:
                 2px solid #2563eb;
 
@@ -800,32 +580,25 @@
             font-size: 19px;
 
             font-weight: bold;
-
         }
 
-
         /* =================================================
-           DETAIL MODAL
+           DETAIL
         ================================================= */
 
         .detail-section {
-
             margin-bottom: 18px;
-
         }
 
         .detail-section h3 {
-
             font-size: 15px;
 
             margin-bottom: 8px;
 
             color: #0d47a1;
-
         }
 
         .detail-box {
-
             background: #f8fafc;
 
             border-radius: 8px;
@@ -833,110 +606,74 @@
             padding: 13px;
 
             white-space: pre-wrap;
-
         }
 
-
         /* =================================================
-           EMPTY
+           EMPTY / LOADING
         ================================================= */
 
         .empty {
-
             text-align: center;
 
             padding: 45px 20px;
 
             color: #64748b;
-
         }
 
-
-        /* =================================================
-           LOADING
-        ================================================= */
-
         .loading {
-
             text-align: center;
 
             padding: 30px;
 
             color: #64748b;
-
         }
-
 
         /* =================================================
            PRINT
         ================================================= */
 
         .print-area {
-
             display: none;
-
         }
-
-
-        /* =================================================
-           RESPONSIVE
-        ================================================= */
 
         @media(max-width: 800px) {
 
             .stats {
-
                 grid-template-columns:
                     repeat(2, 1fr);
-
             }
 
             .form-grid,
             .job-info-grid {
-
                 grid-template-columns: 1fr;
-
             }
 
             .page-title-row {
-
                 align-items: flex-start;
-
                 flex-direction: column;
-
             }
 
         }
-
 
         @media(max-width: 600px) {
 
             header {
-
                 padding: 15px;
-
             }
 
             main {
-
                 padding: 0 12px;
-
             }
 
             .stats {
-
                 grid-template-columns: 1fr;
-
             }
 
             .filter-card {
-
                 flex-direction: column;
-
             }
 
         }
-
 
         /* =================================================
            PRINT STYLE
@@ -945,31 +682,24 @@
         @media print {
 
             body {
-
                 background: white;
-
             }
 
             header,
             main,
             .modal {
-
                 display: none !important;
-
             }
 
             .print-area {
-
                 display: block !important;
 
                 padding: 30px;
 
                 color: #000;
-
             }
 
             .print-header {
-
                 display: flex;
 
                 justify-content: space-between;
@@ -980,102 +710,141 @@
                 padding-bottom: 15px;
 
                 margin-bottom: 20px;
-
             }
 
             .print-company {
-
                 font-size: 24px;
-
                 font-weight: bold;
-
             }
 
             .print-title {
-
                 font-size: 26px;
-
                 font-weight: bold;
-
                 text-align: right;
-
             }
 
             .print-info {
-
                 display: grid;
 
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns:
+                    1fr 1fr;
 
                 gap: 20px;
 
                 margin-bottom: 25px;
-
             }
 
             .print-label {
-
                 font-size: 11px;
-
                 color: #555;
-
             }
 
             .print-value {
-
                 font-size: 14px;
-
                 font-weight: bold;
-
             }
 
             .print-table {
-
                 width: 100%;
-
                 border-collapse: collapse;
-
             }
 
             .print-table th,
             .print-table td {
-
                 border:
                     1px solid #000;
 
                 padding: 10px;
-
             }
 
             .print-total {
-
                 width: 300px;
 
                 margin-left: auto;
 
                 margin-top: 20px;
-
             }
 
             .print-total div {
-
                 display: flex;
 
                 justify-content: space-between;
 
                 padding: 5px;
-
             }
 
             .print-grand {
-
                 border-top:
                     2px solid #000;
 
                 font-size: 18px;
 
                 font-weight: bold;
+            }
 
+            /* =================================================
+               PAYMENT BOX
+            ================================================= */
+
+            .payment-box {
+                width: 100%;
+
+                max-width: 430px;
+
+                margin-top: 25px;
+
+                padding: 15px;
+
+                border:
+                    1px solid #000;
+
+                border-radius: 6px;
+            }
+
+            .payment-title {
+                font-size: 14px;
+
+                font-weight: bold;
+
+                margin-bottom: 6px;
+            }
+
+            .payment-text {
+                font-size: 11px;
+
+                margin-bottom: 10px;
+            }
+
+            .payment-bank {
+                font-size: 16px;
+
+                margin-bottom: 8px;
+            }
+
+            .payment-row {
+                display: flex;
+
+                justify-content: space-between;
+
+                gap: 20px;
+
+                padding: 3px 0;
+
+                font-size: 12px;
+            }
+
+            .print-footer {
+                margin-top: 35px;
+
+                display: flex;
+
+                justify-content: space-between;
+            }
+
+            .print-signature {
+                width: 220px;
+
+                text-align: center;
             }
 
         }
@@ -1084,9 +853,7 @@
 
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      HEADER
@@ -1105,7 +872,6 @@
         </div>
 
     </div>
-
 
     <div class="header-right">
 
@@ -1128,13 +894,11 @@
 </header>
 
 
-
 <!-- =====================================================
      MAIN
 ====================================================== -->
 
 <main>
-
 
     <div class="page-title-row">
 
@@ -1160,7 +924,6 @@
             </div>
 
         </div>
-
 
         <button
             class="btn btn-primary"
@@ -1252,7 +1015,6 @@
     </div>
 
 
-
     <!-- =================================================
          FILTER
     ================================================== -->
@@ -1265,7 +1027,6 @@
             placeholder="Cari nomor invoice atau customer..."
             oninput="renderInvoices()"
         >
-
 
         <select
             id="statusFilter"
@@ -1298,7 +1059,6 @@
 
         </select>
 
-
         <button
             class="btn btn-secondary"
             onclick="loadData()"
@@ -1307,7 +1067,6 @@
         </button>
 
     </div>
-
 
 
     <!-- =================================================
@@ -1326,9 +1085,7 @@
 
     </div>
 
-
 </main>
-
 
 
 <!-- =====================================================
@@ -1341,7 +1098,6 @@
 >
 
     <div class="modal-box">
-
 
         <div class="modal-header">
 
@@ -1361,10 +1117,7 @@
 
         <div class="modal-body">
 
-
-            <!-- =================================================
-                 JOB SELECT
-            ================================================== -->
+            <!-- JOB -->
 
             <div class="form-group">
 
@@ -1386,9 +1139,7 @@
             </div>
 
 
-            <!-- =================================================
-                 JOB INFO
-            ================================================== -->
+            <!-- JOB INFO -->
 
             <div
                 class="job-info"
@@ -1399,9 +1150,7 @@
                     🔗 Data Job Teknisi
                 </div>
 
-
                 <div class="job-info-grid">
-
 
                     <div class="info-item">
 
@@ -1504,16 +1253,12 @@
 
                     </div>
 
-
                 </div>
 
             </div>
 
 
-
-            <!-- =================================================
-                 INVOICE NUMBER
-            ================================================== -->
+            <!-- INVOICE NUMBER -->
 
             <div class="form-group">
 
@@ -1529,13 +1274,9 @@
             </div>
 
 
-
-            <!-- =================================================
-                 CUSTOMER INFO
-            ================================================== -->
+            <!-- CUSTOMER -->
 
             <div class="form-grid">
-
 
                 <div class="form-group">
 
@@ -1566,9 +1307,7 @@
 
                 </div>
 
-
             </div>
-
 
 
             <div class="form-group">
@@ -1585,10 +1324,7 @@
             </div>
 
 
-
-            <!-- =================================================
-                 RINCIAN
-            ================================================== -->
+            <!-- RINCIAN -->
 
             <div class="form-group">
 
@@ -1604,13 +1340,9 @@
             </div>
 
 
-
-            <!-- =================================================
-                 FINANCE
-            ================================================== -->
+            <!-- FINANCE -->
 
             <div class="form-grid">
-
 
                 <div class="form-group">
 
@@ -1695,14 +1427,10 @@
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- =================================================
-                 TOTAL
-            ================================================== -->
+            <!-- TOTAL -->
 
             <div class="total-box">
 
@@ -1760,16 +1488,12 @@
             </div>
 
 
-
-            <!-- =================================================
-                 DATES
-            ================================================== -->
+            <!-- DATES -->
 
             <div
                 class="form-grid"
                 style="margin-top:15px"
             >
-
 
                 <div class="form-group">
 
@@ -1798,14 +1522,10 @@
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- =================================================
-                 NOTES
-            ================================================== -->
+            <!-- NOTES -->
 
             <div class="form-group">
 
@@ -1820,9 +1540,7 @@
 
             </div>
 
-
         </div>
-
 
 
         <div class="modal-footer">
@@ -1844,11 +1562,9 @@
 
         </div>
 
-
     </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -1861,7 +1577,6 @@
 >
 
     <div class="modal-box">
-
 
         <div class="modal-header">
 
@@ -1903,11 +1618,9 @@
 
         </div>
 
-
     </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -1920,9 +1633,7 @@
 ></div>
 
 
-
 <script>
-
 
 /* =========================================================
    GLOBAL
@@ -1945,7 +1656,6 @@ let editingInvoice = null;
 let currentPrintInvoice = null;
 
 
-
 /* =========================================================
    INIT
 ========================================================= */
@@ -1959,10 +1669,6 @@ document.addEventListener(
 async function init() {
 
     try {
-
-        /* ---------------------------------------------
-           CEK CONFIG
-        --------------------------------------------- */
 
         if (
             typeof window.supabase === "undefined"
@@ -1987,20 +1693,12 @@ async function init() {
         }
 
 
-        /* ---------------------------------------------
-           CREATE CLIENT
-        --------------------------------------------- */
-
         supabaseClient =
             window.supabase.createClient(
                 SUPABASE_URL,
                 SUPABASE_PUBLISHABLE_KEY
             );
 
-
-        /* ---------------------------------------------
-           CEK SESSION
-        --------------------------------------------- */
 
         const {
             data: sessionData
@@ -2025,10 +1723,6 @@ async function init() {
             sessionData.session.user;
 
 
-        /* ---------------------------------------------
-           PROFILE
-        --------------------------------------------- */
-
         const {
             data: profile,
             error: profileError
@@ -2046,9 +1740,7 @@ async function init() {
 
 
         if (profileError) {
-
             throw profileError;
-
         }
 
 
@@ -2087,14 +1779,11 @@ async function init() {
             profile.role;
 
 
-        /* ---------------------------------------------
-           LOAD DATA
-        --------------------------------------------- */
-
         await loadData();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "INIT ERROR:",
@@ -2110,7 +1799,6 @@ async function init() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -2164,9 +1852,7 @@ async function loadData() {
 
 
         if (invoiceError) {
-
             throw invoiceError;
-
         }
 
 
@@ -2224,9 +1910,7 @@ async function loadData() {
 
 
         if (jobError) {
-
             throw jobError;
-
         }
 
 
@@ -2235,8 +1919,7 @@ async function loadData() {
 
 
         /* ---------------------------------------------
-           ONLY COMPLETED
-           AND NOT YET INVOICED
+           COMPLETED YANG BELUM DIINVOICE
         --------------------------------------------- */
 
         const invoicedJobIds =
@@ -2263,18 +1946,15 @@ async function loadData() {
             });
 
 
-        /* ---------------------------------------------
-           RENDER
-        --------------------------------------------- */
-
         renderJobOptions();
 
         updateStats();
 
         renderInvoices();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "LOAD ERROR:",
@@ -2290,7 +1970,6 @@ async function loadData() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -2360,7 +2039,6 @@ function renderJobOptions() {
 }
 
 
-
 /* =========================================================
    SELECT JOB
 ========================================================= */
@@ -2400,19 +2078,11 @@ async function selectJob() {
     );
 
 
-    /* ---------------------------------------------
-       JOB CODE
-    --------------------------------------------- */
-
     document.getElementById(
         "jobCode"
     ).textContent =
         selectedJob.job_code || "-";
 
-
-    /* ---------------------------------------------
-       CUSTOMER
-    --------------------------------------------- */
 
     document.getElementById(
         "customerName"
@@ -2426,10 +2096,6 @@ async function selectJob() {
         selectedJob.customer_name || "";
 
 
-    /* ---------------------------------------------
-       PHONE
-    --------------------------------------------- */
-
     document.getElementById(
         "customerPhone"
     ).textContent =
@@ -2441,10 +2107,6 @@ async function selectJob() {
     ).value =
         selectedJob.customer_phone || "";
 
-
-    /* ---------------------------------------------
-       ADDRESS
-    --------------------------------------------- */
 
     document.getElementById(
         "customerAddress"
@@ -2458,9 +2120,17 @@ async function selectJob() {
         selectedJob.customer_address || "";
 
 
-    /* ---------------------------------------------
-       TECHNICIAN NOTES
-    --------------------------------------------- */
+    const technician =
+        selectedJob.technician_id ||
+        selectedJob.assigned_to ||
+        "-";
+
+
+    document.getElementById(
+        "technicianName"
+    ).textContent =
+        technician;
+
 
     const notes =
         selectedJob.technician_notes ||
@@ -2475,10 +2145,6 @@ async function selectJob() {
         notes || "-";
 
 
-    /* ---------------------------------------------
-       BILLING DETAIL
-    --------------------------------------------- */
-
     document.getElementById(
         "billingDetail"
     ).value =
@@ -2486,10 +2152,6 @@ async function selectJob() {
         notes ||
         "";
 
-
-    /* ---------------------------------------------
-       PRICE
-    --------------------------------------------- */
 
     let price =
         Number(
@@ -2507,6 +2169,16 @@ async function selectJob() {
     }
 
 
+    if (price <= 0) {
+
+        price =
+            Number(
+                selectedJob.actual_cost || 0
+            );
+
+    }
+
+
     document.getElementById(
         "subtotal"
     ).value =
@@ -2516,7 +2188,6 @@ async function selectJob() {
     calculateTotal();
 
 }
-
 
 
 /* =========================================================
@@ -2602,7 +2273,6 @@ function generateInvoiceNumber() {
 }
 
 
-
 /* =========================================================
    OPEN CREATE MODAL
 ========================================================= */
@@ -2656,7 +2326,6 @@ function openCreateModal() {
     );
 
 }
-
 
 
 /* =========================================================
@@ -2731,7 +2400,6 @@ function resetForm() {
     calculateTotal();
 
 }
-
 
 
 /* =========================================================
@@ -2846,8 +2514,12 @@ async function editInvoice(
             "jobSelect"
         ).innerHTML = `
             <option value="${selectedJob.id}">
-                ${selectedJob.job_code} - ${
-                    selectedJob.customer_name || "-"
+                ${escapeHtml(
+                    selectedJob.job_code
+                )} - ${
+                    escapeHtml(
+                        selectedJob.customer_name || "-"
+                    )
                 }
             </option>
         `;
@@ -2861,11 +2533,9 @@ async function editInvoice(
 
         await selectJob();
 
-    } else {
+    }
 
-        /* ---------------------------------------------
-           Invoice lama yang Job-nya tidak ditemukan
-        --------------------------------------------- */
+    else {
 
         document.getElementById(
             "jobSelect"
@@ -2888,7 +2558,6 @@ async function editInvoice(
     );
 
 }
-
 
 
 /* =========================================================
@@ -2964,7 +2633,6 @@ function calculateTotal() {
 }
 
 
-
 /* =========================================================
    SAVE INVOICE
 ========================================================= */
@@ -2988,7 +2656,10 @@ async function saveInvoice() {
             ).value;
 
 
-        if (!jobId && !editingInvoice) {
+        if (
+            !jobId &&
+            !editingInvoice
+        ) {
 
             throw new Error(
                 "Pilih Job COMPLETED terlebih dahulu."
@@ -3184,15 +2855,9 @@ async function saveInvoice() {
 
 
             if (error) {
-
                 throw error;
-
             }
 
-
-            /* ---------------------------------------------
-               UPDATE JOB BILLING DETAIL
-            --------------------------------------------- */
 
             if (
                 editingInvoice.job_id
@@ -3222,8 +2887,8 @@ async function saveInvoice() {
                 false
             );
 
-
         }
+
 
         /* =================================================
            CREATE
@@ -3305,15 +2970,9 @@ async function saveInvoice() {
 
 
             if (insertError) {
-
                 throw insertError;
-
             }
 
-
-            /* ---------------------------------------------
-               UPDATE JOB BILLING
-            --------------------------------------------- */
 
             const {
                 error: jobUpdateError
@@ -3347,7 +3006,8 @@ async function saveInvoice() {
 
             showMessage(
                 "Invoice berhasil dibuat dan terhubung ke Job " +
-                selectedJob.job_code + ".",
+                selectedJob.job_code +
+                ".",
                 false
             );
 
@@ -3356,17 +3016,16 @@ async function saveInvoice() {
 
         closeModal();
 
-
         await loadData();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "SAVE INVOICE ERROR:",
             error
         );
-
 
         showMessage(
             "Gagal menyimpan invoice: " +
@@ -3374,7 +3033,9 @@ async function saveInvoice() {
             true
         );
 
-    } finally {
+    }
+
+    finally {
 
         const saveButton =
             document.getElementById(
@@ -3394,7 +3055,6 @@ async function saveInvoice() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -3532,6 +3192,7 @@ function renderInvoices() {
             </thead>
 
             <tbody>
+
     `;
 
 
@@ -3600,11 +3261,13 @@ function renderInvoices() {
 
 
                     <td>
+
                         <strong>
                             ${formatRupiah(
                                 invoice.total
                             )}
                         </strong>
+
                     </td>
 
 
@@ -3707,7 +3370,6 @@ function renderInvoices() {
 }
 
 
-
 /* =========================================================
    UPDATE STATS
 ========================================================= */
@@ -3790,7 +3452,6 @@ function updateStats() {
 }
 
 
-
 /* =========================================================
    MARK PAID
 ========================================================= */
@@ -3834,9 +3495,7 @@ async function markPaid(
 
 
         if (error) {
-
             throw error;
-
         }
 
 
@@ -3848,8 +3507,9 @@ async function markPaid(
 
         await loadData();
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             error
@@ -3864,7 +3524,6 @@ async function markPaid(
     }
 
 }
-
 
 
 /* =========================================================
@@ -4065,10 +3724,43 @@ function showDetail(
                 <br><br>
 
                 <strong style="font-size:18px">
+
                     TOTAL:
                     ${formatRupiah(
                         invoice.total
                     )}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-section">
+
+            <h3>
+                Pembayaran
+            </h3>
+
+            <div class="detail-box">
+
+                <strong>
+                    Bank BCA
+                </strong>
+
+                <br>
+
+                No. Rekening:
+                <strong>
+                    2190176561
+                </strong>
+
+                <br>
+
+                A.n.:
+                <strong>
+                    Roni Wijaya
                 </strong>
 
             </div>
@@ -4086,9 +3778,11 @@ function showDetail(
                         </h3>
 
                         <div class="detail-box">
+
                             ${escapeHtml(
                                 invoice.notes
                             )}
+
                         </div>
 
                     </div>
@@ -4106,7 +3800,6 @@ function showDetail(
     );
 
 }
-
 
 
 /* =========================================================
@@ -4405,6 +4098,53 @@ function printCurrentInvoice() {
         </div>
 
 
+        <!-- =================================================
+             PAYMENT
+        ================================================== -->
+
+        <div class="payment-box">
+
+            <div class="payment-title">
+                PEMBAYARAN
+            </div>
+
+            <div class="payment-text">
+                Silakan melakukan pembayaran ke rekening berikut:
+            </div>
+
+            <div class="payment-bank">
+                <strong>
+                    BANK BCA
+                </strong>
+            </div>
+
+            <div class="payment-row">
+
+                <span>
+                    No. Rekening
+                </span>
+
+                <strong>
+                    2190176561
+                </strong>
+
+            </div>
+
+            <div class="payment-row">
+
+                <span>
+                    A.n.
+                </span>
+
+                <strong>
+                    Roni Wijaya
+                </strong>
+
+            </div>
+
+        </div>
+
+
         <br><br>
 
 
@@ -4435,6 +4175,26 @@ function printCurrentInvoice() {
                 : ""
         }
 
+
+        <div class="print-footer">
+
+            <div>
+            </div>
+
+            <div class="print-signature">
+
+                Hormat kami,
+
+                <br><br><br><br>
+
+                <strong>
+                    PT Wijaya Anugrah Teknik
+                </strong>
+
+            </div>
+
+        </div>
+
     `;
 
 
@@ -4451,7 +4211,6 @@ function printCurrentInvoice() {
     );
 
 }
-
 
 
 /* =========================================================
@@ -4480,7 +4239,6 @@ function closeDetailModal() {
 }
 
 
-
 /* =========================================================
    LOGOUT
 ========================================================= */
@@ -4495,7 +4253,9 @@ async function logout() {
 
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             error
@@ -4511,7 +4271,6 @@ async function logout() {
         "login.html";
 
 }
-
 
 
 /* =========================================================
@@ -4536,15 +4295,12 @@ function formatRupiah(
 }
 
 
-
 function formatDate(
     value
 ) {
 
     if (!value) {
-
         return "-";
-
     }
 
 
@@ -4575,15 +4331,12 @@ function formatDate(
 }
 
 
-
 function toDateTimeLocal(
     value
 ) {
 
     if (!value) {
-
         return "";
-
     }
 
 
@@ -4623,7 +4376,6 @@ function toDateTimeLocal(
 }
 
 
-
 function escapeHtml(
     value
 ) {
@@ -4653,7 +4405,6 @@ function escapeHtml(
         );
 
 }
-
 
 
 function showMessage(
@@ -4687,11 +4438,10 @@ function showMessage(
                 "message";
 
         },
-        5000
+        4000
     );
 
 }
-
 
 
 function showLoading() {
@@ -4708,54 +4458,7 @@ function showLoading() {
 
 }
 
-
-
-/* =========================================================
-   CLOSE MODAL CLICK OUTSIDE
-========================================================= */
-
-document.addEventListener(
-    "click",
-    function(event) {
-
-        const invoiceModal =
-            document.getElementById(
-                "invoiceModal"
-            );
-
-
-        const detailModal =
-            document.getElementById(
-                "detailModal"
-            );
-
-
-        if (
-            event.target ===
-            invoiceModal
-        ) {
-
-            closeModal();
-
-        }
-
-
-        if (
-            event.target ===
-            detailModal
-        ) {
-
-            closeDetailModal();
-
-        }
-
-    }
-);
-
-
 </script>
 
-
 </body>
-
 </html>
