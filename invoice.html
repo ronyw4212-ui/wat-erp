@@ -628,6 +628,108 @@
             color: #64748b;
         }
 
+
+        /* =================================================
+           PAYMENT SUMMARY
+        ================================================= */
+
+        .payment-summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+        }
+
+        .payment-summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .payment-summary-header h2 {
+            font-size: 18px;
+            margin: 0 0 4px;
+        }
+
+        .summary-subtitle {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .payment-summary-header select {
+            min-width: 170px;
+            padding: 9px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: white;
+        }
+
+        .payment-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .payment-summary-item {
+            background: #f8fafc;
+            border-radius: 9px;
+            padding: 15px;
+            border-left: 4px solid #0d47a1;
+        }
+
+        .payment-summary-item.cash {
+            border-left-color: #16a34a;
+        }
+
+        .payment-summary-item.transfer {
+            border-left-color: #2563eb;
+        }
+
+        .payment-summary-item.remaining {
+            border-left-color: #f59e0b;
+        }
+
+        .summary-label {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @media(max-width: 800px) {
+
+            .payment-summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .payment-summary-header {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .payment-summary-header select {
+                width: 100%;
+            }
+
+            .payment-summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
         /* =================================================
            PRINT
         ================================================= */
@@ -1068,6 +1170,58 @@
 
     </div>
 
+
+
+    <!-- =================================================
+         PAYMENT SUMMARY
+    ================================================== -->
+
+    <div class="payment-summary-card">
+
+        <div class="payment-summary-header">
+            <div>
+                <h2>Rekapan Pembayaran</h2>
+                <div class="summary-subtitle">
+                    Rekap berdasarkan transaksi pada invoice_payments.
+                </div>
+            </div>
+
+            <select
+                id="paymentPeriod"
+                onchange="loadPaymentSummary()"
+            >
+                <option value="ALL">Semua Periode</option>
+                <option value="TODAY">Hari Ini</option>
+                <option value="MONTH">Bulan Ini</option>
+                <option value="YEAR">Tahun Ini</option>
+            </select>
+        </div>
+
+        <div class="payment-summary-grid">
+
+            <div class="payment-summary-item">
+                <div class="summary-label">Total Pembayaran</div>
+                <div class="summary-value" id="summaryTotalPayment">Rp 0</div>
+            </div>
+
+            <div class="payment-summary-item cash">
+                <div class="summary-label">Total CASH</div>
+                <div class="summary-value" id="summaryCash">Rp 0</div>
+            </div>
+
+            <div class="payment-summary-item transfer">
+                <div class="summary-label">Total TRANSFER</div>
+                <div class="summary-value" id="summaryTransfer">Rp 0</div>
+            </div>
+
+            <div class="payment-summary-item remaining">
+                <div class="summary-label">Sisa Piutang</div>
+                <div class="summary-value" id="summaryRemaining">Rp 0</div>
+            </div>
+
+        </div>
+
+    </div>
 
     <!-- =================================================
          TABLE
@@ -1623,6 +1777,78 @@
 </div>
 
 
+
+<!-- =====================================================
+     PAYMENT MODAL
+====================================================== -->
+
+<div
+    class="modal"
+    id="paymentModal"
+>
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Pembayaran Invoice</h2>
+            <button class="close" onclick="closePaymentModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="job-info active" style="margin-bottom:18px">
+                <div class="job-info-title">Informasi Invoice</div>
+                <div class="job-info-grid">
+                    <div class="info-item"><div class="info-label">No. Invoice</div><div class="info-value" id="paymentInvoiceNumber">-</div></div>
+                    <div class="info-item"><div class="info-label">Customer</div><div class="info-value" id="paymentCustomer">-</div></div>
+                    <div class="info-item"><div class="info-label">Total Invoice</div><div class="info-value" id="paymentInvoiceTotal">Rp 0</div></div>
+                    <div class="info-item"><div class="info-label">Sudah Dibayar</div><div class="info-value" id="paymentAlreadyPaid">Rp 0</div></div>
+                    <div class="info-item"><div class="info-label">Sisa Tagihan</div><div class="info-value" id="paymentRemaining">Rp 0</div></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Metode Pembayaran *</label>
+                <select id="paymentMethod" onchange="toggleTransferFields()">
+                    <option value="">-- Pilih Metode --</option>
+                    <option value="CASH">CASH</option>
+                    <option value="TRANSFER">TRANSFER</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nominal Pembayaran *</label>
+                <input type="number" id="paymentAmount" min="1" step="1" placeholder="Contoh: 1500000">
+            </div>
+
+            <div class="form-group">
+                <label>Tanggal Pembayaran *</label>
+                <input type="datetime-local" id="paymentDate">
+            </div>
+
+            <div id="transferFields" style="display:none">
+                <div class="form-grid">
+                    <div class="form-group"><label>Bank</label><input type="text" id="paymentBank" value="BCA"></div>
+                    <div class="form-group"><label>No. Rekening</label><input type="text" id="paymentAccountNumber" value="2190176561"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label>Atas Nama</label><input type="text" id="paymentAccountName" value="Roni Wijaya"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nomor Referensi</label>
+                <input type="text" id="paymentReference" placeholder="Contoh: TRX123456">
+            </div>
+
+            <div class="form-group">
+                <label>Catatan</label>
+                <textarea id="paymentNotes" placeholder="Catatan pembayaran..."></textarea>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closePaymentModal()">Batal</button>
+            <button class="btn btn-success" id="savePaymentButton" onclick="savePayment()">Simpan Pembayaran</button>
+        </div>
+    </div>
+</div>
+
 <!-- =====================================================
      PRINT AREA
 ====================================================== -->
@@ -1951,6 +2177,8 @@ async function loadData() {
         updateStats();
 
         renderInvoices();
+
+        await loadPaymentSummary();
 
     }
 
@@ -3332,12 +3560,12 @@ function renderInvoices() {
                                                 btn-small
                                             "
                                             onclick="
-                                                markPaid(
+                                                openPaymentModal(
                                                     '${invoice.id}'
                                                 )
                                             "
                                         >
-                                            Lunas
+                                            Pembayaran
                                         </button>
                                       `
                                     : ""
@@ -3366,6 +3594,268 @@ function renderInvoices() {
 
     container.innerHTML =
         html;
+
+}
+
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+async function loadPaymentSummary() {
+
+    if (!supabaseClient) return;
+
+    try {
+
+        const period =
+            document.getElementById(
+                "paymentPeriod"
+            ).value;
+
+        let query =
+            supabaseClient
+                .from("invoice_payments")
+                .select(
+                    "amount, payment_method, payment_date"
+                );
+
+        const now = new Date();
+
+        if (period === "TODAY") {
+
+            const start = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
+
+            const end = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1
+            );
+
+            query = query
+                .gte(
+                    "payment_date",
+                    start.toISOString()
+                )
+                .lt(
+                    "payment_date",
+                    end.toISOString()
+                );
+
+        }
+
+        else if (period === "MONTH") {
+
+            const start = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                1
+            );
+
+            const end = new Date(
+                now.getFullYear(),
+                now.getMonth() + 1,
+                1
+            );
+
+            query = query
+                .gte(
+                    "payment_date",
+                    start.toISOString()
+                )
+                .lt(
+                    "payment_date",
+                    end.toISOString()
+                );
+
+        }
+
+        else if (period === "YEAR") {
+
+            const start = new Date(
+                now.getFullYear(),
+                0,
+                1
+            );
+
+            const end = new Date(
+                now.getFullYear() + 1,
+                0,
+                1
+            );
+
+            query = query
+                .gte(
+                    "payment_date",
+                    start.toISOString()
+                )
+                .lt(
+                    "payment_date",
+                    end.toISOString()
+                );
+
+        }
+
+        const {
+            data,
+            error
+        } = await query;
+
+        if (error) {
+            throw error;
+        }
+
+        const payments = data || [];
+
+        let total = 0;
+        let cash = 0;
+        let transfer = 0;
+
+        payments.forEach(payment => {
+
+            const amount =
+                Number(
+                    payment.amount || 0
+                );
+
+            total += amount;
+
+            if (
+                String(
+                    payment.payment_method || ""
+                ).toUpperCase() === "CASH"
+            ) {
+                cash += amount;
+            }
+
+            if (
+                String(
+                    payment.payment_method || ""
+                ).toUpperCase() === "TRANSFER"
+            ) {
+                transfer += amount;
+            }
+
+        });
+
+        /*
+         * Piutang dihitung dari seluruh invoice
+         * yang tidak CANCELLED dikurangi seluruh
+         * pembayaran yang sudah tercatat.
+         *
+         * Filter periode hanya berlaku untuk
+         * rekapan pembayaran CASH/TRANSFER.
+         */
+
+        const invoiceAmount =
+            invoices.reduce(
+                (sum, invoice) => {
+
+                    if (
+                        invoice.status !==
+                        "CANCELLED"
+                    ) {
+                        return sum +
+                            Number(
+                                invoice.total || 0
+                            );
+                    }
+
+                    return sum;
+
+                },
+                0
+            );
+
+        const remaining =
+            Math.max(
+                0,
+                invoiceAmount -
+                await getAllPaymentsTotal()
+            );
+
+        document.getElementById(
+            "summaryTotalPayment"
+        ).textContent =
+            formatRupiah(total);
+
+        document.getElementById(
+            "summaryCash"
+        ).textContent =
+            formatRupiah(cash);
+
+        document.getElementById(
+            "summaryTransfer"
+        ).textContent =
+            formatRupiah(transfer);
+
+        document.getElementById(
+            "summaryRemaining"
+        ).textContent =
+            formatRupiah(remaining);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "PAYMENT SUMMARY ERROR:",
+            error
+        );
+
+        document.getElementById(
+            "summaryTotalPayment"
+        ).textContent = "Rp 0";
+
+        document.getElementById(
+            "summaryCash"
+        ).textContent = "Rp 0";
+
+        document.getElementById(
+            "summaryTransfer"
+        ).textContent = "Rp 0";
+
+        document.getElementById(
+            "summaryRemaining"
+        ).textContent = "Rp 0";
+
+    }
+
+}
+
+
+async function getAllPaymentsTotal() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("invoice_payments")
+            .select(
+                "amount"
+            );
+
+    if (error) {
+        throw error;
+    }
+
+    return (data || []).reduce(
+        (
+            sum,
+            payment
+        ) =>
+            sum +
+            Number(
+                payment.amount || 0
+            ),
+        0
+    );
 
 }
 
@@ -3453,76 +3943,132 @@ function updateStats() {
 
 
 /* =========================================================
-   MARK PAID
+   PAYMENT
 ========================================================= */
 
-async function markPaid(
-    invoiceId
-) {
+let currentPaymentInvoice = null;
+let currentPaymentTotal = 0;
+let currentPaymentPaid = 0;
 
-    const confirmed =
-        confirm(
-            "Tandai invoice ini sebagai LUNAS?"
-        );
+async function openPaymentModal(invoiceId) {
+    const invoice = invoices.find(item => item.id === invoiceId);
+    if (!invoice) { showMessage("Invoice tidak ditemukan.", true); return; }
 
-
-    if (!confirmed) return;
-
+    currentPaymentInvoice = invoice;
+    currentPaymentTotal = Number(invoice.total || 0);
 
     try {
+        const { data, error } = await supabaseClient
+            .from("invoice_payments")
+            .select("id, amount")
+            .eq("invoice_id", invoice.id);
+        if (error) throw error;
+        currentPaymentPaid = (data || []).reduce((sum, p) => sum + Number(p.amount || 0), 0);
+    } catch (error) {
+        console.error("LOAD PAYMENT ERROR:", error);
+        showMessage("Gagal mengambil riwayat pembayaran: " + error.message, true);
+        return;
+    }
 
-        const {
-            error
-        } =
-            await supabaseClient
-                .from("invoices")
-                .update({
+    const remaining = Math.max(0, currentPaymentTotal - currentPaymentPaid);
+    const job = jobs.find(item => item.id === invoice.job_id);
 
-                    status:
-                        "PAID",
+    document.getElementById("paymentInvoiceNumber").textContent = invoice.invoice_number || "-";
+    document.getElementById("paymentCustomer").textContent = job ? (job.customer_name || "-") : "-";
+    document.getElementById("paymentInvoiceTotal").textContent = formatRupiah(currentPaymentTotal);
+    document.getElementById("paymentAlreadyPaid").textContent = formatRupiah(currentPaymentPaid);
+    document.getElementById("paymentRemaining").textContent = formatRupiah(remaining);
+    document.getElementById("paymentAmount").value = remaining > 0 ? remaining : 0;
+    document.getElementById("paymentMethod").value = "";
+    document.getElementById("paymentReference").value = "";
+    document.getElementById("paymentNotes").value = "";
+    document.getElementById("paymentBank").value = "BCA";
+    document.getElementById("paymentAccountNumber").value = "2190176561";
+    document.getElementById("paymentAccountName").value = "Roni Wijaya";
+    document.getElementById("transferFields").style.display = "none";
+    document.getElementById("paymentDate").value = toDateTimeLocal(new Date());
+    document.getElementById("paymentModal").classList.add("active");
+}
 
-                    paid_at:
-                        new Date().toISOString(),
+function toggleTransferFields() {
+    const method = document.getElementById("paymentMethod").value;
+    document.getElementById("transferFields").style.display = method === "TRANSFER" ? "block" : "none";
+}
 
-                    updated_at:
-                        new Date().toISOString()
+async function savePayment() {
+    if (!currentPaymentInvoice) { showMessage("Invoice pembayaran tidak ditemukan.", true); return; }
 
-                })
-                .eq(
-                    "id",
-                    invoiceId
-                );
+    const method = document.getElementById("paymentMethod").value;
+    const amount = Number(document.getElementById("paymentAmount").value || 0);
+    const paymentDate = document.getElementById("paymentDate").value;
+    const reference = document.getElementById("paymentReference").value.trim();
+    const notes = document.getElementById("paymentNotes").value.trim();
 
+    if (!method) { showMessage("Pilih metode pembayaran terlebih dahulu.", true); return; }
+    if (!amount || amount <= 0) { showMessage("Nominal pembayaran harus lebih dari Rp 0.", true); return; }
+    if (!paymentDate) { showMessage("Tanggal pembayaran wajib diisi.", true); return; }
 
-        if (error) {
-            throw error;
-        }
+    const remaining = Math.max(0, currentPaymentTotal - currentPaymentPaid);
+    if (amount > remaining) { showMessage("Nominal pembayaran melebihi sisa tagihan.", true); return; }
 
+    const button = document.getElementById("savePaymentButton");
+    button.disabled = true;
+    button.textContent = "MENYIMPAN...";
 
-        showMessage(
-            "Invoice berhasil ditandai LUNAS.",
-            false
-        );
+    try {
+        const payload = {
+            invoice_id: currentPaymentInvoice.id,
+            payment_date: new Date(paymentDate).toISOString(),
+            amount: amount,
+            payment_method: method,
+            bank_name: method === "TRANSFER" ? (document.getElementById("paymentBank").value.trim() || null) : null,
+            account_number: method === "TRANSFER" ? (document.getElementById("paymentAccountNumber").value.trim() || null) : null,
+            account_name: method === "TRANSFER" ? (document.getElementById("paymentAccountName").value.trim() || null) : null,
+            reference_number: reference || null,
+            notes: notes || null,
+            created_by: currentUser.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
 
+        const { error: paymentError } = await supabaseClient.from("invoice_payments").insert(payload);
+        if (paymentError) throw paymentError;
 
+        const { data: payments, error: paymentLoadError } = await supabaseClient
+            .from("invoice_payments")
+            .select("amount")
+            .eq("invoice_id", currentPaymentInvoice.id);
+        if (paymentLoadError) throw paymentLoadError;
+
+        const totalPaid = (payments || []).reduce((sum, p) => sum + Number(p.amount || 0), 0);
+        const invoiceTotal = Number(currentPaymentInvoice.total || 0);
+        const nextStatus = totalPaid >= invoiceTotal ? "PAID" : totalPaid > 0 ? "PARTIAL" : currentPaymentInvoice.status;
+
+        const { error: invoiceError } = await supabaseClient
+            .from("invoices")
+            .update({
+                status: nextStatus,
+                paid_at: nextStatus === "PAID" ? new Date().toISOString() : null,
+                updated_at: new Date().toISOString()
+            })
+            .eq("id", currentPaymentInvoice.id);
+        if (invoiceError) throw invoiceError;
+
+        closePaymentModal();
+        showMessage(nextStatus === "PAID" ? "Pembayaran berhasil disimpan. Invoice sekarang LUNAS." : "Pembayaran berhasil disimpan. Status invoice menjadi PARTIAL.", false);
         await loadData();
-
+    } catch (error) {
+        console.error("SAVE PAYMENT ERROR:", error);
+        showMessage("Gagal menyimpan pembayaran: " + error.message, true);
+    } finally {
+        button.disabled = false;
+        button.textContent = "Simpan Pembayaran";
     }
+}
 
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-        showMessage(
-            "Gagal mengubah status: " +
-            error.message,
-            true
-        );
-
-    }
-
+function closePaymentModal() {
+    document.getElementById("paymentModal").classList.remove("active");
+    currentPaymentInvoice = null;
 }
 
 
