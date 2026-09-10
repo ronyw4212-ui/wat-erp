@@ -1,0 +1,12 @@
+{
+  "name": "WAT ERP Teknisi",
+  "short_name": "WAT Teknisi",
+  "description": "Aplikasi teknisi WAT / Wijaya AC",
+  "start_url": "technician.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0876ff",
+  "lang": "id-ID"
+}
